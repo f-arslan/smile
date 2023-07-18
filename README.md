@@ -1,1 +1,1 @@
-# smile
+# Smile Chat App
