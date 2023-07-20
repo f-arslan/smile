@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">smile</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">It\'s  Time to Chat!</string>
+    
+
 </resources>
