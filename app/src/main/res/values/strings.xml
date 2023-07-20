@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">smile</string>
 
+    <!-- Common -->
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+
     <!-- Onboarding -->
-    <string name="onboarding_title">It\'s  Time to Chat!</string>
-    
+    <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
+    <string name="onboarding_title">It\'s Time to Chat!</string>
+    <string name="onboarding_subtitle">Join the community of users and make your voice heard!</string>
 
 </resources>
