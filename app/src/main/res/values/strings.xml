@@ -4,10 +4,21 @@
     <!-- Common -->
     <string name="register">Register</string>
     <string name="login">Login</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="re_password">Repeat Password</string>
+    <string name="or_continue_with">Or continue with</string>
+    <string name="google_icon">Google Icon</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
     <string name="onboarding_title">It\'s Time to Chat!</string>
     <string name="onboarding_subtitle">Join the community of users and make your voice heard!</string>
+
+    <!-- Register -->
+    <string name="register_header">Join Us Today!</string>
+    <string name="register_sub_header">Welcome! We\'re so glad you\'re here. Signing up is easy and opens up a world of fun conversations.</string>
+    <string name="already_have_acc">Already have an account?</string>
 
 </resources>
