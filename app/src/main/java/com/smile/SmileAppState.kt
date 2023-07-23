@@ -1,24 +1,12 @@
 package com.smile
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Stable
 class SmileAppState(
-    val navController: NavHostController,
-    val snackbarHostState: SnackbarHostState,
-    val coroutineScope: CoroutineScope
+    val navController: NavHostController
 ) {
-
-    init {
-        coroutineScope.launch {
-            snackbarHostState.showSnackbar("Hello World")
-        }
-    }
-
     fun popUp() {
         navController.popBackStack()
     }
