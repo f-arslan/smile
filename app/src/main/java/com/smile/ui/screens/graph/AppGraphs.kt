@@ -16,9 +16,9 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
     composable(ONBOARDING_SCREEN) {
         OnBoardingScreen()
     }
-    composable(REGISTER_SCREEN)  {
-        RegisterScreenProvider(snackbarHostState = appState.snackbarHostState) {
-            appState.clearAndNavigate(HOME_SCREEN)
+    composable(REGISTER_SCREEN) {
+        RegisterScreenProvider(snackbarHostState = appState.snackbarHostState) { destination ->
+            appState.clearAndNavigate(destination)
         }
     }
     composable(LOGIN_SCREEN) {

@@ -1,6 +1,8 @@
 package com.smile.model.service.impl
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthRegistrar
+import com.google.firebase.auth.FirebaseUser
 import com.smile.model.service.AuthService
 import com.smile.model.service.AuthStateResponse
 import com.smile.model.service.ReloadUserResponse
@@ -12,6 +14,7 @@ import com.smile.model.service.SignUpResponse
 import com.smile.model.service.module.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
@@ -21,7 +24,17 @@ import javax.inject.Inject
 class AuthServiceImpl @Inject constructor(
     private val auth: FirebaseAuth
 ) : AuthService {
-    override val currentUser = auth.currentUser
+    override val currentUser: Flow<FirebaseUser?>
+        get() = callbackFlow {
+            val listener = FirebaseAuth.AuthStateListener { auth ->
+                this.trySend(auth.currentUser)
+            }
+            auth.addAuthStateListener(listener)
+            awaitClose {
+                auth.removeAuthStateListener(listener)
+            }
+        }
+
 
     override suspend fun firebaseSignUpWithEmailAndPassword(
         email: String,

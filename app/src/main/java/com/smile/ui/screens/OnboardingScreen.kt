@@ -74,7 +74,6 @@ fun OnboardingBanner(modifier: Modifier) {
             )
         }
     }
-
 }
 
 @Composable

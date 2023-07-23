@@ -20,6 +20,8 @@ import com.smile.common.composables.DefaultButton
 import com.smile.common.composables.DefaultTextField
 import com.smile.common.composables.PasswordTextField
 import com.smile.common.composables.RegisterHeader
+import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import com.smile.ui.view_models.RegisterScreenViewModel
 import com.smile.ui.view_models.RegisterUiState
 import com.smile.util.Constants.HIGH_PADDING
@@ -32,7 +34,7 @@ import com.smile.R.string as AppText
 fun RegisterScreenProvider(
     viewModel: RegisterScreenViewModel = hiltViewModel(),
     snackbarHostState: SnackbarHostState,
-    openAndPopUp: () -> Unit
+    openAndPopUp: (String) -> Unit
 ) {
     val uiState = viewModel.uiState
     RegisterScreen(
@@ -42,10 +44,12 @@ fun RegisterScreenProvider(
         onPasswordChange = viewModel::onPasswordChange,
         onConfirmPasswordChange = viewModel::onRePasswordChange,
         onSignUpClick = {
-            viewModel.onSignUpClick(snackbarHostState, openAndPopUp)
+            viewModel.onSignUpClick(snackbarHostState) {
+                openAndPopUp(HOME_SCREEN)
+            }
         },
         onGoogleClick = viewModel::onGoogleClick,
-        {}
+        onAlreadyHaveAccountClick = { openAndPopUp(LOGIN_SCREEN) }
     )
 }
 

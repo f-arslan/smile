@@ -25,10 +25,10 @@ import javax.inject.Inject
 
 
 data class RegisterUiState(
-    val name: String = "",
-    val email: String = "",
-    val password: String = "",
-    val rePassword: String = ""
+    val name: String = "fatih",
+    val email: String = "fatiharslanedu@gmail.com",
+    val password: String = "Mkal858858",
+    val rePassword: String = "Mkal858858"
 )
 @HiltViewModel
 class RegisterScreenViewModel @Inject constructor(
