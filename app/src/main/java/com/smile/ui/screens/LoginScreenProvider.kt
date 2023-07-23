@@ -1,4 +1,8 @@
 package com.smile.ui.screens
 
-class LoginScreenProvider {
+import androidx.compose.runtime.Composable
+
+@Composable
+fun LoginScreenProvider() {
+
 }
