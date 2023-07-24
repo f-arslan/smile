@@ -21,4 +21,11 @@
     <string name="register_sub_header">Welcome! We\'re so glad you\'re here. Signing up is easy and opens up a world of fun conversations.</string>
     <string name="already_have_acc">Already have an account?</string>
 
+
+    <!-- Verify -->
+    <string name="verify_email">Verify Your Email</string>
+    <string name="verify_description">Check your email for a verification link</string>
+    <string name="no_worries">Didn\'t receive it? No worries!</string>
+    <string name="resend_verification">Resend Verification</string>
+
 </resources>

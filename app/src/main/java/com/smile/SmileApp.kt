@@ -17,9 +17,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.smile.model.service.module.AuthState
 import com.smile.ui.screens.RegisterScreenProvider
+import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.ONBOARDING_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.VERIFY_SCREEN
 import com.smile.ui.screens.graph.appGraph
 import com.smile.ui.view_models.AppViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -33,9 +36,12 @@ fun SmileApp(viewModel: AppViewModel = hiltViewModel()) {
     ) {
         val appState = rememberAppState()
         val authState by viewModel.authState.collectAsStateWithLifecycle()
-        Log.d("SmileApp", "authState: $authState")
+        val startDestination = when (authState) {
+            AuthState.Unauthenticated -> ONBOARDING_SCREEN
+            else -> LOGIN_SCREEN
+        }
         Scaffold(snackbarHost = { appState.snackbarHostState }) {
-            NavHost(navController = appState.navController, startDestination = REGISTER_SCREEN) {
+            NavHost(navController = appState.navController, startDestination = startDestination) {
                 appGraph(appState)
             }
         }
