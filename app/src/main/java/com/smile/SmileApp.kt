@@ -1,30 +1,33 @@
 package com.smile
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.content.res.Resources
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.smile.model.service.module.AuthState
-import com.smile.ui.screens.RegisterScreenProvider
-import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
+import com.smile.common.snackbar.SnackbarManager
 import com.smile.ui.screens.graph.SmileRoutes.ONBOARDING_SCREEN
-import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
-import com.smile.ui.screens.graph.SmileRoutes.VERIFY_SCREEN
 import com.smile.ui.screens.graph.appGraph
 import com.smile.ui.view_models.AppViewModel
+import com.smile.util.Constants.MEDIUM_PADDING
 import kotlinx.coroutines.CoroutineScope
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -36,24 +39,36 @@ fun SmileApp(viewModel: AppViewModel = hiltViewModel()) {
     ) {
         val appState = rememberAppState()
         val authState by viewModel.authState.collectAsStateWithLifecycle()
-        val startDestination = when (authState) {
-            AuthState.Unauthenticated -> ONBOARDING_SCREEN
-            else -> LOGIN_SCREEN
-        }
-        Scaffold(snackbarHost = { appState.snackbarHostState }) {
-            NavHost(navController = appState.navController, startDestination = startDestination) {
+        Scaffold(snackbarHost = {
+            SnackbarHost(
+                hostState = appState.snackbarHostState,
+                modifier = Modifier.padding(MEDIUM_PADDING),
+                snackbar = { snackbarData ->
+                    Snackbar(snackbarData = snackbarData)
+                }
+            )
+        }) {
+            NavHost(navController = appState.navController, startDestination = ONBOARDING_SCREEN) {
                 appGraph(appState)
             }
         }
     }
 }
 
+@Composable
+@ReadOnlyComposable
+fun resources(): Resources {
+    LocalConfiguration.current
+    return LocalContext.current.resources
+}
 
 @Composable
 fun rememberAppState(
     navController: NavHostController = rememberNavController(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    snackbarManager: SnackbarManager = SnackbarManager,
+    resources: Resources = resources(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) = remember(navController, snackbarHostState, coroutineScope) {
-    SmileAppState(navController, snackbarHostState, coroutineScope)
+    SmileAppState(navController, snackbarHostState, snackbarManager, resources, coroutineScope)
 }

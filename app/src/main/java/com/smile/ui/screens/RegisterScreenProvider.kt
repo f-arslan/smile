@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -18,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.smile.common.composables.DefaultApp
 import com.smile.common.composables.DefaultButton
 import com.smile.common.composables.DefaultTextField
+import com.smile.common.composables.FormWrapper
 import com.smile.common.composables.PasswordTextField
 import com.smile.common.composables.RegisterHeader
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
@@ -25,8 +25,6 @@ import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import com.smile.ui.view_models.RegisterScreenViewModel
 import com.smile.ui.view_models.RegisterUiState
 import com.smile.util.Constants.HIGH_PADDING
-import com.smile.util.Constants.MEDIUM_PADDING
-import com.smile.util.Constants.VERY_MAX_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
 
@@ -44,7 +42,7 @@ fun RegisterScreenProvider(
         onPasswordChange = viewModel::onPasswordChange,
         onConfirmPasswordChange = viewModel::onRePasswordChange,
         onSignUpClick = {
-            viewModel.onSignUpClick(snackbarHostState) {
+            viewModel.onSignUpClick {
                 openAndPopUp(HOME_SCREEN)
             }
         },
@@ -70,15 +68,7 @@ fun RegisterScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         RegisterHeader()
-        Column(
-            modifier = Modifier.padding(
-                start = VERY_MAX_PADDING,
-                top = MEDIUM_PADDING,
-                end = VERY_MAX_PADDING
-            ),
-            verticalArrangement = Arrangement.spacedBy(HIGH_PADDING),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        FormWrapper {
             DefaultTextField(uiState.name, AppText.name, onNameChange)
             DefaultTextField(uiState.email, AppText.email, onEmailChange)
             PasswordTextField(uiState.password, AppText.password, onPasswordChange)

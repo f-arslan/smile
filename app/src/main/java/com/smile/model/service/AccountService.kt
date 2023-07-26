@@ -14,7 +14,7 @@ typealias SendPasswordResetEmailResponse = Response<Boolean>
 typealias RevokeAccessResponse = Response<Boolean>
 typealias AuthStateResponse = StateFlow<Boolean>
 
-interface AuthService {
+interface AccountService {
     val currentUser: Flow<FirebaseUser?>
     suspend fun firebaseSignUpWithEmailAndPassword(email: String, password: String): SignUpResponse
 

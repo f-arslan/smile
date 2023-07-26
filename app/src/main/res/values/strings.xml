@@ -8,8 +8,10 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="re_password">Repeat Password</string>
+    <string name="recovery_password">Recovery password</string>
     <string name="or_continue_with">Or continue with</string>
     <string name="google_icon">Google Icon</string>
+    <string name="generic_error">Something wrong happened. Please try again.</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
@@ -20,7 +22,16 @@
     <string name="register_header">Join Us Today!</string>
     <string name="register_sub_header">Welcome! We\'re so glad you\'re here. Signing up is easy and opens up a world of fun conversations.</string>
     <string name="already_have_acc">Already have an account?</string>
+    <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
+    <string name="password_match_error">Passwords do not match.</string>
+    <string name="email_error">Please insert a valid email.</string>
 
+    <!-- Login -->
+    <string name="login_header">Hello Again!</string>
+    <string name="login_sub_header">Welcome back you\'ve been missed</string>
+    <string name="not_a_member">Not a member?</string>
+    <string name="register_now">Register now</string>
+    <string name="empty_password_error">Password cannot be empty.</string>
 
     <!-- Verify -->
     <string name="verify_email">Verify Your Email</string>

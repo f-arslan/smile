@@ -30,7 +30,7 @@ import com.smile.R.string as AppText
 @Composable
 fun DefaultTextField(
     value: String,
-    @StringRes placeholder: Int,
+    @StringRes label: Int,
     onValueChange: (String) -> Unit
 ) {
 
@@ -39,12 +39,8 @@ fun DefaultTextField(
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = value,
-        placeholder = { Text(text = stringResource(id = placeholder)) },
+        label = { Text(text = stringResource(id = label)) },
         shape = RoundedCornerShape(MEDIUM_PADDING),
-        colors = TextFieldDefaults.colors(
-            unfocusedIndicatorColor = Color.Transparent,
-            focusedIndicatorColor = Color.Transparent
-        ),
         trailingIcon = {
             if (shouldShowClearIcon.value) {
                 IconButton(onClick = {
@@ -68,7 +64,7 @@ fun DefaultTextField(
 @Composable
 fun PasswordTextField(
     value: String,
-    @StringRes placeholder: Int,
+    @StringRes label: Int,
     onValueChange: (String) -> Unit
 ) {
     var isVisible by remember { mutableStateOf(false) }
@@ -81,12 +77,8 @@ fun PasswordTextField(
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = value,
-        placeholder = { Text(text = stringResource(id = placeholder)) },
+        label = { Text(text = stringResource(id = label)) },
         shape = RoundedCornerShape(MEDIUM_PADDING),
-        colors = TextFieldDefaults.colors(
-            unfocusedIndicatorColor = Color.Transparent,
-            focusedIndicatorColor = Color.Transparent
-        ),
         trailingIcon = {
             IconButton(onClick = { isVisible = !isVisible }) {
                 Icon(painter = painterResource(icon), contentDescription = null)

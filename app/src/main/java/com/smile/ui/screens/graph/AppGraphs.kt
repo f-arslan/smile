@@ -14,7 +14,9 @@ import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 
 fun NavGraphBuilder.appGraph(appState: SmileAppState) {
     composable(ONBOARDING_SCREEN) {
-        OnBoardingScreen()
+        OnBoardingScreen { destination ->
+            appState.clearAndNavigate(destination)
+        }
     }
     composable(REGISTER_SCREEN) {
         RegisterScreenProvider(snackbarHostState = appState.snackbarHostState) { destination ->
@@ -22,7 +24,9 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
         }
     }
     composable(LOGIN_SCREEN) {
-        LoginScreenProvider()
+        LoginScreenProvider { destination ->
+            appState.clearAndNavigate(destination)
+        }
     }
     composable(HOME_SCREEN) {
         HomeScreenProvider()

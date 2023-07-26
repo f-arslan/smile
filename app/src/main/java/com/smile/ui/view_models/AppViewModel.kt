@@ -2,7 +2,8 @@ package com.smile.ui.view_models
 
 import androidx.lifecycle.viewModelScope
 import com.smile.SmileViewModel
-import com.smile.model.service.AuthService
+import com.smile.model.service.AccountService
+import com.smile.model.service.LogService
 import com.smile.model.service.module.AuthState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -14,13 +15,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
-    private val authService: AuthService
-) : SmileViewModel() {
+    private val authService: AccountService,
+    logService: LogService
+) : SmileViewModel(logService) {
     private val _authState = MutableStateFlow<AuthState>(AuthState.Loading)
     val authState: StateFlow<AuthState> = _authState
 
     init {
-        authService.signOut()
         viewModelScope.launch {
             authService.currentUser.collect {
                 async { authService.reloadFirebaseUser() }.await()

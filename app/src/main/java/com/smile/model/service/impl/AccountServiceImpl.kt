@@ -1,9 +1,8 @@
 package com.smile.model.service.impl
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthRegistrar
 import com.google.firebase.auth.FirebaseUser
-import com.smile.model.service.AuthService
+import com.smile.model.service.AccountService
 import com.smile.model.service.AuthStateResponse
 import com.smile.model.service.ReloadUserResponse
 import com.smile.model.service.RevokeAccessResponse
@@ -21,9 +20,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class AuthServiceImpl @Inject constructor(
+class AccountServiceImpl @Inject constructor(
     private val auth: FirebaseAuth
-) : AuthService {
+) : AccountService {
     override val currentUser: Flow<FirebaseUser?>
         get() = callbackFlow {
             val listener = FirebaseAuth.AuthStateListener { auth ->
