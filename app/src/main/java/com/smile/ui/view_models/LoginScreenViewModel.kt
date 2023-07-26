@@ -1,6 +1,5 @@
 package com.smile.ui.view_models
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -29,9 +28,9 @@ class LoginScreenViewModel @Inject constructor(
     private var _uiState by mutableStateOf(LoginUiState("fatiharslanedu@gmail.com", "Mkal858858"))
     val uiState: LoginUiState
         get() = _uiState
-    var signInResponse by mutableStateOf<SignInResponse>(Response.Success(false))
-        private set
 
+    private var signInResponse by mutableStateOf<SignInResponse>(Response.Success(false))
+    private var emailVerificationResponse by mutableStateOf<Response<Boolean>>(Response.Success(false))
 
     fun onEmailChange(newValue: String) {
         _uiState = _uiState.copy(email = newValue)
@@ -52,12 +51,34 @@ class LoginScreenViewModel @Inject constructor(
         }
 
         launchCatching {
-            val signInResponse =
+            signInResponse =
                 accountService.firebaseSignInWithEmailAndPassword(uiState.email, uiState.password)
-            Log.d("LoginScreenViewModel", "onLoginClick: signInResponse: $signInResponse")
-            if (signInResponse is Response.Success) {
-                openAndPopUp(HOME_SCREEN)
+            when (val result = signInResponse) {
+                is Response.Success -> {
+                    if (result.data) {
+                        checkEmailVerification(openAndPopUp)
+                    } else {
+                        SnackbarManager.showMessage(AppText.email_or_password_error)
+                    }
+                }
+                else -> {
+                    SnackbarManager.showMessage(AppText.email_or_password_error)
+                }
             }
+        }
+    }
+
+    private fun checkEmailVerification(openAndPopUp: (String) -> Unit) {
+        emailVerificationResponse =  accountService.isEmailVerified
+        when (val result = emailVerificationResponse) {
+            is Response.Success -> {
+                if (result.data) {
+                    openAndPopUp(HOME_SCREEN)
+                } else {
+                    SnackbarManager.showMessage(AppText.please_verify_email)
+                }
+            }
+            else -> {}
         }
     }
 

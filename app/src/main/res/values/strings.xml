@@ -12,6 +12,8 @@
     <string name="or_continue_with">Or continue with</string>
     <string name="google_icon">Google Icon</string>
     <string name="generic_error">Something wrong happened. Please try again.</string>
+    <string name="please_verify_email">Please verify your email. Also check your spam folder as well.</string>
+    <string name="email_or_password_error">Email or password is incorrect.</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
