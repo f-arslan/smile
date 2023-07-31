@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ChatScreenProvider(viewModel: ChatScreenViewModel = hiltViewModel()) {
-    val uiState
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

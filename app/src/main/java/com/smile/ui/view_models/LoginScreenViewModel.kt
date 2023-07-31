@@ -55,16 +55,12 @@ class LoginScreenViewModel @Inject constructor(
             when (val result = signInResponse) {
                 is Response.Success -> {
                     if (result.data) {
-                        if (accountService.isEmailVerified) {
-                            openAndPopUp(HOME_SCREEN)
-                        } else {
-                            SnackbarManager.showMessage(AppText.please_verify_email)
-                        }
+                        openAndPopUp(HOME_SCREEN)
+
                     } else {
                         SnackbarManager.showMessage(AppText.email_or_password_error)
                     }
                 }
-
                 else -> {
                     SnackbarManager.showMessage(AppText.email_or_password_error)
                 }

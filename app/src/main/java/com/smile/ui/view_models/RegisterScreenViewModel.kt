@@ -86,7 +86,6 @@ class RegisterScreenViewModel @Inject constructor(
                 SnackbarManager.showMessage(AppText.generic_error)
                 return@launch
             }
-            async { sendEmailVerification() }.await()
             openAndPopUp()
         }
     }
@@ -96,13 +95,7 @@ class RegisterScreenViewModel @Inject constructor(
         signUpResponse = accountService.firebaseSignUpWithEmailAndPassword(email, password)
     }
 
-    private suspend fun sendEmailVerification() {
-        sendEmailVerificationResponse = Response.Loading
-        sendEmailVerificationResponse = accountService.sendEmailVerification()
-    }
-
     fun onGoogleClick() {
 
     }
-
 }
