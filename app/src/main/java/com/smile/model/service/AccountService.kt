@@ -12,12 +12,11 @@ typealias SignInResponse = Response<Boolean>
 typealias ReloadUserResponse = Response<Boolean>
 typealias SendPasswordResetEmailResponse = Response<Boolean>
 typealias RevokeAccessResponse = Response<Boolean>
-typealias EmailVerifiedResponse = Response<Boolean>
 typealias AuthStateResponse = StateFlow<Boolean>
 
 interface AccountService {
     val currentUser: Flow<FirebaseUser?>
-    val isEmailVerified: EmailVerifiedResponse
+    val isEmailVerified: Boolean
     suspend fun firebaseSignUpWithEmailAndPassword(email: String, password: String): SignUpResponse
 
     suspend fun sendEmailVerification(): SendEmailVerificationResponse

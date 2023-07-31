@@ -30,7 +30,6 @@ class LoginScreenViewModel @Inject constructor(
         get() = _uiState
 
     private var signInResponse by mutableStateOf<SignInResponse>(Response.Success(false))
-    private var emailVerificationResponse by mutableStateOf<Response<Boolean>>(Response.Success(false))
 
     fun onEmailChange(newValue: String) {
         _uiState = _uiState.copy(email = newValue)
@@ -56,29 +55,20 @@ class LoginScreenViewModel @Inject constructor(
             when (val result = signInResponse) {
                 is Response.Success -> {
                     if (result.data) {
-                        checkEmailVerification(openAndPopUp)
+                        if (accountService.isEmailVerified) {
+                            openAndPopUp(HOME_SCREEN)
+                        } else {
+                            SnackbarManager.showMessage(AppText.please_verify_email)
+                        }
                     } else {
                         SnackbarManager.showMessage(AppText.email_or_password_error)
                     }
                 }
+
                 else -> {
                     SnackbarManager.showMessage(AppText.email_or_password_error)
                 }
             }
-        }
-    }
-
-    private fun checkEmailVerification(openAndPopUp: (String) -> Unit) {
-        emailVerificationResponse =  accountService.isEmailVerified
-        when (val result = emailVerificationResponse) {
-            is Response.Success -> {
-                if (result.data) {
-                    openAndPopUp(HOME_SCREEN)
-                } else {
-                    SnackbarManager.showMessage(AppText.please_verify_email)
-                }
-            }
-            else -> {}
         }
     }
 

@@ -41,4 +41,13 @@
     <string name="no_worries">Didn\'t receive it? No worries!</string>
     <string name="resend_verification">Resend Verification</string>
 
+
+    <!-- Chat Screen -->
+    <string name="smile_icon">Smile Icon</string>
+    <string name="attach_icon">Attach Icon</string>
+    <string name="camera_icon">Camera Icon</string>
+    <string name="send_icon">Send Icon</string>
+    <string name="chat_text_field_placeholder">Ready when you are…</string>
+    <string name="chat_text_field_desc">Chat Text Field</string>
+
 </resources>

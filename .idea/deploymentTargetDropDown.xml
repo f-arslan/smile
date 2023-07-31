@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="ChatFieldPreview">
+        <State />
+      </entry>
       <entry key="TextFieldPreview">
         <State />
       </entry>

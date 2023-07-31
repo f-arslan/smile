@@ -1,11 +1,9 @@
 package com.smile.model.service.impl
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.smile.model.service.AccountService
 import com.smile.model.service.AuthStateResponse
-import com.smile.model.service.EmailVerifiedResponse
 import com.smile.model.service.ReloadUserResponse
 import com.smile.model.service.RevokeAccessResponse
 import com.smile.model.service.SendEmailVerificationResponse
@@ -36,12 +34,8 @@ class AccountServiceImpl @Inject constructor(
             }
         }
 
-    override val isEmailVerified: EmailVerifiedResponse
-        get() = if (auth.currentUser?.isEmailVerified == true) {
-            Response.Success(true)
-        } else {
-            Response.Success(false)
-        }
+    override val isEmailVerified: Boolean
+        get() = auth.currentUser?.isEmailVerified ?: false
 
     override suspend fun firebaseSignUpWithEmailAndPassword(
         email: String,
