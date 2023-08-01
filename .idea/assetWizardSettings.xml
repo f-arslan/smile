@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialiconsoutlined/camera_alt/outline_camera_alt_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialiconsoutlined/keyboard_alt/outline_keyboard_alt_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +28,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="outline_camera_alt_24" />
+                            <entry key="outputName" value="outline_keyboard_alt_24" />
                             <entry key="sourceFile" value="C:\Users\fatih\Desktop\project_file\logo_white.svg" />
                           </map>
                         </option>

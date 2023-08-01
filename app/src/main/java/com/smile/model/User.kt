@@ -1,10 +1,12 @@
 package com.smile.model
 
+import com.google.firebase.firestore.DocumentId
+
 data class User(
-    val id: String = "",
+    @DocumentId val userId: String = "",
     val displayName: String = "",
-    val friends: List<String> = emptyList(),
     val profilePictureUrl: String = "",
+    val friends: List<String> = emptyList(), // user id's
     val isEmailVerified : Boolean = false,
     val status: UserStatus = UserStatus.OFFLINE
 )

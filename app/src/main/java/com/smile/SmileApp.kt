@@ -24,6 +24,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.smile.common.snackbar.SnackbarManager
+import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.ONBOARDING_SCREEN
 import com.smile.ui.screens.graph.appGraph
 import com.smile.ui.view_models.AppViewModel
@@ -48,7 +50,7 @@ fun SmileApp(viewModel: AppViewModel = hiltViewModel()) {
                 }
             )
         }) {
-            NavHost(navController = appState.navController, startDestination = ONBOARDING_SCREEN) {
+            NavHost(navController = appState.navController, startDestination = CONTACT_SCREEN) {
                 appGraph(appState)
             }
         }

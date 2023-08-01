@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.smile.R.drawable as AppDrawable
@@ -70,9 +71,19 @@ fun NavigationTopAppBar(@StringRes title: Int, popUp: () -> Unit) {
     }
 }
 
+@Composable
+fun ContactTopAppBar(
+    textFieldValue: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    popUp: () -> Unit
+) {
+    Column {
+        NavigationTopAppBar(title = AppText.new_conversation, popUp)
+        ContactTextField(textFieldValue, onValueChange)
+    }
+}
 
 @Composable
 @Preview(showBackground = true)
 fun HeaderPreview() {
-    LoginHeader()
 }

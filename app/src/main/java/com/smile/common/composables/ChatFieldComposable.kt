@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.util.Constants.SMALL_PADDING
 import com.smile.util.Constants.VERY_HIGH_PADDING
 import com.smile.R.drawable as AppDrawable
@@ -63,8 +65,14 @@ fun ChatField(
     // Used to decide if the keyboard should be shown
     var textFieldFocusState by remember { mutableStateOf(false) }
 
-    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(SMALL_PADDING)) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(MEDIUM_PADDING),
+        horizontalArrangement = Arrangement.spacedBy(SMALL_PADDING)
+    ) {
         UserInputText(
+            modifier = Modifier.weight(1f),
             textFieldValue = textState,
             onTextChanged = { textState = it },
             keyboardShown = currentInputSelector == InputSelector.NONE && textFieldFocusState,
@@ -83,6 +91,7 @@ fun ChatField(
 
 @Composable
 fun UserInputText(
+    modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
     textFieldValue: TextFieldValue,
     onTextChanged: (TextFieldValue) -> Unit,
@@ -117,8 +126,7 @@ fun UserInputText(
             unfocusedIndicatorColor = Color.Transparent
         ),
         onValueChange = { onTextChanged(it) },
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .onFocusChanged { state ->
                 if (lastFocusState != state.isFocused) {
                     onTextFieldFocused(state.isFocused)

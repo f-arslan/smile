@@ -50,4 +50,14 @@
     <string name="chat_text_field_placeholder">Ready when you are…</string>
     <string name="chat_text_field_desc">Chat Text Field</string>
 
+    <!-- Home Screen -->
+    <string name="message_icon">Message Icon</string>
+
+    <!-- Contact Screen -->
+    <string name="new_conversation">New conversation</string>
+    <string name="type_name_phone_number">Type a name or phone number</string>
+    <string name="to">To</string>
+    <string name="dial_pad">Dial Pad</string>
+    <string name="keyboard">Keyboard</string>
+
 </resources>
