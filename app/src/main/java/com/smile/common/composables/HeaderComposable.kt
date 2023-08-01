@@ -2,6 +2,7 @@ package com.smile.common.composables
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -80,10 +81,12 @@ fun ContactTopAppBar(
     Column {
         NavigationTopAppBar(title = AppText.new_conversation, popUp)
         ContactTextField(textFieldValue, onValueChange)
+        Divider()
     }
 }
 
 @Composable
 @Preview(showBackground = true)
 fun HeaderPreview() {
+    ContactTopAppBar(textFieldValue = TextFieldValue(""), onValueChange = {}, popUp = {})
 }

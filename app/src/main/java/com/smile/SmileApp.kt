@@ -50,7 +50,7 @@ fun SmileApp(viewModel: AppViewModel = hiltViewModel()) {
                 }
             )
         }) {
-            NavHost(navController = appState.navController, startDestination = CONTACT_SCREEN) {
+            NavHost(navController = appState.navController, startDestination = HOME_SCREEN) {
                 appGraph(appState)
             }
         }
