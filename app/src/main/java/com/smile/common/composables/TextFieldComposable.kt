@@ -36,7 +36,8 @@ import com.smile.R.string as AppText
 fun DefaultTextField(
     value: String,
     @StringRes label: Int,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    enabled: Boolean = true,
 ) {
 
     val shouldShowClearIcon = remember { mutableStateOf(false) }
@@ -44,6 +45,7 @@ fun DefaultTextField(
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = value,
+        enabled = enabled,
         label = { Text(text = stringResource(id = label)) },
         shape = RoundedCornerShape(MEDIUM_PADDING),
         trailingIcon = {

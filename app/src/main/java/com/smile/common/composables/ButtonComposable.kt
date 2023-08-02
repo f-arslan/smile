@@ -46,6 +46,13 @@ fun DefaultButton(@StringRes text: Int, onClick: () -> Unit, modifier: Modifier 
 }
 
 @Composable
+fun BottomButton(@StringRes text: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Button(modifier = modifier, onClick = onClick) {
+        Text(text = stringResource(id = text))
+    }
+}
+
+@Composable
 fun DefaultOutlinedButton(@StringRes text: Int, onClick: () -> Unit) {
     OutlinedButton(onClick = onClick) {
         Text(text = stringResource(id = text))
@@ -80,6 +87,7 @@ fun NewContactButton(onClick: () -> Unit) {
         Text(text = stringResource(id = AppText.new_contact), fontWeight = FontWeight.SemiBold)
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun ButtonPreview() {

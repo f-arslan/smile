@@ -1,10 +1,14 @@
 package com.smile.common.composables
 
+import android.content.res.Configuration
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -166,14 +171,18 @@ val KeyboardShownKey = SemanticsPropertyKey<Boolean>("KeyboardShownKey")
 var SemanticsPropertyReceiver.keyboardShownProperty by KeyboardShownKey
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true,
+    uiMode = UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
+)
 fun ChatFieldPreview() {
-    UserInputText(
-        keyboardType = KeyboardType.Text,
-        onTextChanged = {},
-        textFieldValue = TextFieldValue(""),
-        keyboardShown = false,
-        onTextFieldFocused = {},
-        focusState = false
-    )
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+        UserInputText(
+            keyboardType = KeyboardType.Text,
+            onTextChanged = {},
+            textFieldValue = TextFieldValue(""),
+            keyboardShown = false,
+            onTextFieldFocused = {},
+            focusState = false
+        )
+    }
 }
