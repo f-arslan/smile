@@ -59,5 +59,13 @@
     <string name="to">To</string>
     <string name="dial_pad">Dial Pad</string>
     <string name="keyboard">Keyboard</string>
+    <string name="new_contact">New contact</string>
+    <string name="new_contact_icon">New contact Icon</string>
+
+    <!-- New Contact Screen -->
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone_number">Phone</string>
+    <string name="save">Save</string>
 
 </resources>

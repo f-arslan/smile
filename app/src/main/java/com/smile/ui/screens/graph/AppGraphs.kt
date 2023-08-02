@@ -6,11 +6,13 @@ import com.smile.SmileAppState
 import com.smile.ui.screens.ContactScreenProvider
 import com.smile.ui.screens.HomeScreenProvider
 import com.smile.ui.screens.LoginScreenProvider
+import com.smile.ui.screens.NewContactScreenProvider
 import com.smile.ui.screens.OnBoardingScreen
 import com.smile.ui.screens.RegisterScreenProvider
 import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.NEW_CONTACT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.ONBOARDING_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 
@@ -33,6 +35,15 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
     }
 
     composable(CONTACT_SCREEN) {
-        ContactScreenProvider(popUp = { appState.popUp() })
+        ContactScreenProvider(
+            popUp = { appState.popUp() },
+            navigateNewContact = {
+                appState.navigate(NEW_CONTACT_SCREEN)
+            }
+        )
+    }
+
+    composable(NEW_CONTACT_SCREEN) {
+        NewContactScreenProvider(popUp = { appState.popUp() })
     }
 }
