@@ -67,5 +67,7 @@
     <string name="last_name">Last Name</string>
     <string name="phone_number">Phone</string>
     <string name="save">Save</string>
+    <string name="require_first_name">First name is required.</string>
+    <string name="require_last_name">Last name is required.</string>
 
 </resources>

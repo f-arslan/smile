@@ -40,7 +40,6 @@ fun NewContactScreenProvider(
         viewModel::onFirstNameChange,
         viewModel::onLastNameChange,
         viewModel::onEmailChange,
-        viewModel::onPhoneNumberChange,
         viewModel::onSaveClick
     )
 }
@@ -53,7 +52,6 @@ fun NewContactScreen(
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
-    onPhoneNumberChange: (String) -> Unit,
     onSaveClick: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
@@ -102,5 +100,5 @@ fun NewContactPreview() {
         onFirstNameChange = {},
         onLastNameChange = {},
         onEmailChange = {},
-        onPhoneNumberChange = {}, {})
+         {})
 }

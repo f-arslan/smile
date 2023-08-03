@@ -5,6 +5,7 @@ import com.google.firebase.firestore.DocumentId
 data class Message(
     @DocumentId val messageId: String = "",
     val senderId: String = "",
+    val recipientId: String = "",
     val content: String = "",
     val timestamp: Long = 0L,
     val readBy: List<String> = emptyList(), // user id's
