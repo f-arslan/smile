@@ -29,7 +29,7 @@ import com.smile.R.string as AppText
 
 
 @Composable
-fun DefaultApp(@DrawableRes icon: Int, @StringRes contentDescription: Int, onClick: () -> Unit) {
+fun FloAppButton(@DrawableRes icon: Int, @StringRes contentDescription: Int, onClick: () -> Unit) {
     FloatingActionButton(onClick = onClick) {
         Image(
             painter = painterResource(icon),

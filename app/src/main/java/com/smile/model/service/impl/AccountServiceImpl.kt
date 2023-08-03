@@ -1,8 +1,8 @@
 package com.smile.model.service.impl
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.smile.model.service.AccountService
+import com.smile.model.service.AuthEmailStateResponse
 import com.smile.model.service.AuthStateResponse
 import com.smile.model.service.ReloadUserResponse
 import com.smile.model.service.RevokeAccessResponse
@@ -13,7 +13,6 @@ import com.smile.model.service.SignUpResponse
 import com.smile.model.service.module.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
@@ -23,19 +22,9 @@ import javax.inject.Inject
 class AccountServiceImpl @Inject constructor(
     private val auth: FirebaseAuth
 ) : AccountService {
-    override val currentUser: Flow<FirebaseUser?>
-        get() = callbackFlow {
-            val listener = FirebaseAuth.AuthStateListener { auth ->
-                this.trySend(auth.currentUser)
-            }
-            auth.addAuthStateListener(listener)
-            awaitClose {
-                auth.removeAuthStateListener(listener)
-            }
-        }
 
-    override val isEmailVerified: Boolean
-        get() = auth.currentUser?.isEmailVerified ?: false
+    override val currentUserId: String
+        get() = auth.currentUser?.uid.orEmpty()
 
     override suspend fun firebaseSignUpWithEmailAndPassword(
         email: String,
@@ -106,4 +95,15 @@ class AccountServiceImpl @Inject constructor(
         auth.addAuthStateListener(listener)
         awaitClose { auth.removeAuthStateListener(listener) }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
+    override fun getAuthEmailState(viewModelScope: CoroutineScope): AuthEmailStateResponse =
+        callbackFlow {
+            val listener = FirebaseAuth.AuthStateListener { auth ->
+                val user = auth.currentUser
+                if (user != null) {
+                    trySend(user.isEmailVerified)
+                }
+            }
+            awaitClose { auth.removeAuthStateListener(listener) }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 }

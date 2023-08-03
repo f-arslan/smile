@@ -14,6 +14,8 @@
     <string name="generic_error">Something wrong happened. Please try again.</string>
     <string name="please_verify_email">Please verify your email. Also check your spam folder as well.</string>
     <string name="email_or_password_error">Email or password is incorrect.</string>
+    <string name="close">CLOSE</string>
+    <string name="confirm_icon">Confirm Icon</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
@@ -27,6 +29,7 @@
     <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
     <string name="password_match_error">Passwords do not match.</string>
     <string name="email_error">Please insert a valid email.</string>
+    <string name="email_confirmation_body">Please check your inbox for the confirmation email and click the verification link to complete signup. Contact support if you don\'t receive it.</string>
 
     <!-- Login -->
     <string name="login_header">Hello Again!</string>
@@ -69,5 +72,6 @@
     <string name="save">Save</string>
     <string name="require_first_name">First name is required.</string>
     <string name="require_last_name">Last name is required.</string>
+
 
 </resources>

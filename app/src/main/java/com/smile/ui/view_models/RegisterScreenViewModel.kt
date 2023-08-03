@@ -11,9 +11,10 @@ import com.smile.common.ext.passwordMatches
 import com.smile.common.snackbar.SnackbarManager
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
-import com.smile.model.service.SendEmailVerificationResponse
 import com.smile.model.service.SignUpResponse
+import com.smile.model.service.StorageService
 import com.smile.model.service.module.Response
+import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -30,17 +31,18 @@ data class RegisterUiState(
 @HiltViewModel
 class RegisterScreenViewModel @Inject constructor(
     private val accountService: AccountService,
+    private val storageService: StorageService,
     logService: LogService
 ) : SmileViewModel(logService) {
     private var _uiState by mutableStateOf(RegisterUiState())
 
-    var signUpResponse by mutableStateOf<SignUpResponse>(Response.Success(false))
-        private set
-
-    var sendEmailVerificationResponse by mutableStateOf<SendEmailVerificationResponse>(
-        Response.Success(false)
+    private var signUpResponse by mutableStateOf<SignUpResponse>(Response.Success(false))
+    private var sendEmailVerificationResponse by mutableStateOf<Response<Boolean>>(
+        Response.Success(
+            false
+        )
     )
-        private set
+
     val uiState: RegisterUiState
         get() = _uiState
 
@@ -81,19 +83,24 @@ class RegisterScreenViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-            async { signUpWithEmailAndPassword(email, password) }.await()
+            async {
+                signUpResponse = accountService.firebaseSignUpWithEmailAndPassword(email, password)
+            }.await()
             if (signUpResponse is Response.Failure) {
-                SnackbarManager.showMessage(AppText.generic_error)
+                SnackbarManager.showMessage((signUpResponse as Response.Failure).e.message.toString())
+                return@launch
+            }
+            if (signUpResponse is Response.Success && !(signUpResponse as Response.Success<Boolean>).data)
+                return@launch
+            async { sendEmailVerificationResponse = accountService.sendEmailVerification() }.await()
+            if (sendEmailVerificationResponse is Response.Failure) {
+                SnackbarManager.showMessage((sendEmailVerificationResponse as Response.Failure).e.message.toString())
                 return@launch
             }
             openAndPopUp()
         }
     }
 
-    private suspend fun signUpWithEmailAndPassword(email: String, password: String) {
-        signUpResponse = Response.Loading
-        signUpResponse = accountService.firebaseSignUpWithEmailAndPassword(email, password)
-    }
 
     fun onGoogleClick() {
 

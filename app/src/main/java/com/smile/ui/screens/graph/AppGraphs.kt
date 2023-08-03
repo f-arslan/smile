@@ -23,7 +23,7 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
         }
     }
     composable(REGISTER_SCREEN) {
-        RegisterScreenProvider(snackbarHostState = appState.snackbarHostState) { destination ->
+        RegisterScreenProvider { destination ->
             appState.clearAndNavigate(destination)
         }
     }

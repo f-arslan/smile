@@ -1,8 +1,10 @@
 package com.smile.ui.view_models
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
 import com.smile.SmileViewModel
 import com.smile.common.ext.isValidEmail
 import com.smile.common.snackbar.SnackbarManager
@@ -12,6 +14,7 @@ import com.smile.model.service.SignInResponse
 import com.smile.model.service.module.Response
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 import com.smile.R.string as AppText
 
@@ -53,10 +56,15 @@ class LoginScreenViewModel @Inject constructor(
             signInResponse =
                 accountService.firebaseSignInWithEmailAndPassword(uiState.email, uiState.password)
             when (val result = signInResponse) {
-                is Response.Success -> {
+                is Response.Success  -> {
                     if (result.data) {
-                        openAndPopUp(HOME_SCREEN)
-
+                        val authEmailState = accountService.getAuthEmailState(viewModelScope)
+                        authEmailState.collect {
+                            Log.d("LoginScreenViewModel", "onLoginClick: $it")
+                            if (it) {
+                                openAndPopUp(HOME_SCREEN)
+                            }
+                        }
                     } else {
                         SnackbarManager.showMessage(AppText.email_or_password_error)
                     }

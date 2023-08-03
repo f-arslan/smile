@@ -95,7 +95,6 @@ fun NewContactPreview() {
             firstName = "Robin Crosby",
             lastName = "Darryl Cummings",
             email = "lonnie.neal@example.com",
-            phoneNumber = "(148) 671-6357"
         ),
         onFirstNameChange = {},
         onLastNameChange = {},

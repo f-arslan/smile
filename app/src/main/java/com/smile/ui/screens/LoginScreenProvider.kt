@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -14,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.smile.R
-import com.smile.common.composables.DefaultApp
+import com.smile.common.composables.FloAppButton
 import com.smile.common.composables.DefaultButton
 import com.smile.common.composables.DefaultTextField
 import com.smile.common.composables.FormWrapper
@@ -53,6 +54,7 @@ fun LoginScreen(
     onNotMemberClick: () -> Unit
 ) {
     Column(
+        modifier = Modifier.statusBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(HIGH_PADDING),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -66,7 +68,7 @@ fun LoginScreen(
             text = stringResource(id = AppText.or_continue_with),
             style = MaterialTheme.typography.titleMedium
         )
-        DefaultApp(R.drawable.google_32, AppText.google_icon, onGoogleClick)
+        FloAppButton(R.drawable.google_32, AppText.google_icon, onGoogleClick)
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {

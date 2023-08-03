@@ -28,8 +28,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="baseline_person_add_alt_24" />
-                            <entry key="sourceFile" value="C:\Users\fatih\Desktop\project_file\logo_white.svg" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="confirm_badge" />
+                            <entry key="sourceFile" value="C:\Users\fatih\Desktop\project_file\confirm_badge.svg" />
                           </map>
                         </option>
                       </PersistentState>

@@ -7,12 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.smile.util.Constants
+import com.smile.util.Constants.MEDIUM_PADDING
+import com.smile.util.Constants.VERY_HIGH_PADDING
 
 @Composable
 fun HeaderWrapper(content: @Composable () -> Unit) {
     Column(
-        modifier = Modifier.padding(Constants.VERY_HIGH_PADDING),
-        verticalArrangement = Arrangement.spacedBy(Constants.HIGH_PADDING),
+        modifier = Modifier.padding(horizontal = VERY_HIGH_PADDING, vertical = MEDIUM_PADDING),
+        verticalArrangement = Arrangement.spacedBy(Constants.MEDIUM_PADDING),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         content()
@@ -23,9 +25,9 @@ fun HeaderWrapper(content: @Composable () -> Unit) {
 fun FormWrapper(content: @Composable () -> Unit) {
     Column(
         modifier = Modifier.padding(
-            start = Constants.VERY_MAX_PADDING,
+            start = Constants.HIGH_PADDING,
             top = Constants.MEDIUM_PADDING,
-            end = Constants.VERY_MAX_PADDING
+            end = Constants.HIGH_PADDING
         ),
         verticalArrangement = Arrangement.spacedBy(Constants.HIGH_PADDING),
         horizontalAlignment = Alignment.CenterHorizontally

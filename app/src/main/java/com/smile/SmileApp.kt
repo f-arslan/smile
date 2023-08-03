@@ -28,6 +28,7 @@ import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.NEW_CONTACT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.ONBOARDING_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import com.smile.ui.screens.graph.appGraph
 import com.smile.ui.view_models.AppViewModel
 import com.smile.util.Constants.MEDIUM_PADDING
@@ -41,7 +42,6 @@ fun SmileApp(viewModel: AppViewModel = hiltViewModel()) {
         color = MaterialTheme.colorScheme.background
     ) {
         val appState = rememberAppState()
-        val authState by viewModel.authState.collectAsStateWithLifecycle()
         Scaffold(snackbarHost = {
             SnackbarHost(
                 hostState = appState.snackbarHostState,
@@ -51,7 +51,7 @@ fun SmileApp(viewModel: AppViewModel = hiltViewModel()) {
                 }
             )
         }) {
-            NavHost(navController = appState.navController, startDestination = HOME_SCREEN) {
+            NavHost(navController = appState.navController, startDestination = REGISTER_SCREEN) {
                 appGraph(appState)
             }
         }

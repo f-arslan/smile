@@ -4,37 +4,52 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.smile.common.composables.DefaultApp
 import com.smile.common.composables.DefaultButton
 import com.smile.common.composables.DefaultTextField
+import com.smile.common.composables.FloAppButton
 import com.smile.common.composables.FormWrapper
 import com.smile.common.composables.PasswordTextField
 import com.smile.common.composables.RegisterHeader
-import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
+import com.smile.common.composables.VerificationDialog
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import com.smile.ui.view_models.RegisterScreenViewModel
 import com.smile.ui.view_models.RegisterUiState
-import com.smile.util.Constants.HIGH_PADDING
+import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
 
 @Composable
 fun RegisterScreenProvider(
     viewModel: RegisterScreenViewModel = hiltViewModel(),
-    snackbarHostState: SnackbarHostState,
     openAndPopUp: (String) -> Unit
 ) {
+
     val uiState = viewModel.uiState
+    var verificationState by rememberSaveable {
+        mutableStateOf(false)
+    }
+    if (verificationState) {
+        VerificationDialog(text = AppText.email_confirmation_body) {
+            verificationState = false
+            openAndPopUp(LOGIN_SCREEN)
+        }
+    }
     RegisterScreen(
         uiState = uiState,
         onNameChange = viewModel::onNameChange,
@@ -43,7 +58,7 @@ fun RegisterScreenProvider(
         onConfirmPasswordChange = viewModel::onRePasswordChange,
         onSignUpClick = {
             viewModel.onSignUpClick {
-                openAndPopUp(HOME_SCREEN)
+                verificationState = true
             }
         },
         onGoogleClick = viewModel::onGoogleClick,
@@ -63,9 +78,13 @@ fun RegisterScreen(
     onGoogleClick: () -> Unit,
     onAlreadyHaveAccountClick: () -> Unit
 ) {
+    val scrollState = rememberScrollState()
     Column(
-        verticalArrangement = Arrangement.spacedBy(HIGH_PADDING),
-        horizontalAlignment = Alignment.CenterHorizontally
+        verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .statusBarsPadding()
+            .verticalScroll(scrollState)
     ) {
         RegisterHeader()
         FormWrapper {
@@ -79,7 +98,7 @@ fun RegisterScreen(
             text = stringResource(id = AppText.or_continue_with),
             style = MaterialTheme.typography.titleMedium
         )
-        DefaultApp(AppDrawable.google_32, AppText.google_icon, onGoogleClick)
+        FloAppButton(AppDrawable.google_32, AppText.google_icon, onGoogleClick)
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
