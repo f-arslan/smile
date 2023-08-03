@@ -11,12 +11,12 @@ The Open-Source Chat App is a cross-platform chat application built from scratch
 
 - Real-time messaging
 - User authentication and registration
-- Private and group chats
-- Multimedia sharing (images, videos, files)
-- Push notifications
-- Emojis and rich text formatting
-- Online/offline status
-- User profiles and avatars
+- Private and group chats 
+- Multimedia sharing (images, videos, files) (under development)
+- Push notifications (under development)
+- Emojis and rich text formatting 
+- Online/offline status (under development)
+- User profiles and avatars (under development)
 
 ## Tech Stack
 
@@ -24,7 +24,7 @@ The app is built using the following technologies and tools:
 
 - Kotlin
 - Jetpack Compose
-- Firebase Realtime Database
+- Firebase Firestore
 - Firebase Authentication
 - Hilt for dependency injection
 - Material Design 3
