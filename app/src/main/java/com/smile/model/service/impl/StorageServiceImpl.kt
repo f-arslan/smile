@@ -30,14 +30,41 @@ class StorageServiceImpl @Inject constructor(
     override suspend fun saveContact(firstContact: Contact, secondContact: Contact) {
         // Create transaction to save both contacts
         firestore.runTransaction { transition ->
+            // Append userId to user's contactIds
+            val user1Snapshot =
+                transition.get(firestore.collection(USER_COLLECTION).document(firstContact.userId))
+            val user2Snapshot =
+                transition.get(firestore.collection(USER_COLLECTION).document(secondContact.userId))
+
+            val existingIds1 = user1Snapshot.get(USER_CONTACT_IDS_FIELD) as List<*>
+            val existingIds2 = user2Snapshot.get(USER_CONTACT_IDS_FIELD) as List<*>
+
+            if (!existingIds1.contains(firstContact.contactUserId)) {
+                transition.update(
+                    firestore.collection(USER_COLLECTION).document(firstContact.userId),
+                    USER_CONTACT_IDS_FIELD,
+                    existingIds1 + firstContact.contactUserId
+                )
+            }
+
+            if (!existingIds2.contains(secondContact.contactUserId)) {
+                transition.update(
+                    firestore.collection(USER_COLLECTION).document(secondContact.userId),
+                    USER_CONTACT_IDS_FIELD,
+                    existingIds2 + secondContact.contactUserId
+                )
+            }
+
             transition.set(
-                firestore.collection(CONTACT_COLLECTION).document(firstContact.contactId),
+                firestore.collection(CONTACT_COLLECTION).document(),
                 firstContact
             )
             transition.set(
-                firestore.collection(CONTACT_COLLECTION).document(secondContact.contactId),
+                firestore.collection(CONTACT_COLLECTION).document(),
                 secondContact
             )
+
+            null
         }
     }
 
@@ -47,12 +74,11 @@ class StorageServiceImpl @Inject constructor(
         firestore.collection(USER_COLLECTION)
             .whereEqualTo("email", email)
             .get()
-            .addOnSuccessListener { querySnapshot ->
-                for (document in querySnapshot) {
-                    userId = document.id
-                    break //exit loop after first match
+            .addOnSuccessListener {
+                if (!it.isEmpty) {
+                    userId = it.documents[0].id
                 }
-            }
+            }.await()
         return userId
     }
 
@@ -60,6 +86,7 @@ class StorageServiceImpl @Inject constructor(
     companion object {
         private const val CONTACT_COLLECTION = "contacts"
         private const val USER_COLLECTION = "users"
+        private const val USER_CONTACT_IDS_FIELD = "contactIds"
 
     }
 }

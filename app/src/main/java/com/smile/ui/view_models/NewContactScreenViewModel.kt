@@ -62,6 +62,7 @@ class NewContactScreenViewModel @Inject constructor(
             Log.d("NewContactScreenViewModel", "contactUserId: $contactUserId")
             storageService.user.collect {
                 if (it != null && contactUserId != null) {
+                    Log.d("NewContactScreenViewModel", "it.userId: ${it.userId}")
                     val firstContact = Contact(
                         userId = accountService.currentUserId,
                         contactUserId = contactUserId,
