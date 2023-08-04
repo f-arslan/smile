@@ -1,6 +1,7 @@
 package com.smile.model.service.impl
 
 import com.google.firebase.auth.FirebaseAuth
+import com.smile.model.User
 import com.smile.model.service.AccountService
 import com.smile.model.service.AuthStateResponse
 import com.smile.model.service.ReloadUserResponse
@@ -12,6 +13,7 @@ import com.smile.model.service.SignUpResponse
 import com.smile.model.service.module.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
@@ -21,9 +23,6 @@ import javax.inject.Inject
 class AccountServiceImpl @Inject constructor(
     private val auth: FirebaseAuth
 ) : AccountService {
-
-    override val reloadUser: Boolean
-        get() =  auth.currentUser?.reload()?.isSuccessful ?: false
 
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()

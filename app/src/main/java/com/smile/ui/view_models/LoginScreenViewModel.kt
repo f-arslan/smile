@@ -1,6 +1,5 @@
 package com.smile.ui.view_models
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,6 +10,7 @@ import com.smile.common.snackbar.SnackbarManager
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
 import com.smile.model.service.SignInResponse
+import com.smile.model.service.StorageService
 import com.smile.model.service.module.Response
 import com.smile.model.service.module.map
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
@@ -28,6 +28,7 @@ data class LoginUiState(
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
     private val accountService: AccountService,
+    private val storageService: StorageService,
     logService: LogService
 ) : SmileViewModel(logService) {
     private var _uiState by mutableStateOf(LoginUiState("fatiharslanedu@gmail.com", "Mkal858858"))
@@ -73,10 +74,12 @@ class LoginScreenViewModel @Inject constructor(
         }
     }
 
+
     fun checkEmailVerification() {
         viewModelScope.launch(Dispatchers.IO) {
             accountService.reloadFirebaseUser()
             if (accountService.isEmailVerified)
+                storageService.updateUserEmailVerification()
                 emailVerification.value = true
         }
     }

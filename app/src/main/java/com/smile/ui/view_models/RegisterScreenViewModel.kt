@@ -9,6 +9,7 @@ import com.smile.common.ext.isValidEmail
 import com.smile.common.ext.isValidPassword
 import com.smile.common.ext.passwordMatches
 import com.smile.common.snackbar.SnackbarManager
+import com.smile.model.User
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
 import com.smile.model.service.SignUpResponse
@@ -16,6 +17,7 @@ import com.smile.model.service.StorageService
 import com.smile.model.service.module.Response
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,6 +50,9 @@ class RegisterScreenViewModel @Inject constructor(
 
     private val email
         get() = uiState.email.trim()
+
+    private val name
+        get() = uiState.name.trim()
 
     private val password
         get() = uiState.password
@@ -82,6 +87,10 @@ class RegisterScreenViewModel @Inject constructor(
             SnackbarManager.showMessage(AppText.password_match_error)
             return
         }
+        if (name.isBlank()) {
+            SnackbarManager.showMessage(AppText.require_first_name)
+            return
+        }
         viewModelScope.launch {
             async {
                 signUpResponse = accountService.firebaseSignUpWithEmailAndPassword(email, password)
@@ -97,10 +106,17 @@ class RegisterScreenViewModel @Inject constructor(
                 SnackbarManager.showMessage((sendEmailVerificationResponse as Response.Failure).e.message.toString())
                 return@launch
             }
+            saveToDatabase()
             openAndPopUp()
         }
     }
 
+
+    private fun saveToDatabase() {
+        viewModelScope.launch(Dispatchers.IO) {
+            storageService.saveUser(User(accountService.currentUserId, name, email))
+        }
+    }
 
     fun onGoogleClick() {
 

@@ -1,7 +1,9 @@
 package com.smile.model.service
 
+import com.smile.model.User
 import com.smile.model.service.module.Response
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 typealias SignUpResponse = Response<Boolean>
@@ -15,7 +17,6 @@ typealias AuthStateResponse = StateFlow<Boolean>
 interface AccountService {
     val currentUserId: String
     val isEmailVerified: Boolean
-    val reloadUser: Boolean
     suspend fun firebaseSignUpWithEmailAndPassword(email: String, password: String): SignUpResponse
 
     suspend fun sendEmailVerification(): SendEmailVerificationResponse

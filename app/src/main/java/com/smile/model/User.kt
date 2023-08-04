@@ -5,8 +5,10 @@ import com.google.firebase.firestore.DocumentId
 data class User(
     @DocumentId val userId: String = "",
     val displayName: String = "",
+    val email: String = "",
     val profilePictureUrl: String = "",
     val isEmailVerified : Boolean = false,
+    val contactIds: List<String> = emptyList()
 )
 
 data class Status(
