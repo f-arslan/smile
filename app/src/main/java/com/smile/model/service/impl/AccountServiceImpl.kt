@@ -2,7 +2,6 @@ package com.smile.model.service.impl
 
 import com.google.firebase.auth.FirebaseAuth
 import com.smile.model.service.AccountService
-import com.smile.model.service.AuthEmailStateResponse
 import com.smile.model.service.AuthStateResponse
 import com.smile.model.service.ReloadUserResponse
 import com.smile.model.service.RevokeAccessResponse
@@ -23,9 +22,14 @@ class AccountServiceImpl @Inject constructor(
     private val auth: FirebaseAuth
 ) : AccountService {
 
+    override val reloadUser: Boolean
+        get() =  auth.currentUser?.reload()?.isSuccessful ?: false
+
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
 
+    override val isEmailVerified: Boolean
+        get() = auth.currentUser?.isEmailVerified ?: false
     override suspend fun firebaseSignUpWithEmailAndPassword(
         email: String,
         password: String
@@ -96,14 +100,4 @@ class AccountServiceImpl @Inject constructor(
         awaitClose { auth.removeAuthStateListener(listener) }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
-    override fun getAuthEmailState(viewModelScope: CoroutineScope): AuthEmailStateResponse =
-        callbackFlow {
-            val listener = FirebaseAuth.AuthStateListener { auth ->
-                val user = auth.currentUser
-                if (user != null) {
-                    trySend(user.isEmailVerified)
-                }
-            }
-            awaitClose { auth.removeAuthStateListener(listener) }
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 }
