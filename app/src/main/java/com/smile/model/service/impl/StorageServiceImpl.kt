@@ -1,5 +1,6 @@
 package com.smile.model.service.impl
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.dataObjects
 import com.smile.model.Contact
@@ -38,12 +39,16 @@ class StorageServiceImpl @Inject constructor(
 
             val existingIds1 = user1Snapshot.get(USER_CONTACT_IDS_FIELD) as List<*>
             val existingIds2 = user2Snapshot.get(USER_CONTACT_IDS_FIELD) as List<*>
+            // add contactId to user's contactIds
+            val updatedIds1 = existingIds1 + firstContact.contactUserId
+            val updatedIds2 = existingIds2 + secondContact.contactUserId
 
             if (!existingIds1.contains(firstContact.contactUserId)) {
+                Log.d("StorageService", "firstContact.contactUserId: ${firstContact.contactUserId}")
                 transition.update(
                     firestore.collection(USER_COLLECTION).document(firstContact.userId),
                     USER_CONTACT_IDS_FIELD,
-                    existingIds1 + firstContact.contactUserId
+                    updatedIds1
                 )
             }
 
@@ -51,18 +56,23 @@ class StorageServiceImpl @Inject constructor(
                 transition.update(
                     firestore.collection(USER_COLLECTION).document(secondContact.userId),
                     USER_CONTACT_IDS_FIELD,
-                    existingIds2 + secondContact.contactUserId
+                    updatedIds2
                 )
             }
 
-            transition.set(
-                firestore.collection(CONTACT_COLLECTION).document(),
-                firstContact
-            )
-            transition.set(
-                firestore.collection(CONTACT_COLLECTION).document(),
-                secondContact
-            )
+            if (!existingIds1.contains(firstContact.contactUserId)) {
+                transition.set(
+                    firestore.collection(CONTACT_COLLECTION).document(),
+                    firstContact
+                )
+            }
+
+            if (!existingIds2.contains(secondContact.contactUserId)) {
+                transition.set(
+                    firestore.collection(CONTACT_COLLECTION).document(),
+                    secondContact
+                )
+            }
 
             null
         }

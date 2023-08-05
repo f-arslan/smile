@@ -1,5 +1,6 @@
 package com.smile.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -21,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.BottomButton
 import com.smile.common.composables.DefaultTextField
+import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.NavigationTopAppBar
 import com.smile.ui.view_models.NewContactScreenViewModel
 import com.smile.ui.view_models.NewContactUiState
@@ -34,6 +36,11 @@ fun NewContactScreenProvider(
     viewModel: NewContactScreenViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
+    Log.d("NewContactScreen", "NewContactScreenProvider: $loadingState")
+    if (loadingState) {
+        LoadingAnimationDialog { viewModel.onLoadingStateChange(false) }
+    }
     NewContactScreen(
         popUp,
         uiState,
@@ -99,5 +106,5 @@ fun NewContactPreview() {
         onFirstNameChange = {},
         onLastNameChange = {},
         onEmailChange = {},
-         {})
+        {})
 }

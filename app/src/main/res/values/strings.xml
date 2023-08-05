@@ -16,6 +16,8 @@
     <string name="email_or_password_error">Email or password is incorrect.</string>
     <string name="close">CLOSE</string>
     <string name="confirm_icon">Confirm Icon</string>
+    <string name="connection_error">Connection error. Would you like to retry?</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>

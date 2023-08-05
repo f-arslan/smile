@@ -28,7 +28,8 @@ class NewContactScreenViewModel @Inject constructor(
 ) : SmileViewModel(logService) {
     private val _uiState = MutableStateFlow(NewContactUiState())
     val uiState = _uiState.asStateFlow()
-
+    private val _loadingState = MutableStateFlow(false)
+    val loadingState = _loadingState.asStateFlow()
 
     fun onFirstNameChange(firstName: String) {
         _uiState.value = _uiState.value.copy(firstName = firstName.trim())
@@ -40,6 +41,10 @@ class NewContactScreenViewModel @Inject constructor(
 
     fun onEmailChange(email: String) {
         _uiState.value = _uiState.value.copy(email = email.trim())
+    }
+
+    fun onLoadingStateChange(loadingState: Boolean) {
+        _loadingState.value = loadingState
     }
 
     fun onSaveClick() {
@@ -58,26 +63,29 @@ class NewContactScreenViewModel @Inject constructor(
             }
         }
         launchCatching {
-            val contactUserId = storageService.findIdByEmail(uiState.value.email)
-            Log.d("NewContactScreenViewModel", "contactUserId: $contactUserId")
-            storageService.user.collect {
-                if (it != null && contactUserId != null) {
-                    Log.d("NewContactScreenViewModel", "it.userId: ${it.userId}")
-                    val firstContact = Contact(
-                        userId = accountService.currentUserId,
-                        contactUserId = contactUserId,
-                        firstName = uiState.value.firstName,
-                        lastName = uiState.value.lastName,
-                        email = uiState.value.email
-                    )
-                    val secondContact = Contact(
-                        userId = contactUserId,
-                        contactUserId = it.userId,
-                        firstName = it.displayName,
-                        email = it.email
-                    )
-                    storageService.saveContact(firstContact, secondContact)
-                }
+            saveContactToDb()
+        }
+    }
+
+    private suspend fun saveContactToDb() {
+        val contactUserId = storageService.findIdByEmail(uiState.value.email)
+        Log.d("NewContactScreenViewModel", "saveContactToDb: $contactUserId")
+        storageService.user.collect {
+            if (it != null && contactUserId != null) {
+                val firstContact = Contact(
+                    userId = accountService.currentUserId,
+                    contactUserId = contactUserId,
+                    firstName = uiState.value.firstName,
+                    lastName = uiState.value.lastName,
+                    email = uiState.value.email
+                )
+                val secondContact = Contact(
+                    userId = contactUserId,
+                    contactUserId = it.userId,
+                    firstName = it.displayName,
+                    email = it.email
+                )
+                storageService.saveContact(firstContact, secondContact)
             }
         }
     }

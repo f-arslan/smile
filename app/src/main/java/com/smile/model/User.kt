@@ -8,7 +8,7 @@ data class User(
     val email: String = "",
     val profilePictureUrl: String = "",
     val isEmailVerified : Boolean = false,
-    val contactIds: List<String> = emptyList()
+    val contactIds: List<String> = emptyList(),
 )
 
 data class Status(

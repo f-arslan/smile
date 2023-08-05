@@ -78,9 +78,10 @@ class LoginScreenViewModel @Inject constructor(
     fun checkEmailVerification() {
         viewModelScope.launch(Dispatchers.IO) {
             accountService.reloadFirebaseUser()
-            if (accountService.isEmailVerified)
+            if (accountService.isEmailVerified) {
                 storageService.updateUserEmailVerification()
                 emailVerification.value = true
+            }
         }
     }
 
