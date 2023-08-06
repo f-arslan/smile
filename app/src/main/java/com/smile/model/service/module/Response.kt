@@ -4,6 +4,7 @@ sealed class Response<out T> {
     object Loading : Response<Nothing>()
     data class Success<out R>(val data: R) : Response<R>()
     data class Failure(val e: Exception) : Response<Nothing>()
+
 }
 
 fun <T, R> Response<T>.map(transform: (T) -> R): Response<R> {

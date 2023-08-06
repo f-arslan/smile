@@ -47,7 +47,12 @@ fun NewContactScreenProvider(
         viewModel::onFirstNameChange,
         viewModel::onLastNameChange,
         viewModel::onEmailChange,
-        viewModel::onSaveClick
+        onSaveClick = {
+            viewModel.onSaveClick {
+                viewModel.onLoadingStateChange(true)
+                viewModel.saveContactToDb()
+            }
+        }
     )
 }
 

@@ -39,6 +39,9 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
             popUp = { appState.popUp() },
             navigateNewContact = {
                 appState.navigate(NEW_CONTACT_SCREEN)
+            },
+            navigateContactChat = {
+
             }
         )
     }

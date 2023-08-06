@@ -62,7 +62,7 @@ fun LoadingAnimationDialog(onDismiss: () -> Unit) {
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             ThreeDotAnimation()
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = onDismiss, enabled = buttonState) {
                 Text(text = stringResource(AppText.cancel), fontWeight = FontWeight.SemiBold)
             }
         }
