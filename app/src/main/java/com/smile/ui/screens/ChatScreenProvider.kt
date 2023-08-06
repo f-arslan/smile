@@ -1,10 +1,8 @@
 package com.smile.ui.screens
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
@@ -19,31 +17,65 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.ChatField
+import com.smile.common.composables.ContactTopAppBar
+import com.smile.common.composables.FunctionalityNotAvailablePopup
+import com.smile.model.Contact
+import com.smile.model.service.module.Response
 import com.smile.ui.view_models.ChatScreenViewModel
-import com.smile.util.Constants.MEDIUM_PADDING
 import kotlinx.coroutines.launch
 
 @Composable
-fun ChatScreenProvider(viewModel: ChatScreenViewModel = hiltViewModel()) {
-    ChatScreen()
+fun ChatScreenProvider(
+    contactId: String,
+    popUp: () -> Unit,
+    viewModel: ChatScreenViewModel = hiltViewModel()
+) {
+    LaunchedEffect(Unit) {
+        viewModel.getContact(contactId)
+    }
+    val contactState by viewModel.contactState.collectAsStateWithLifecycle()
+    when (val res = contactState) {
+        is Response.Success -> {
+            ChatScreen(res.data, popUp)
+        }
+
+        else -> {}
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen() {
+fun ChatScreen(contact: Contact, popUp: () -> Unit) {
     val scrollState = rememberLazyListState()
     val topBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState)
     val scope = rememberCoroutineScope()
+    var notFunctionalState by remember { mutableStateOf(false) }
+    if (notFunctionalState) {
+        FunctionalityNotAvailablePopup {
+            notFunctionalState = false
+        }
+    }
     Scaffold(
         topBar = {
-
+            ContactTopAppBar(
+                contactName = contact.firstName + " " + contact.lastName,
+                popUp = popUp,
+                onMoreClick = {
+                    notFunctionalState = true
+                })
         },
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets
             .exclude(WindowInsets.navigationBars)

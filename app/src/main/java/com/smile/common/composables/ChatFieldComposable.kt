@@ -43,6 +43,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smile.util.Constants.MEDIUM_PADDING
+import com.smile.util.Constants.SMALL_MEDIUM_PADDING
 import com.smile.util.Constants.SMALL_PADDING
 import com.smile.util.Constants.VERY_HIGH_PADDING
 import com.smile.R.drawable as AppDrawable
@@ -74,7 +75,7 @@ fun ChatField(
         modifier = modifier
             .fillMaxWidth()
             .padding(MEDIUM_PADDING),
-        horizontalArrangement = Arrangement.spacedBy(SMALL_PADDING)
+        horizontalArrangement = Arrangement.spacedBy(SMALL_MEDIUM_PADDING)
     ) {
         UserInputText(
             modifier = Modifier.weight(1f),
@@ -106,17 +107,23 @@ fun UserInputText(
 ) {
     var lastFocusState by remember { mutableStateOf(false) }
     val contentDesc = stringResource(id = AppText.chat_text_field_desc)
+    var dialogState by rememberSaveable {
+        mutableStateOf(false)
+    }
+    if (dialogState) {
+        FunctionalityNotAvailablePopup({ dialogState = false })
+    }
     OutlinedTextField(
         value = textFieldValue,
         leadingIcon = {
             DefaultIconButton(AppDrawable.baseline_mood_24, AppText.smile_icon) {
-                TODO("Handle Open emojis")
+                dialogState = true
             }
         },
         trailingIcon = {
             Row {
                 DefaultIconButton(AppDrawable.baseline_attach_file_24, AppText.attach_icon) {
-                    TODO("Handle Attach item case")
+                   dialogState = true
                 }
             }
         },
@@ -171,7 +178,8 @@ val KeyboardShownKey = SemanticsPropertyKey<Boolean>("KeyboardShownKey")
 var SemanticsPropertyReceiver.keyboardShownProperty by KeyboardShownKey
 
 @Composable
-@Preview(showBackground = true,
+@Preview(
+    showBackground = true,
     uiMode = UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
 )
 fun ChatFieldPreview() {

@@ -7,4 +7,5 @@ object SmileRoutes {
     const val HOME_SCREEN = "home_screen"
     const val CONTACT_SCREEN = "contact_screen"
     const val NEW_CONTACT_SCREEN = "new_contact_screen"
+    const val CHAT_SCREEN = "chat_screen"
 }

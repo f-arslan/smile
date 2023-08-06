@@ -27,7 +27,7 @@ class ContactScreenViewModel @Inject constructor(
 
     fun getContacts() {
         viewModelScope.launch {
-            storageService.getContacts(viewModelScope) {
+            storageService.getContacts {
                 _contacts.value = it
             }
         }

@@ -29,14 +29,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.ContactTopAppBar
 import com.smile.common.composables.NewContactButton
 import com.smile.model.Contact
 import com.smile.ui.view_models.ContactScreenViewModel
+import com.smile.util.Constants.AVATAR_SIZE
 import com.smile.util.Constants.HIGH_PADDING
+import com.smile.util.Constants.HIGH_PLUS_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.util.Constants.SMALL_PADDING
 
@@ -51,10 +52,10 @@ fun ContactScreenProvider(
         viewModel.getContacts()
     }
     val textFieldValue by viewModel.textFieldValue.collectAsStateWithLifecycle()
-    val contacts by viewModel.contacts.collectAsStateWithLifecycle()
+    val groupedContacts by viewModel.contacts.collectAsStateWithLifecycle()
     ContactScreen(
         textFieldValue,
-        contacts,
+        groupedContacts,
         viewModel::onTextFieldValueChange,
         popUp,
         navigateNewContact,
@@ -66,7 +67,7 @@ fun ContactScreenProvider(
 @Composable
 fun ContactScreen(
     textFieldValue: TextFieldValue,
-    contacts: List<List<Contact>>,
+    groupContacts: List<List<Contact>>,
     onValueChange: (TextFieldValue) -> Unit,
     popUp: () -> Unit,
     navigateNewContact: () -> Unit,
@@ -82,7 +83,7 @@ fun ContactScreen(
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             NewContactButton(navigateNewContact)
-            for (contact in contacts) {
+            for (contact in groupContacts) {
                 ContactListWithLetter(contact[0].firstName.substring(0, 1), contact) {
                     navigateContactChat(it)
                 }
@@ -101,7 +102,7 @@ fun ContactListWithLetter(
         modifier = Modifier.padding(vertical = MEDIUM_PADDING, horizontal = MEDIUM_PADDING)
     ) {
         Row {
-            Spacer(Modifier.width(20.dp))
+            Spacer(Modifier.width(HIGH_PLUS_PADDING))
             Text(text = label.uppercase(), style = MaterialTheme.typography.titleMedium)
         }
         Spacer(Modifier.height(MEDIUM_PADDING))
@@ -136,7 +137,7 @@ fun ContactItem(name: String, onContactClick: () -> Unit) {
 fun ContactAvatar(letter: String) {
     Surface(
         modifier = Modifier
-            .size(40.dp)
+            .size(AVATAR_SIZE)
             .clip(CircleShape),
         color = MaterialTheme.colorScheme.tertiary
     ) {

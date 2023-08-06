@@ -56,9 +56,26 @@ fun LoginHeader() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationTopAppBar(@StringRes title: Int, popUp: () -> Unit) {
+    TopAppBar(
+        title = { Text(text = stringResource(id = title), fontWeight = FontWeight.Medium) },
+        navigationIcon = {
+            IconButton(
+                onClick = popUp
+            ) {
+                Icon(
+                    painter = painterResource(id = AppDrawable.outline_arrow_circle_left_24),
+                    contentDescription = null
+                )
+            }
+        })
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ContactTopAppBar(contactName: String, popUp: () -> Unit, onMoreClick: () -> Unit) {
     Column {
         TopAppBar(
-            title = { Text(text = stringResource(id = title), fontWeight = FontWeight.Medium) },
+            title = { Text(text = contactName, fontWeight = FontWeight.Medium) },
             navigationIcon = {
                 IconButton(
                     onClick = popUp
@@ -68,7 +85,17 @@ fun NavigationTopAppBar(@StringRes title: Int, popUp: () -> Unit) {
                         contentDescription = null
                     )
                 }
-            })
+            },
+            actions = {
+                IconButton(onClick = onMoreClick) {
+                    Icon(
+                        painter = painterResource(id = AppDrawable.baseline_more_vert_24),
+                        contentDescription = stringResource(id = AppText.options)
+                    )
+                }
+            }
+        )
+        Divider()
     }
 }
 
@@ -88,5 +115,5 @@ fun ContactTopAppBar(
 @Composable
 @Preview(showBackground = true)
 fun HeaderPreview() {
-    ContactTopAppBar(textFieldValue = TextFieldValue(""), onValueChange = {}, popUp = {})
+    ContactTopAppBar(contactName = "Lenore Raymond", popUp = {}) {}
 }

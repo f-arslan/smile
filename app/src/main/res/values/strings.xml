@@ -17,6 +17,7 @@
     <string name="close">CLOSE</string>
     <string name="confirm_icon">Confirm Icon</string>
     <string name="connection_error">Connection error. Would you like to retry?</string>
+    <string name="options">Options</string>
     <string name="cancel">Cancel</string>
 
     <!-- Onboarding -->

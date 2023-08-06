@@ -7,7 +7,6 @@ import com.smile.model.Contact
 import com.smile.model.User
 import com.smile.model.service.AccountService
 import com.smile.model.service.StorageService
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -19,16 +18,13 @@ class StorageServiceImpl @Inject constructor(
     override val user: Flow<User?>
         get() = firestore.collection(USER_COLLECTION).document(auth.currentUserId).dataObjects()
 
-    override val contacts: Flow<List<Contact>>
-        get() = TODO()
-
     override suspend fun saveUser(user: User) {
         firestore.collection(USER_COLLECTION).document(auth.currentUserId).set(user).await()
     }
 
     override suspend fun updateUserEmailVerification() {
         firestore.collection(USER_COLLECTION).document(auth.currentUserId)
-            .update("emailVerified", true).await()
+            .update(EMAIL_VERIFIED, true).await()
     }
 
     override suspend fun saveContact(firstContact: Contact, secondContact: Contact) {
@@ -38,7 +34,9 @@ class StorageServiceImpl @Inject constructor(
             val user1Snapshot =
                 transaction.get(firestore.collection(USER_COLLECTION).document(firstContact.userId))
             val user2Snapshot =
-                transaction.get(firestore.collection(USER_COLLECTION).document(secondContact.userId))
+                transaction.get(
+                    firestore.collection(USER_COLLECTION).document(secondContact.userId)
+                )
 
             val existingIds1 = user1Snapshot.get(USER_CONTACT_IDS_FIELD) as List<*>
             val existingIds2 = user2Snapshot.get(USER_CONTACT_IDS_FIELD) as List<*>
@@ -94,7 +92,6 @@ class StorageServiceImpl @Inject constructor(
     }
 
     override suspend fun getContacts(
-        coroutineScope: CoroutineScope,
         onDataChange: (List<List<Contact>>) -> Unit
     ) {
         firestore.runTransaction { transition ->
@@ -117,6 +114,20 @@ class StorageServiceImpl @Inject constructor(
         }
     }
 
+    override suspend fun getContact(contactId: String, onDataChange: (Contact) -> Unit) {
+        val contactRef = getContactDocRef(contactId)
+        // Listen changes in real time
+        contactRef.addSnapshotListener { snapshot, _ ->
+            Log.d("StorageServiceImpl", "getContact: $snapshot")
+            if (snapshot != null && snapshot.exists()) {
+                val contact = snapshot.toObject(Contact::class.java)
+                Log.d("StorageServiceImpl", "getContact: $contact")
+                if (contact != null)
+                    onDataChange(contact)
+            }
+        }
+    }
+
     private fun getUserCollRef() = firestore.collection(USER_COLLECTION)
     private fun getUserDocRef(id: String) = getUserCollRef().document(id)
 
@@ -129,6 +140,7 @@ class StorageServiceImpl @Inject constructor(
         private const val USER_CONTACT_IDS_FIELD = "contactIds"
         private const val USER_ID = "userId"
         private const val CONTACT_ID = "contactId"
+        private const val EMAIL_VERIFIED = "emailVerified"
 
     }
 }
