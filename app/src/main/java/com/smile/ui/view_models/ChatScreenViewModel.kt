@@ -30,7 +30,10 @@ class ChatScreenViewModel @Inject constructor(
     private val _messagesState = MutableStateFlow<Response<List<Message>>>(Response.Loading)
     val messagesState = _messagesState.asStateFlow()
 
-    fun sendMessage(text: String, recipientId: String) {
+    val currentUserId = accountService.currentUserId
+
+    fun sendMessage(text: String, contactId: String) {
+        val recipientId = contactId.split("_")[1]
         viewModelScope.launch(Dispatchers.IO) {
             storageService.sendMessage(
                 Message(
@@ -44,19 +47,15 @@ class ChatScreenViewModel @Inject constructor(
         }
     }
 
-    fun getMessage(contactId: String) {
-        val recipientId = contactId.split("_")[1]
-        viewModelScope.launch(Dispatchers.IO) {
-            storageService.getMessages(recipientId) {
-                _messagesState.value = Response.Success(it)
-            }
-        }
-    }
-
-    fun getContact(contactId: String) {
+    fun getContactAndMessage(contactId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             storageService.getContact(contactId) {
                 _contactState.value = Response.Success(it)
+            }
+
+            val recipientId = contactId.split("_")[1]
+            storageService.getMessages(recipientId) {
+                _messagesState.value = Response.Success(it)
             }
         }
     }

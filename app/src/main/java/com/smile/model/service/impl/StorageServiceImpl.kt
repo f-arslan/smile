@@ -1,6 +1,5 @@
 package com.smile.model.service.impl
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.dataObjects
@@ -26,7 +25,7 @@ class StorageServiceImpl @Inject constructor(
 
     override suspend fun updateUserEmailVerification() {
         firestore.collection(USER_COLLECTION).document(auth.currentUserId)
-            .update(EMAIL_VERIFIED, true).await()
+            .update(USER_EMAIL_VERIFIED, true).await()
     }
 
     override suspend fun saveContact(firstContact: Contact, secondContact: Contact) {
@@ -124,9 +123,9 @@ class StorageServiceImpl @Inject constructor(
 
     override suspend fun getMessages(recipientId: String, onDataChange: (List<Message>) -> Unit) {
         val query = messageColRef
-            .whereEqualTo(SENDER_ID, auth.currentUserId)
-            .whereEqualTo(RECIPIENT_ID, recipientId)
-            .orderBy(TIMESTAMP, Query.Direction.ASCENDING)
+            .whereEqualTo(MESSAGE_SENDER_ID, auth.currentUserId)
+            .whereEqualTo(MESSAGE_RECIPIENT_ID, recipientId)
+            .orderBy(MESSAGE_TIMESTAMP, Query.Direction.ASCENDING)
         query.addSnapshotListener { snapshot, _ ->
             val messages = snapshot?.toObjects(Message::class.java)
             onDataChange(messages?.toList() ?: emptyList())
@@ -150,9 +149,9 @@ class StorageServiceImpl @Inject constructor(
         private const val USER_CONTACT_IDS_FIELD = "contactIds"
         private const val USER_ID = "userId"
         private const val CONTACT_ID = "contactId"
-        private const val EMAIL_VERIFIED = "emailVerified"
-        private const val SENDER_ID = "senderId"
-        private const val RECIPIENT_ID = "recipientId"
-        private const val TIMESTAMP = "timestamp"
+        private const val USER_EMAIL_VERIFIED = "emailVerified"
+        private const val MESSAGE_SENDER_ID = "senderId"
+        private const val MESSAGE_RECIPIENT_ID = "recipientId"
+        private const val MESSAGE_TIMESTAMP = "timestamp"
     }
 }

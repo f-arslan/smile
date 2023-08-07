@@ -1,14 +1,20 @@
 package com.smile.ui.screens
 
-import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,9 +42,12 @@ import com.smile.common.composables.ContactTopAppBar
 import com.smile.common.composables.FunctionalityNotAvailablePopup
 import com.smile.model.Contact
 import com.smile.model.Message
+import com.smile.model.MessageStatus
 import com.smile.model.service.module.Response
 import com.smile.ui.view_models.ChatScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
+import com.smile.util.Constants.MEDIUM_HIGH_PADDING
+import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.util.Constants.SMALL_PADDING
 import kotlinx.coroutines.launch
 
@@ -49,26 +58,30 @@ fun ChatScreenProvider(
     viewModel: ChatScreenViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
-        viewModel.getContact(contactId)
-        viewModel.getMessage(contactId)
+        viewModel.getContactAndMessage(contactId)
     }
     val contactState by viewModel.contactState.collectAsStateWithLifecycle()
     val messages by viewModel.messagesState.collectAsStateWithLifecycle()
-    Log.d("ChatScreenProvider", "messages: $messages")
-    when (val res = contactState) {
-        is Response.Success -> {
-            ChatScreen(res.data, popUp) {
-                viewModel.sendMessage(it, res.data.contactUserId)
-            }
-        }
-
-        else -> {}
+    if (contactState is Response.Success && messages is Response.Success) {
+        ChatScreen(
+            contact = (contactState as Response.Success<Contact>).data,
+            popUp = popUp,
+            onMessageSent = { viewModel.sendMessage(it, contactId) },
+            messages = (messages as Response.Success<List<Message>>).data,
+            currentUserId = viewModel.currentUserId
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(contact: Contact, popUp: () -> Unit, onMessageSent: (String) -> Unit) {
+fun ChatScreen(
+    contact: Contact,
+    popUp: () -> Unit,
+    onMessageSent: (String) -> Unit,
+    messages: List<Message>,
+    currentUserId: String
+) {
     val scrollState = rememberLazyListState()
     val topBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState)
@@ -79,6 +92,7 @@ fun ChatScreen(contact: Contact, popUp: () -> Unit, onMessageSent: (String) -> U
             notFunctionalState = false
         }
     }
+
     Scaffold(
         topBar = {
             ContactTopAppBar(
@@ -93,14 +107,25 @@ fun ChatScreen(contact: Contact, popUp: () -> Unit, onMessageSent: (String) -> U
             .exclude(WindowInsets.ime),
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
-            Messages(modifier = Modifier.weight(1f))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            Messages(
+                modifier = Modifier.weight(1f),
+                messages = messages,
+                currentUserId,
+                scrollState
+            )
             Surface {
                 ChatField(
-                    onMessageSent = onMessageSent,
+                    onMessageSent = {
+                        onMessageSent(it)
+                    },
                     resetScroll = {
                         scope.launch {
-                            scrollState.scrollToItem(0)
+                            scrollState.animateScrollToItem(messages.size - 1)
                         }
                     },
                     modifier = Modifier
@@ -123,16 +148,36 @@ fun ChatItemBubble(message: Message, isUserMe: Boolean) {
         MaterialTheme.colorScheme.surfaceVariant
     }
 
-    Surface(color = backgroundBubbleColor, shape = ChatBubbleShape) {
-        Text(text = message.content)
+    Surface(
+        color = backgroundBubbleColor, shape = ChatBubbleShape
+    ) {
+        Text(text = message.content, modifier = Modifier.padding(MEDIUM_HIGH_PADDING))
     }
 }
 
 @Composable
-fun Messages(modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
-        Text(text = "Hello")
+fun Messages(
+    modifier: Modifier = Modifier,
+    messages: List<Message>,
+    currentUserId: String,
+    scrollState: LazyListState
+) {
+    val scope = rememberCoroutineScope()
+    Box(modifier = modifier) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(HIGH_PADDING),
+            state = scrollState,
+            verticalArrangement = Arrangement.spacedBy(
+                MEDIUM_PADDING
+            )
+        ) {
+            items(messages, key = { it.messageId }) { // It can be error maybe messageId empty
+                ChatItemBubble(message = it, isUserMe = it.senderId == currentUserId)
+            }
+        }
     }
+
 }
 
 
@@ -141,12 +186,14 @@ fun Messages(modifier: Modifier = Modifier) {
 fun ChatScreenPreview() {
     ChatItemBubble(
         message = Message(
-            messageId = "vivamus",
-            senderId = "vim",
-            recipientId = "ridiculus",
-            content = "feugiat",
-            timestamp = 7807,
+            messageId = "efficiantur",
+            senderId = "ubique",
+            recipientId = "gravida",
+            content = "faucibus",
+            timestamp = 4199,
             readBy = listOf(),
+            status = MessageStatus.SENT
         ), isUserMe = false
+
     )
 }

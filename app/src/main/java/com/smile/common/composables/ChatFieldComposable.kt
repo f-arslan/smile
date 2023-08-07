@@ -21,7 +21,6 @@ import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,11 +30,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.SemanticsPropertyKey
@@ -95,6 +92,7 @@ fun ChatField(
         )
         ChatButton {
             onMessageSent(textState.text)
+            resetScroll()
             textState = TextFieldValue()
         }
     }
@@ -116,7 +114,7 @@ fun UserInputText(
         mutableStateOf(false)
     }
     if (dialogState) {
-        FunctionalityNotAvailablePopup({ dialogState = false })
+        FunctionalityNotAvailablePopup { dialogState = false }
     }
     OutlinedTextField(
         value = textFieldValue,
