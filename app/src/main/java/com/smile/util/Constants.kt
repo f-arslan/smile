@@ -16,4 +16,5 @@ object Constants {
     val VERY_MAX_PADDING = 48.dp
     val ICON_SIZE = 150.dp
     val AVATAR_SIZE = 40.dp
+    val TEXT_FIELD_SIZE = 54.dp
 }

@@ -1,6 +1,7 @@
 package com.smile.model.service
 
 import com.smile.model.Contact
+import com.smile.model.Message
 import com.smile.model.User
 import kotlinx.coroutines.flow.Flow
 
@@ -14,4 +15,8 @@ interface StorageService {
 
     suspend fun getContacts(onDataChange: (List<List<Contact>>) -> Unit)
     suspend fun getContact(contactId: String, onDataChange: (Contact) -> Unit)
+
+    suspend fun sendMessage(message: Message)
+
+    suspend fun getMessages(recipientId: String, onDataChange: (List<Message>) -> Unit)
 }

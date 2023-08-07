@@ -2,8 +2,10 @@ package com.smile.model.service.impl
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.dataObjects
 import com.smile.model.Contact
+import com.smile.model.Message
 import com.smile.model.User
 import com.smile.model.service.AccountService
 import com.smile.model.service.StorageService
@@ -95,22 +97,14 @@ class StorageServiceImpl @Inject constructor(
         onDataChange: (List<List<Contact>>) -> Unit
     ) {
         firestore.runTransaction { transition ->
-            val userRef = transition.get(getUserDocRef(auth.currentUserId))
-            val contactIds = userRef.get(USER_CONTACT_IDS_FIELD) as List<*>
-            val contacts = mutableListOf<Contact>()
-            contactIds.forEach { contactId ->
-                val contactRef = transition.get(getContactDocRef(contactId as String))
-                val contact = contactRef.toObject(Contact::class.java)
-                if (contact != null)
-                    contacts.add(contact)
-            }
-            // Sort contact by their firstName + lastName
-            val sortedContacts = contacts.sortedBy { it.firstName + it.lastName }
-            // Group them by their first letter
-            val groupedContacts = sortedContacts.groupBy { it.firstName.first() }
-            // Convert to list of list
-            val groupedContactsList = groupedContacts.map { it.value }
-            onDataChange(groupedContactsList)
+            val contactIds = transition.get(getUserDocRef(auth.currentUserId))
+                .get(USER_CONTACT_IDS_FIELD) as List<String>
+
+            val contacts = contactIds.asSequence()
+                .map { transition.get(getContactDocRef(it)).toObject(Contact::class.java) }
+                .filterNotNull()
+
+            onDataChange(contacts.groupBy { it.contactUserId }.values.toList())
         }
     }
 
@@ -118,29 +112,47 @@ class StorageServiceImpl @Inject constructor(
         val contactRef = getContactDocRef(contactId)
         // Listen changes in real time
         contactRef.addSnapshotListener { snapshot, _ ->
-            Log.d("StorageServiceImpl", "getContact: $snapshot")
-            if (snapshot != null && snapshot.exists()) {
-                val contact = snapshot.toObject(Contact::class.java)
-                Log.d("StorageServiceImpl", "getContact: $contact")
-                if (contact != null)
-                    onDataChange(contact)
+            snapshot?.toObject(Contact::class.java)?.let {
+                onDataChange(it)
             }
         }
     }
 
-    private fun getUserCollRef() = firestore.collection(USER_COLLECTION)
-    private fun getUserDocRef(id: String) = getUserCollRef().document(id)
+    override suspend fun sendMessage(message: Message) {
+        messageColRef.add(message).await()
+    }
 
-    private fun getContactCollRef() = firestore.collection(CONTACT_COLLECTION)
-    private fun getContactDocRef(id: String) = getContactCollRef().document(id)
+    override suspend fun getMessages(recipientId: String, onDataChange: (List<Message>) -> Unit) {
+        val query = messageColRef
+            .whereEqualTo(SENDER_ID, auth.currentUserId)
+            .whereEqualTo(RECIPIENT_ID, recipientId)
+            .orderBy(TIMESTAMP, Query.Direction.ASCENDING)
+        query.addSnapshotListener { snapshot, _ ->
+            val messages = snapshot?.toObjects(Message::class.java)
+            onDataChange(messages?.toList() ?: emptyList())
+        }
+
+    }
+
+
+    private val messageColRef by lazy { firestore.collection(MESSAGE_COLLECTION) }
+    private val userColRef by lazy { firestore.collection(USER_COLLECTION) }
+    private val contactColRef by lazy { firestore.collection(CONTACT_COLLECTION) }
+
+    private fun getUserDocRef(id: String) = userColRef.document(id)
+    private fun getContactDocRef(id: String) = contactColRef.document(id)
 
     companion object {
         private const val CONTACT_COLLECTION = "contacts"
         private const val USER_COLLECTION = "users"
+        private const val MESSAGE_COLLECTION = "messages"
+
         private const val USER_CONTACT_IDS_FIELD = "contactIds"
         private const val USER_ID = "userId"
         private const val CONTACT_ID = "contactId"
         private const val EMAIL_VERIFIED = "emailVerified"
-
+        private const val SENDER_ID = "senderId"
+        private const val RECIPIENT_ID = "recipientId"
+        private const val TIMESTAMP = "timestamp"
     }
 }

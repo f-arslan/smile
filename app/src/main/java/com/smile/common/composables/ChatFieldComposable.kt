@@ -7,21 +7,23 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Send
-import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,9 +31,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.SemanticsPropertyKey
@@ -43,8 +47,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smile.util.Constants.MEDIUM_PADDING
+import com.smile.util.Constants.NO_PADDING
 import com.smile.util.Constants.SMALL_MEDIUM_PADDING
-import com.smile.util.Constants.SMALL_PADDING
 import com.smile.util.Constants.VERY_HIGH_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
@@ -59,7 +63,6 @@ fun ChatField(
 ) {
     var currentInputSelector by rememberSaveable { mutableStateOf(InputSelector.NONE) }
     val dismissKeyboard = { currentInputSelector = InputSelector.NONE }
-
     if (currentInputSelector != InputSelector.NONE) {
         BackHandler(onBack = dismissKeyboard)
     }
@@ -67,7 +70,6 @@ fun ChatField(
     var textState by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue())
     }
-
     // Used to decide if the keyboard should be shown
     var textFieldFocusState by remember { mutableStateOf(false) }
 
@@ -91,7 +93,10 @@ fun ChatField(
             },
             focusState = textFieldFocusState
         )
-        ChatButton()
+        ChatButton {
+            onMessageSent(textState.text)
+            textState = TextFieldValue()
+        }
     }
 }
 
@@ -123,7 +128,7 @@ fun UserInputText(
         trailingIcon = {
             Row {
                 DefaultIconButton(AppDrawable.baseline_attach_file_24, AppText.attach_icon) {
-                   dialogState = true
+                    dialogState = true
                 }
             }
         },
@@ -133,10 +138,7 @@ fun UserInputText(
             }
         },
         shape = RoundedCornerShape(VERY_HIGH_PADDING),
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        ),
+
         onValueChange = { onTextChanged(it) },
         modifier = modifier
             .onFocusChanged { state ->
@@ -155,8 +157,14 @@ fun UserInputText(
 }
 
 @Composable
-fun ChatButton() {
-    FilledTonalIconButton(onClick = {}, modifier = Modifier.size(54.dp)) {
+fun ChatButton(onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .size(54.dp)
+            .clip(CircleShape),
+        contentPadding = PaddingValues(NO_PADDING)
+    ) {
         Icon(
             imageVector = Icons.Outlined.Send,
             contentDescription = stringResource(AppText.send_icon),

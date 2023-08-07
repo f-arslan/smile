@@ -1,5 +1,6 @@
 package com.smile.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
@@ -9,7 +10,9 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
@@ -32,8 +35,11 @@ import com.smile.common.composables.ChatField
 import com.smile.common.composables.ContactTopAppBar
 import com.smile.common.composables.FunctionalityNotAvailablePopup
 import com.smile.model.Contact
+import com.smile.model.Message
 import com.smile.model.service.module.Response
 import com.smile.ui.view_models.ChatScreenViewModel
+import com.smile.util.Constants.HIGH_PADDING
+import com.smile.util.Constants.SMALL_PADDING
 import kotlinx.coroutines.launch
 
 @Composable
@@ -44,11 +50,16 @@ fun ChatScreenProvider(
 ) {
     LaunchedEffect(Unit) {
         viewModel.getContact(contactId)
+        viewModel.getMessage(contactId)
     }
     val contactState by viewModel.contactState.collectAsStateWithLifecycle()
+    val messages by viewModel.messagesState.collectAsStateWithLifecycle()
+    Log.d("ChatScreenProvider", "messages: $messages")
     when (val res = contactState) {
         is Response.Success -> {
-            ChatScreen(res.data, popUp)
+            ChatScreen(res.data, popUp) {
+                viewModel.sendMessage(it, res.data.contactUserId)
+            }
         }
 
         else -> {}
@@ -57,7 +68,7 @@ fun ChatScreenProvider(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(contact: Contact, popUp: () -> Unit) {
+fun ChatScreen(contact: Contact, popUp: () -> Unit, onMessageSent: (String) -> Unit) {
     val scrollState = rememberLazyListState()
     val topBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState)
@@ -86,9 +97,7 @@ fun ChatScreen(contact: Contact, popUp: () -> Unit) {
             Messages(modifier = Modifier.weight(1f))
             Surface {
                 ChatField(
-                    onMessageSent = {
-
-                    },
+                    onMessageSent = onMessageSent,
                     resetScroll = {
                         scope.launch {
                             scrollState.scrollToItem(0)
@@ -103,6 +112,22 @@ fun ChatScreen(contact: Contact, popUp: () -> Unit) {
     }
 }
 
+private val ChatBubbleShape =
+    RoundedCornerShape(SMALL_PADDING, HIGH_PADDING, HIGH_PADDING, HIGH_PADDING)
+
+@Composable
+fun ChatItemBubble(message: Message, isUserMe: Boolean) {
+    val backgroundBubbleColor = if (isUserMe) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        MaterialTheme.colorScheme.surfaceVariant
+    }
+
+    Surface(color = backgroundBubbleColor, shape = ChatBubbleShape) {
+        Text(text = message.content)
+    }
+}
+
 @Composable
 fun Messages(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
@@ -114,5 +139,14 @@ fun Messages(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun ChatScreenPreview() {
-
+    ChatItemBubble(
+        message = Message(
+            messageId = "vivamus",
+            senderId = "vim",
+            recipientId = "ridiculus",
+            content = "feugiat",
+            timestamp = 7807,
+            readBy = listOf(),
+        ), isUserMe = false
+    )
 }
