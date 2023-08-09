@@ -74,18 +74,17 @@ class NewContactScreenViewModel @Inject constructor(
             delay(250)
             val contactUserId = storageService.findIdByEmail(uiState.value.email)
             storageService.user.collect {
-                Log.d("NewContactScreenViewModel", "saveContactToDb: $it")
                 if (it != null && contactUserId != null) {
                     val firstContact = Contact(
                         userId = accountService.currentUserId,
-                        contactUserId = contactUserId,
+                        friendId = contactUserId,
                         firstName = uiState.value.firstName,
                         lastName = uiState.value.lastName,
                         email = uiState.value.email
                     )
                     val secondContact = Contact(
                         userId = contactUserId,
-                        contactUserId = it.userId,
+                        friendId = accountService.currentUserId,
                         firstName = it.displayName,
                         email = it.email
                     )

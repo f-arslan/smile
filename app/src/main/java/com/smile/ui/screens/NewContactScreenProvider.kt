@@ -39,7 +39,6 @@ fun NewContactScreenProvider(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
-    Log.d("NewContactScreen", "NewContactScreenProvider: $loadingState")
     if (loadingState) {
         LoadingAnimationDialog { viewModel.onLoadingStateChange(false) }
     }

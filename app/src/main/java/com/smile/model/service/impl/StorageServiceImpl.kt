@@ -1,5 +1,6 @@
 package com.smile.model.service.impl
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.dataObjects
@@ -31,46 +32,35 @@ class StorageServiceImpl @Inject constructor(
     override suspend fun saveContact(firstContact: Contact, secondContact: Contact) {
         // Create transaction to save both contacts
         firestore.runTransaction { transaction ->
-            // Append userId to user's contactIds
             val user1Snapshot =
-                transaction.get(firestore.collection(USER_COLLECTION).document(firstContact.userId))
+                transaction.get(getUserDocRef(firstContact.userId))
             val user2Snapshot =
-                transaction.get(
-                    firestore.collection(USER_COLLECTION).document(secondContact.userId)
-                )
+                transaction.get(getUserDocRef(secondContact.userId))
 
             val existingIds1 = user1Snapshot.get(USER_CONTACT_IDS_FIELD) as List<*>
             val existingIds2 = user2Snapshot.get(USER_CONTACT_IDS_FIELD) as List<*>
-            val firstContactId = firstContact.userId + "_" + firstContact.contactUserId
-            val secondContactId = secondContact.userId + "_" + secondContact.contactUserId
-
+            val firstContactId = firstContact.userId + "_" + firstContact.friendId
+            val secondContactId = secondContact.userId + "_" + secondContact.friendId
             if (!existingIds1.contains(firstContactId)) {
                 transaction.update(
-                    firestore.collection(USER_COLLECTION).document(firstContact.userId),
+                    userColRef.document(firstContact.userId),
                     USER_CONTACT_IDS_FIELD,
                     existingIds1 + firstContactId
                 )
-            }
-
-            if (!existingIds2.contains(secondContactId)) {
-                transaction.update(
-                    firestore.collection(USER_COLLECTION).document(secondContact.userId),
-                    USER_CONTACT_IDS_FIELD,
-                    existingIds2 + secondContactId
-                )
-            }
-
-            // Save contacts
-            if (!existingIds1.contains(firstContactId)) {
                 transaction.set(
-                    firestore.collection(CONTACT_COLLECTION).document(firstContactId),
+                    contactColRef.document(firstContactId),
                     firstContact
                 )
             }
 
             if (!existingIds2.contains(secondContactId)) {
+                transaction.update(
+                    userColRef.document(secondContact.userId),
+                    USER_CONTACT_IDS_FIELD,
+                    existingIds2 + secondContactId
+                )
                 transaction.set(
-                    firestore.collection(CONTACT_COLLECTION).document(secondContactId),
+                    contactColRef.document(secondContactId),
                     secondContact
                 )
             }
@@ -103,7 +93,7 @@ class StorageServiceImpl @Inject constructor(
                 .map { transition.get(getContactDocRef(it)).toObject(Contact::class.java) }
                 .filterNotNull()
 
-            onDataChange(contacts.groupBy { it.contactUserId }.values.toList())
+            onDataChange(contacts.groupBy { it.friendId }.values.toList())
         }
     }
 
@@ -147,8 +137,6 @@ class StorageServiceImpl @Inject constructor(
         private const val MESSAGE_COLLECTION = "messages"
 
         private const val USER_CONTACT_IDS_FIELD = "contactIds"
-        private const val USER_ID = "userId"
-        private const val CONTACT_ID = "contactId"
         private const val USER_EMAIL_VERIFIED = "emailVerified"
         private const val MESSAGE_SENDER_ID = "senderId"
         private const val MESSAGE_RECIPIENT_ID = "recipientId"

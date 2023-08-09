@@ -2,13 +2,12 @@ package com.smile.common.composables
 
 import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,73 +25,43 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.SemanticsPropertyKey
 import androidx.compose.ui.semantics.SemanticsPropertyReceiver
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.util.Constants.NO_PADDING
-import com.smile.util.Constants.SMALL_MEDIUM_PADDING
+import com.smile.util.Constants.SMALL_PADDING
 import com.smile.util.Constants.VERY_HIGH_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
 
-enum class InputSelector { NONE, EMOJI, ATTACH }
 
 @Composable
 fun ChatField(
     onMessageSent: (String) -> Unit,
     modifier: Modifier = Modifier,
-    resetScroll: () -> Unit = {}
 ) {
-    var currentInputSelector by rememberSaveable { mutableStateOf(InputSelector.NONE) }
-    val dismissKeyboard = { currentInputSelector = InputSelector.NONE }
-    if (currentInputSelector != InputSelector.NONE) {
-        BackHandler(onBack = dismissKeyboard)
-    }
-
     var textState by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue())
     }
-    // Used to decide if the keyboard should be shown
-    var textFieldFocusState by remember { mutableStateOf(false) }
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(MEDIUM_PADDING),
-        horizontalArrangement = Arrangement.spacedBy(SMALL_MEDIUM_PADDING)
-    ) {
+    Row(modifier = modifier.fillMaxWidth().padding(MEDIUM_PADDING)) {
         UserInputText(
-            modifier = Modifier.weight(1f),
             textFieldValue = textState,
             onTextChanged = { textState = it },
-            keyboardShown = currentInputSelector == InputSelector.NONE && textFieldFocusState,
-            onTextFieldFocused = { focused ->
-                if (focused) {
-                    currentInputSelector = InputSelector.NONE
-                    resetScroll()
-                }
-                textFieldFocusState = focused
-            },
-            focusState = textFieldFocusState
         )
-        ChatButton {
+        Spacer(modifier = Modifier.padding(SMALL_PADDING))
+        ChatButton(modifier = Modifier.weight(1f)) {
             onMessageSent(textState.text)
-            resetScroll()
             textState = TextFieldValue()
         }
     }
@@ -100,22 +69,12 @@ fun ChatField(
 
 @Composable
 fun UserInputText(
-    modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
     textFieldValue: TextFieldValue,
     onTextChanged: (TextFieldValue) -> Unit,
-    keyboardShown: Boolean,
-    onTextFieldFocused: (Boolean) -> Unit,
-    focusState: Boolean
 ) {
-    var lastFocusState by remember { mutableStateOf(false) }
-    val contentDesc = stringResource(id = AppText.chat_text_field_desc)
-    var dialogState by rememberSaveable {
-        mutableStateOf(false)
-    }
-    if (dialogState) {
-        FunctionalityNotAvailablePopup { dialogState = false }
-    }
+    var dialogState by rememberSaveable { mutableStateOf(false) }
+    if (dialogState) { FunctionalityNotAvailablePopup { dialogState = false } }
     OutlinedTextField(
         value = textFieldValue,
         leadingIcon = {
@@ -131,36 +90,24 @@ fun UserInputText(
             }
         },
         placeholder = {
-            if (textFieldValue.text.isEmpty() && !focusState) {
+            if (textFieldValue.text.isEmpty()) {
                 Text(text = stringResource(id = AppText.chat_text_field_placeholder))
             }
         },
         shape = RoundedCornerShape(VERY_HIGH_PADDING),
-
         onValueChange = { onTextChanged(it) },
-        modifier = modifier
-            .onFocusChanged { state ->
-                if (lastFocusState != state.isFocused) {
-                    onTextFieldFocused(state.isFocused)
-                }
-                lastFocusState = state.isFocused
-            }
-            .semantics {
-                contentDescription = contentDesc
-                keyboardShownProperty = keyboardShown
-            },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         maxLines = 1,
     )
 }
 
 @Composable
-fun ChatButton(onClick: () -> Unit) {
+fun ChatButton(modifier: Modifier, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         modifier = Modifier
             .size(54.dp)
-            .clip(CircleShape),
+            .clip(CircleShape).then(modifier),
         contentPadding = PaddingValues(NO_PADDING)
     ) {
         Icon(
@@ -180,8 +127,6 @@ fun DefaultIconButton(@DrawableRes icon: Int, @StringRes desc: Int, onClick: () 
     }
 }
 
-val KeyboardShownKey = SemanticsPropertyKey<Boolean>("KeyboardShownKey")
-var SemanticsPropertyReceiver.keyboardShownProperty by KeyboardShownKey
 
 @Composable
 @Preview(
@@ -192,11 +137,8 @@ fun ChatFieldPreview() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         UserInputText(
             keyboardType = KeyboardType.Text,
-            onTextChanged = {},
             textFieldValue = TextFieldValue(""),
-            keyboardShown = false,
-            onTextFieldFocused = {},
-            focusState = false
+            onTextChanged = {},
         )
     }
 }

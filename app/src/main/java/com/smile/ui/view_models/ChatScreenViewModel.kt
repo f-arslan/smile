@@ -55,7 +55,7 @@ class ChatScreenViewModel @Inject constructor(
 
             val recipientId = contactId.split("_")[1]
             storageService.getMessages(recipientId) {
-                _messagesState.value = Response.Success(it)
+                _messagesState.value = Response.Success(it.reversed())
             }
         }
     }

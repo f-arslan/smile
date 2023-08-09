@@ -7,7 +7,7 @@ data class Contact(
     @DocumentId
     val contactId: String = "",
     val userId: String = "",
-    val contactUserId: String = "",
+    val friendId: String = "",
     val firstName: String = "",
     val lastName: String = "",
     val email: String = "",

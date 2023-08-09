@@ -32,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,9 +47,12 @@ import com.smile.model.MessageStatus
 import com.smile.model.service.module.Response
 import com.smile.ui.view_models.ChatScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
+import com.smile.util.Constants.HIGH_PLUS_PADDING
 import com.smile.util.Constants.MEDIUM_HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.util.Constants.SMALL_PADDING
+import com.smile.util.Constants.VERY_HIGH_PADDING
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 @Composable
@@ -82,25 +86,22 @@ fun ChatScreen(
     messages: List<Message>,
     currentUserId: String
 ) {
+    var notFunctionalState by remember { mutableStateOf(false) }
+    if (notFunctionalState) {
+        FunctionalityNotAvailablePopup { notFunctionalState = false }
+    }
+
     val scrollState = rememberLazyListState()
     val topBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState)
-    val scope = rememberCoroutineScope()
-    var notFunctionalState by remember { mutableStateOf(false) }
-    if (notFunctionalState) {
-        FunctionalityNotAvailablePopup {
-            notFunctionalState = false
-        }
-    }
+
 
     Scaffold(
         topBar = {
             ContactTopAppBar(
                 contactName = contact.firstName + " " + contact.lastName,
                 popUp = popUp,
-                onMoreClick = {
-                    notFunctionalState = true
-                })
+                onMoreClick = { notFunctionalState = true })
         },
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets
             .exclude(WindowInsets.navigationBars)
@@ -113,32 +114,25 @@ fun ChatScreen(
                 .padding(paddingValues)
         ) {
             Messages(
-                modifier = Modifier.weight(1f),
                 messages = messages,
                 currentUserId,
-                scrollState
+                scrollState,
+                modifier = Modifier.weight(1f),
             )
-            Surface {
-                ChatField(
-                    onMessageSent = {
-                        onMessageSent(it)
-                    },
-                    resetScroll = {
-                        scope.launch {
-                            scrollState.animateScrollToItem(messages.size - 1)
-                        }
-                    },
-                    modifier = Modifier
-                        .navigationBarsPadding()
-                        .imePadding()
-                )
-            }
+            ChatField(
+                onMessageSent = {
+                    onMessageSent(it)
+                },
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .imePadding()
+            )
         }
     }
 }
 
 private val ChatBubbleShape =
-    RoundedCornerShape(SMALL_PADDING, HIGH_PADDING, HIGH_PADDING, HIGH_PADDING)
+    RoundedCornerShape(HIGH_PLUS_PADDING)
 
 @Composable
 fun ChatItemBubble(message: Message, isUserMe: Boolean) {
@@ -155,19 +149,20 @@ fun ChatItemBubble(message: Message, isUserMe: Boolean) {
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Messages(
-    modifier: Modifier = Modifier,
     messages: List<Message>,
     currentUserId: String,
-    scrollState: LazyListState
+    scrollState: LazyListState,
+    modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
     Box(modifier = modifier) {
         LazyColumn(
+            reverseLayout = true,
+            state = scrollState,
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(HIGH_PADDING),
-            state = scrollState,
             verticalArrangement = Arrangement.spacedBy(
                 MEDIUM_PADDING
             )
@@ -175,6 +170,9 @@ fun Messages(
             items(messages, key = { it.messageId }) { // It can be error maybe messageId empty
                 ChatItemBubble(message = it, isUserMe = it.senderId == currentUserId)
             }
+        }
+        LaunchedEffect(messages.size) {
+            scrollState.animateScrollToItem(0)
         }
     }
 
