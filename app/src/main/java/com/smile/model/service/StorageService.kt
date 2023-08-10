@@ -18,5 +18,5 @@ interface StorageService {
 
     suspend fun sendMessage(message: Message)
 
-    suspend fun getMessages(recipientId: String, onDataChange: (List<Message>) -> Unit)
+    suspend fun getMessages(senderId: String, recipientId: String, onDataChange: (List<Message>) -> Unit)
 }

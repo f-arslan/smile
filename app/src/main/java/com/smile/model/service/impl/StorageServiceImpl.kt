@@ -1,6 +1,5 @@
 package com.smile.model.service.impl
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.dataObjects
@@ -115,16 +114,26 @@ class StorageServiceImpl @Inject constructor(
         getContactDocRef(secondContact).update(CONTACT_LAST_MESSAGE, message)
     }
 
-    override suspend fun getMessages(recipientId: String, onDataChange: (List<Message>) -> Unit) {
-        val query = messageColRef
-            .whereEqualTo(MESSAGE_SENDER_ID, auth.currentUserId)
+    override suspend fun getMessages(senderId: String, recipientId: String, onDataChange: (List<Message>) -> Unit){
+        val query1 = messageColRef
+            .whereEqualTo(MESSAGE_SENDER_ID, senderId)
             .whereEqualTo(MESSAGE_RECIPIENT_ID, recipientId)
             .orderBy(MESSAGE_TIMESTAMP, Query.Direction.ASCENDING)
-        query.addSnapshotListener { snapshot, _ ->
-            val messages = snapshot?.toObjects(Message::class.java)
-            onDataChange(messages?.toList() ?: emptyList())
-        }
 
+        val query2 = messageColRef
+            .whereEqualTo(MESSAGE_SENDER_ID, recipientId)
+            .whereEqualTo(MESSAGE_RECIPIENT_ID, senderId)
+            .orderBy(MESSAGE_TIMESTAMP, Query.Direction.ASCENDING)
+
+        val messages = mutableListOf<Message>()
+        query1.get().await().documents.forEach {
+            messages.add(it.toObject(Message::class.java)!!)
+        }
+        query2.get().await().documents.forEach {
+            messages.add(it.toObject(Message::class.java)!!)
+        }
+        onDataChange(messages)
+        
     }
 
 

@@ -27,6 +27,7 @@ import com.smile.common.snackbar.SnackbarManager
 import com.smile.ui.screens.graph.SmileRoutes.CHAT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.NEW_CONTACT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.ONBOARDING_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN

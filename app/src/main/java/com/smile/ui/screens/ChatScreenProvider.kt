@@ -218,10 +218,10 @@ fun Messages(
         ) {
             val messageGrouped = messages.groupBy { isTodayOrDate(it.timestamp) }
             messageGrouped.forEach { (date, messagesForDate) ->
-                items(messagesForDate) {
+                items(messagesForDate, key = { it.messageId }) {
                     ChatItemBubble(message = it, isUserMe = it.senderId == currentUserId)
                 }
-                item {
+                stickyHeader {
                     DayHeader(dayString = date)
                 }
             }
