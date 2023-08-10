@@ -989,7 +989,7 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
         public VersionAccessors(ProviderFactory providers, DefaultVersionCatalog config) { super(providers, config); }
 
             /**
-             * Returns the version associated to this alias: agp (8.2.0-alpha14)
+             * Returns the version associated to this alias: agp (8.2.0-alpha15)
              * If the version is a rich version and that its not expressible as a
              * single version string, then an empty string is returned.
              * This version was declared in catalog libs.versions.toml
@@ -997,7 +997,7 @@ public class LibrariesForLibsInPluginsBlock extends AbstractExternalDependencyFa
             public Provider<String> getAgp() { return getVersion("agp"); }
 
             /**
-             * Returns the version associated to this alias: gradle (3.4.0)
+             * Returns the version associated to this alias: gradle (8.2.0-alpha15)
              * If the version is a rich version and that its not expressible as a
              * single version string, then an empty string is returned.
              * This version was declared in catalog libs.versions.toml

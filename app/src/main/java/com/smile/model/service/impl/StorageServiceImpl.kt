@@ -109,6 +109,10 @@ class StorageServiceImpl @Inject constructor(
 
     override suspend fun sendMessage(message: Message) {
         messageColRef.add(message).await()
+        val firstContact = message.senderId + "_" + message.recipientId
+        val secondContact = message.recipientId + "_" + message.senderId
+        getContactDocRef(firstContact).update(CONTACT_LAST_MESSAGE, message)
+        getContactDocRef(secondContact).update(CONTACT_LAST_MESSAGE, message)
     }
 
     override suspend fun getMessages(recipientId: String, onDataChange: (List<Message>) -> Unit) {
@@ -141,5 +145,6 @@ class StorageServiceImpl @Inject constructor(
         private const val MESSAGE_SENDER_ID = "senderId"
         private const val MESSAGE_RECIPIENT_ID = "recipientId"
         private const val MESSAGE_TIMESTAMP = "timestamp"
+        private const val CONTACT_LAST_MESSAGE = "lastMessage"
     }
 }

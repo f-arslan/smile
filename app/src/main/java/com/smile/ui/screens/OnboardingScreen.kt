@@ -111,5 +111,5 @@ fun OnboardingButtons(modifier: Modifier, onLoginClick: () -> Unit, onRegisterCl
 @Preview(showBackground = true)
 @Composable
 fun PreviewOnboarding() {
-    OnBoardingScreen({})
+    OnBoardingScreen {}
 }

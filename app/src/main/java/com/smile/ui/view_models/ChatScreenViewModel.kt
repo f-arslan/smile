@@ -39,7 +39,7 @@ class ChatScreenViewModel @Inject constructor(
                 Message(
                     senderId = accountService.currentUserId,
                     recipientId = recipientId,
-                    content = text,
+                    content = text.trim(),
                     timestamp = getCurrentTimestamp(),
                     status = MessageStatus.SENT
                 )

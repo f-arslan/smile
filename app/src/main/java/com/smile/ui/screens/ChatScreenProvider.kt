@@ -1,12 +1,20 @@
 package com.smile.ui.screens
 
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
@@ -17,6 +25,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,12 +39,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.ChatField
@@ -50,10 +59,8 @@ import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.HIGH_PLUS_PADDING
 import com.smile.util.Constants.MEDIUM_HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
-import com.smile.util.Constants.SMALL_PADDING
-import com.smile.util.Constants.VERY_HIGH_PADDING
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import com.smile.util.isTodayOrDate
+import com.smile.util.timestampToDate
 
 @Composable
 fun ChatScreenProvider(
@@ -61,9 +68,7 @@ fun ChatScreenProvider(
     popUp: () -> Unit,
     viewModel: ChatScreenViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.getContactAndMessage(contactId)
-    }
+    LaunchedEffect(Unit) { viewModel.getContactAndMessage(contactId) }
     val contactState by viewModel.contactState.collectAsStateWithLifecycle()
     val messages by viewModel.messagesState.collectAsStateWithLifecycle()
     if (contactState is Response.Success && messages is Response.Success) {
@@ -90,11 +95,9 @@ fun ChatScreen(
     if (notFunctionalState) {
         FunctionalityNotAvailablePopup { notFunctionalState = false }
     }
-
     val scrollState = rememberLazyListState()
     val topBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState)
-
 
     Scaffold(
         topBar = {
@@ -131,8 +134,35 @@ fun ChatScreen(
     }
 }
 
-private val ChatBubbleShape =
-    RoundedCornerShape(HIGH_PLUS_PADDING)
+@Composable
+fun DayHeader(dayString: String) {
+    Row(
+        modifier = Modifier
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .height(16.dp)
+    ) {
+        DayHeaderLine()
+        Text(
+            text = dayString,
+            modifier = Modifier.padding(horizontal = 16.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        DayHeaderLine()
+    }
+}
+
+@Composable
+private fun RowScope.DayHeaderLine() {
+    Divider(
+        modifier = Modifier
+            .weight(1f)
+            .align(Alignment.CenterVertically),
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+    )
+}
+
+private val ChatBubbleShape = RoundedCornerShape(HIGH_PLUS_PADDING)
 
 @Composable
 fun ChatItemBubble(message: Message, isUserMe: Boolean) {
@@ -141,15 +171,34 @@ fun ChatItemBubble(message: Message, isUserMe: Boolean) {
     } else {
         MaterialTheme.colorScheme.surfaceVariant
     }
-
-    Surface(
-        color = backgroundBubbleColor, shape = ChatBubbleShape
-    ) {
-        Text(text = message.content, modifier = Modifier.padding(MEDIUM_HIGH_PADDING))
+    val interactionSource = remember { MutableInteractionSource() }
+    val isTimestampVisible = remember { mutableStateOf(false) }
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Surface(
+            color = backgroundBubbleColor, shape = ChatBubbleShape,
+            modifier = Modifier.clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {
+                isTimestampVisible.value = !isTimestampVisible.value
+            }
+        ) {
+            Text(
+                text = message.content,
+                modifier = Modifier.padding(MEDIUM_HIGH_PADDING)
+            )
+        }
+        AnimatedVisibility(visible = isTimestampVisible.value) {
+            Text(
+                text = timestampToDate(message.timestamp),
+                style = MaterialTheme.typography.labelSmall,
+            )
+        }
     }
+
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Messages(
     messages: List<Message>,
@@ -167,8 +216,14 @@ fun Messages(
                 MEDIUM_PADDING
             )
         ) {
-            items(messages, key = { it.messageId }) { // It can be error maybe messageId empty
-                ChatItemBubble(message = it, isUserMe = it.senderId == currentUserId)
+            val messageGrouped = messages.groupBy { isTodayOrDate(it.timestamp) }
+            messageGrouped.forEach { (date, messagesForDate) ->
+                items(messagesForDate) {
+                    ChatItemBubble(message = it, isUserMe = it.senderId == currentUserId)
+                }
+                item {
+                    DayHeader(dayString = date)
+                }
             }
         }
         LaunchedEffect(messages.size) {

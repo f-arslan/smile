@@ -1,6 +1,5 @@
 package com.smile.ui.view_models
 
-import android.util.Log
 import com.smile.SmileViewModel
 import com.smile.common.ext.isValidEmail
 import com.smile.common.snackbar.SnackbarManager
@@ -50,7 +49,7 @@ class NewContactScreenViewModel @Inject constructor(
         _loadingState.value = loadingState
     }
 
-    fun onSaveClick(openLoading: () -> Unit) {
+    fun onSaveClick() {
         uiState.value.apply {
             if (firstName.isBlank()) {
                 SnackbarManager.showMessage(AppText.require_first_name)
@@ -71,7 +70,7 @@ class NewContactScreenViewModel @Inject constructor(
 
     fun saveContactToDb() {
         launchCatching {
-            delay(250)
+            delay(150)
             val contactUserId = storageService.findIdByEmail(uiState.value.email)
             storageService.user.collect {
                 if (it != null && contactUserId != null) {

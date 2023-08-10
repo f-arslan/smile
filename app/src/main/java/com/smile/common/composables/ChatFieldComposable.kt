@@ -23,8 +23,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -32,8 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.SemanticsPropertyKey
-import androidx.compose.ui.semantics.SemanticsPropertyReceiver
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,13 +54,16 @@ fun ChatField(
     var textState by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue())
     }
-    Row(modifier = modifier.fillMaxWidth().padding(MEDIUM_PADDING)) {
+    val isTextFieldBlank = remember { derivedStateOf { textState.text.isBlank() } }
+    Row(modifier = modifier
+        .fillMaxWidth()
+        .padding(MEDIUM_PADDING)) {
         UserInputText(
             textFieldValue = textState,
             onTextChanged = { textState = it },
         )
         Spacer(modifier = Modifier.padding(SMALL_PADDING))
-        ChatButton(modifier = Modifier.weight(1f)) {
+        ChatButton(modifier = Modifier.weight(1f), enabled = !isTextFieldBlank.value) {
             onMessageSent(textState.text)
             textState = TextFieldValue()
         }
@@ -102,13 +105,15 @@ fun UserInputText(
 }
 
 @Composable
-fun ChatButton(modifier: Modifier, onClick: () -> Unit) {
+fun ChatButton(modifier: Modifier, enabled: Boolean, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         modifier = Modifier
             .size(54.dp)
-            .clip(CircleShape).then(modifier),
-        contentPadding = PaddingValues(NO_PADDING)
+            .clip(CircleShape)
+            .then(modifier),
+        contentPadding = PaddingValues(NO_PADDING),
+        enabled = enabled
     ) {
         Icon(
             imageVector = Icons.Outlined.Send,
