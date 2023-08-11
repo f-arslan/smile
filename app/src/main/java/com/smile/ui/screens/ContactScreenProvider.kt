@@ -33,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.ContactTopAppBar
 import com.smile.common.composables.NewContactButton
+import com.smile.common.composables.UserAvatar
 import com.smile.model.Contact
 import com.smile.ui.view_models.ContactScreenViewModel
 import com.smile.util.Constants.AVATAR_SIZE
@@ -126,24 +127,7 @@ fun ContactItem(name: String, onContactClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(HIGH_PADDING)
     ) {
-        ContactAvatar(letter = name.substring(0, 1))
+        UserAvatar(letter = name.substring(0, 1))
         Text(text = name, style = MaterialTheme.typography.titleMedium)
-    }
-}
-
-@Composable
-fun ContactAvatar(letter: String) {
-    Surface(
-        modifier = Modifier
-            .size(AVATAR_SIZE)
-            .clip(CircleShape),
-        color = MaterialTheme.colorScheme.tertiary
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(text = letter, style = MaterialTheme.typography.titleLarge)
-        }
     }
 }

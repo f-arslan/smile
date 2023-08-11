@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -61,7 +60,7 @@ fun ChatField(
             .fillMaxWidth()
             .padding(MEDIUM_PADDING),
     ) {
-        UserInputText(
+        UserInputTextField(
             modifier = Modifier.weight(1f),
             textFieldValue = textState,
             onTextChanged = { textState = it },
@@ -75,7 +74,7 @@ fun ChatField(
 }
 
 @Composable
-fun UserInputText(
+fun UserInputTextField(
     modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
     textFieldValue: TextFieldValue,
@@ -147,7 +146,7 @@ fun DefaultIconButton(@DrawableRes icon: Int, @StringRes desc: Int, onClick: () 
 )
 fun ChatFieldPreview() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-        UserInputText(
+        UserInputTextField(
             keyboardType = KeyboardType.Text,
             textFieldValue = TextFieldValue(""),
             onTextChanged = {},

@@ -19,6 +19,8 @@
     <string name="connection_error">Connection error. Would you like to retry?</string>
     <string name="options">Options</string>
     <string name="cancel">Cancel</string>
+    <string name="search">Search</string>
+    <string name="menu">Menu</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
@@ -58,6 +60,7 @@
 
     <!-- Home Screen -->
     <string name="message_icon">Message Icon</string>
+    <string name="search_messages">Search messages</string>
 
     <!-- Contact Screen -->
     <string name="new_conversation">New conversation</string>
