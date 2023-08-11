@@ -14,6 +14,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,31 +34,34 @@ class ChatScreenViewModel @Inject constructor(
 
     val currentUserId = accountService.currentUserId
 
-    fun sendMessage(text: String, contactId: String) {
-        val recipientId = contactId.split("_")[1]
+    fun sendMessage(text: String, roomId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             storageService.sendMessage(
                 Message(
                     senderId = accountService.currentUserId,
-                    recipientId = recipientId,
                     content = text.trim(),
                     timestamp = getCurrentTimestamp(),
                     status = MessageStatus.SENT
-                )
+                ),
+                roomId
             )
         }
     }
 
-    fun getContactAndMessage(contactId: String) {
+    fun getContactAndMessage(contactId: String, roomId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            storageService.getContact(contactId) {
-                _contactState.value = Response.Success(it)
-            }
+            val contactFlow = storageService.getContact(contactId)
 
-            val (senderId, recipientId) = contactId.split("_")
-            storageService.getMessages(senderId, recipientId) {
-                _messagesState.value = Response.Success(it.reversed())
-            }
+            val messagesFlow = storageService.getMessages(roomId)
+
+            // Combine these flow with combine operator
+            combine(contactFlow, messagesFlow) { contact, messages ->
+                if (contact != null) {
+                    _contactState.value = Response.Success(contact)
+                    _messagesState.value = Response.Success(messages)
+                }
+            }.collect()
+
         }
     }
 

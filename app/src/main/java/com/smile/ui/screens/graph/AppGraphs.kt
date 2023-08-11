@@ -44,19 +44,27 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
             navigateNewContact = {
                 appState.navigate(NEW_CONTACT_SCREEN)
             },
-            navigateContactChat = {
+            navigateChatScreen = { contactId, roomId ->
                 // Navigate with id parameter
-                appState.navigate("$CHAT_SCREEN/$it")
+                appState.navigate("$CHAT_SCREEN/$contactId/$roomId")
             }
         )
     }
 
     composable(
-        "$CHAT_SCREEN/{id}",
-        arguments = listOf(navArgument("id") { type = NavType.StringType })
+        "$CHAT_SCREEN/{contactId}/{roomId}",
+        arguments = listOf(
+            navArgument("contactId") {
+                type = NavType.StringType
+            },
+            navArgument("roomId") {
+                type = NavType.StringType
+            }
+        )
     ) {
         ChatScreenProvider(
-            contactId = it.arguments?.getString("id") ?: "",
+            contactId = it.arguments?.getString("contactId") ?: "",
+            roomId = it.arguments?.getString("roomId") ?: "",
             popUp = { appState.popUp() })
     }
 

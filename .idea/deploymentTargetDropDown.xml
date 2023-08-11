@@ -4,18 +4,18 @@
     <value>
       <entry key="app">
         <State>
-          <runningDeviceTargetSelectedWithDropDown>
+          <targetSelectedWithDropDown>
             <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
+              <type value="QUICK_BOOT_TARGET" />
               <deviceKey>
                 <Key>
-                  <type value="SERIAL_NUMBER" />
-                  <value value="adb-22cf8f6a-LPgHcr._adb-tls-connect._tcp" />
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\fatih\.android\avd\Resizable_Experimental_API_33.avd" />
                 </Key>
               </deviceKey>
             </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2023-08-10T20:45:10.015288Z" />
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2023-08-11T19:05:14.249500100Z" />
         </State>
       </entry>
     </value>

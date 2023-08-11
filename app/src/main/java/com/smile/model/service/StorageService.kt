@@ -14,9 +14,9 @@ interface StorageService {
     suspend fun findIdByEmail(email: String): String?
 
     suspend fun getContacts(onDataChange: (List<List<Contact>>) -> Unit)
-    suspend fun getContact(contactId: String, onDataChange: (Contact) -> Unit)
+    suspend fun getContact(contactId: String): Flow<Contact?>
 
-    suspend fun sendMessage(message: Message)
+    suspend fun sendMessage(message: Message, roomId: String)
 
-    suspend fun getMessages(senderId: String, recipientId: String, onDataChange: (List<Message>) -> Unit)
+    suspend fun getMessages(roomId: String): Flow<List<Message>>
 }

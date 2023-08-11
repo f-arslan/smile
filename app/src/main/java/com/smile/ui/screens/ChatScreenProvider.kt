@@ -1,6 +1,5 @@
 package com.smile.ui.screens
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
@@ -65,17 +65,20 @@ import com.smile.util.timestampToDate
 @Composable
 fun ChatScreenProvider(
     contactId: String,
+    roomId: String,
     popUp: () -> Unit,
     viewModel: ChatScreenViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit) { viewModel.getContactAndMessage(contactId) }
+    LaunchedEffect(Unit) { viewModel.getContactAndMessage(contactId, roomId) }
     val contactState by viewModel.contactState.collectAsStateWithLifecycle()
     val messages by viewModel.messagesState.collectAsStateWithLifecycle()
     if (contactState is Response.Success && messages is Response.Success) {
         ChatScreen(
             contact = (contactState as Response.Success<Contact>).data,
             popUp = popUp,
-            onMessageSent = { viewModel.sendMessage(it, contactId) },
+            onMessageSent = { message ->
+                viewModel.sendMessage(message, roomId)
+            },
             messages = (messages as Response.Success<List<Message>>).data,
             currentUserId = viewModel.currentUserId
         )
@@ -114,7 +117,7 @@ fun ChatScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues),
         ) {
             Messages(
                 messages = messages,
@@ -173,26 +176,31 @@ fun ChatItemBubble(message: Message, isUserMe: Boolean) {
     }
     val interactionSource = remember { MutableInteractionSource() }
     val isTimestampVisible = remember { mutableStateOf(false) }
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Surface(
-            color = backgroundBubbleColor, shape = ChatBubbleShape,
-            modifier = Modifier.clickable(
-                interactionSource = interactionSource,
-                indication = null
+    Row(
+        horizontalArrangement = if (isUserMe) Arrangement.End else Arrangement.Start,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Surface(
+                color = backgroundBubbleColor, shape = ChatBubbleShape,
+                modifier = Modifier.clickable(
+                    interactionSource = interactionSource,
+                    indication = null
+                ) {
+                    isTimestampVisible.value = !isTimestampVisible.value
+                }
             ) {
-                isTimestampVisible.value = !isTimestampVisible.value
+                Text(
+                    text = message.content,
+                    modifier = Modifier.padding(MEDIUM_HIGH_PADDING)
+                )
             }
-        ) {
-            Text(
-                text = message.content,
-                modifier = Modifier.padding(MEDIUM_HIGH_PADDING)
-            )
-        }
-        AnimatedVisibility(visible = isTimestampVisible.value) {
-            Text(
-                text = timestampToDate(message.timestamp),
-                style = MaterialTheme.typography.labelSmall,
-            )
+            AnimatedVisibility(visible = isTimestampVisible.value) {
+                Text(
+                    text = timestampToDate(message.timestamp),
+                    style = MaterialTheme.typography.labelSmall,
+                )
+            }
         }
     }
 
@@ -241,7 +249,6 @@ fun ChatScreenPreview() {
         message = Message(
             messageId = "efficiantur",
             senderId = "ubique",
-            recipientId = "gravida",
             content = "faucibus",
             timestamp = 4199,
             readBy = listOf(),

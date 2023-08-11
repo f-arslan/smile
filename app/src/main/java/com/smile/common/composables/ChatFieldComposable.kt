@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -55,15 +56,18 @@ fun ChatField(
         mutableStateOf(TextFieldValue())
     }
     val isTextFieldBlank = remember { derivedStateOf { textState.text.isBlank() } }
-    Row(modifier = modifier
-        .fillMaxWidth()
-        .padding(MEDIUM_PADDING)) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(MEDIUM_PADDING),
+    ) {
         UserInputText(
+            modifier = Modifier.weight(1f),
             textFieldValue = textState,
             onTextChanged = { textState = it },
         )
         Spacer(modifier = Modifier.padding(SMALL_PADDING))
-        ChatButton(modifier = Modifier.weight(1f), enabled = !isTextFieldBlank.value) {
+        ChatButton(enabled = !isTextFieldBlank.value) {
             onMessageSent(textState.text)
             textState = TextFieldValue()
         }
@@ -72,12 +76,15 @@ fun ChatField(
 
 @Composable
 fun UserInputText(
+    modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
     textFieldValue: TextFieldValue,
     onTextChanged: (TextFieldValue) -> Unit,
 ) {
     var dialogState by rememberSaveable { mutableStateOf(false) }
-    if (dialogState) { FunctionalityNotAvailablePopup { dialogState = false } }
+    if (dialogState) {
+        FunctionalityNotAvailablePopup { dialogState = false }
+    }
     OutlinedTextField(
         value = textFieldValue,
         leadingIcon = {
@@ -100,18 +107,18 @@ fun UserInputText(
         shape = RoundedCornerShape(VERY_HIGH_PADDING),
         onValueChange = { onTextChanged(it) },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        modifier = modifier,
         maxLines = 1,
     )
 }
 
 @Composable
-fun ChatButton(modifier: Modifier, enabled: Boolean, onClick: () -> Unit) {
+fun ChatButton(enabled: Boolean, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         modifier = Modifier
             .size(54.dp)
-            .clip(CircleShape)
-            .then(modifier),
+            .clip(CircleShape),
         contentPadding = PaddingValues(NO_PADDING),
         enabled = enabled
     ) {

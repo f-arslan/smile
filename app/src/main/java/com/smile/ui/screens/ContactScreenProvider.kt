@@ -45,7 +45,7 @@ import com.smile.util.Constants.SMALL_PADDING
 fun ContactScreenProvider(
     popUp: () -> Unit,
     navigateNewContact: () -> Unit,
-    navigateContactChat: (String) -> Unit,
+    navigateChatScreen: (String, String) -> Unit,
     viewModel: ContactScreenViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
@@ -59,7 +59,7 @@ fun ContactScreenProvider(
         viewModel::onTextFieldValueChange,
         popUp,
         navigateNewContact,
-        navigateContactChat = navigateContactChat
+        navigateChatScreen = navigateChatScreen
     )
 }
 
@@ -71,7 +71,7 @@ fun ContactScreen(
     onValueChange: (TextFieldValue) -> Unit,
     popUp: () -> Unit,
     navigateNewContact: () -> Unit,
-    navigateContactChat: (String) -> Unit
+    navigateChatScreen: (String, String) -> Unit
 ) {
     val topBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState)
@@ -84,9 +84,7 @@ fun ContactScreen(
         Column(modifier = Modifier.padding(paddingValues)) {
             NewContactButton(navigateNewContact)
             for (contact in groupContacts) {
-                ContactListWithLetter(contact[0].firstName.substring(0, 1), contact) {
-                    navigateContactChat(it)
-                }
+                ContactListWithLetter(contact[0].firstName.substring(0, 1), contact, navigateChatScreen)
             }
         }
     }
@@ -96,7 +94,7 @@ fun ContactScreen(
 fun ContactListWithLetter(
     label: String,
     contacts: List<Contact>,
-    onContactClick: (String) -> Unit
+    onContactClick: (String, String) -> Unit
 ) {
     Column(
         modifier = Modifier.padding(vertical = MEDIUM_PADDING, horizontal = MEDIUM_PADDING)
@@ -109,7 +107,7 @@ fun ContactListWithLetter(
         LazyColumn {
             items(contacts, key = { it.contactId }) {
                 ContactItem(name = "${it.firstName} ${it.lastName}") {
-                    onContactClick(it.contactId)
+                    onContactClick(it.contactId, it.roomId)
                 }
             }
         }
