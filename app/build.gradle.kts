@@ -6,8 +6,8 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+    id("com.google.devtools.ksp")
 }
-
 android {
     namespace = "com.smile"
     compileSdk = 34
@@ -23,8 +23,15 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true"
+                )
+            }
+        }
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -35,14 +42,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlin {
-        jvmToolchain(8)
+        jvmToolchain(17)
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
 
     }
     buildFeatures {
@@ -56,6 +63,10 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 dependencies {
@@ -96,8 +107,10 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.compose)
     implementation (libs.accompanist.systemuicontroller)
-}
 
-kapt {
-    correctErrorTypes = true
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    annotationProcessor(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 }

@@ -22,7 +22,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.text.font.FontWeight
 import com.smile.util.Constants
+import com.smile.util.Constants.COUNT_BUBBLE_SIZE
 import com.smile.util.Constants.VERY_SMALL_PADDING
 
 val colorStops = arrayOf(
@@ -67,18 +69,35 @@ fun UserAvatar(letter: String) {
 }
 
 @Composable
-fun DefaultUserAvatar(letter: String) {
+fun LetterInCircle(letter: String) {
     Surface(
         modifier = Modifier
             .size(Constants.AVATAR_SIZE)
             .clip(CircleShape),
-        color = MaterialTheme.colorScheme.primary
+        color = MaterialTheme.colorScheme.primaryContainer
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             Text(text = letter, style = MaterialTheme.typography.titleLarge)
+        }
+    }
+}
+
+@Composable
+fun CountCircle(letter: String, fontWeight: FontWeight = FontWeight.Normal) {
+    Surface(
+        modifier = Modifier
+            .size(COUNT_BUBBLE_SIZE)
+            .clip(CircleShape),
+        color = MaterialTheme.colorScheme.secondaryContainer
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(text = letter, style = MaterialTheme.typography.labelSmall, fontWeight = fontWeight)
         }
     }
 }
