@@ -1,6 +1,5 @@
 package com.smile.model.service.impl
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.dataObjects
@@ -9,18 +8,22 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
 import com.smile.model.Contact
 import com.smile.model.Message
-import com.smile.model.Room
 import com.smile.model.User
+import com.smile.model.room.RoomStorageService
 import com.smile.model.service.AccountService
 import com.smile.model.service.StorageService
-import com.smile.util.getCurrentTimestamp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class StorageServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
+    private val roomStorageService: RoomStorageService,
     private val auth: AccountService
 ) : StorageService {
     override val user: Flow<User?>
@@ -35,64 +38,35 @@ class StorageServiceImpl @Inject constructor(
             .update(USER_EMAIL_VERIFIED, true).await()
     }
 
-    override suspend fun saveContact(firstContact: Contact, secondContact: Contact) {
-        // Create transaction to save both contacts
-        firestore.runTransaction { transaction ->
-            val user1Snapshot =
-                transaction.get(getUserDocRef(firstContact.userId))
-            val user2Snapshot =
-                transaction.get(getUserDocRef(secondContact.userId))
+    override suspend fun saveContact(
+        scope: CoroutineScope,
+        firstContact: Contact,
+        secondContact: Contact
+    ) {
+        val firstContactId = firstContact.userId + "_" + firstContact.friendId
+        val secondContactId = secondContact.userId + "_" + secondContact.friendId
+        scope.launch(Dispatchers.IO) {
+            val user1Task = async { getUserDocRef(firstContact.userId) }
+            val user2Task = async { getUserDocRef(secondContact.userId) }
 
-            val existingIds1 = user1Snapshot.get(USER_CONTACT_IDS_FIELD) as List<*>
-            val existingIds2 = user2Snapshot.get(USER_CONTACT_IDS_FIELD) as List<*>
-            val firstContactId = firstContact.userId + "_" + firstContact.friendId
-            val secondContactId = secondContact.userId + "_" + secondContact.friendId
-            // Create a room collection for both users and add the room id to both contact
+            val user1Doc = user1Task.await()
+            val user2Doc = user2Task.await()
 
-            if (!existingIds1.contains(firstContactId)) {
-                transaction.update(
-                    userColRef.document(firstContact.userId),
-                    USER_CONTACT_IDS_FIELD,
-                    existingIds1 + firstContactId
-                )
-                transaction.set(
-                    contactColRef.document(firstContactId),
-                    firstContact
-                )
+            val user1 = user1Doc.get().await().toObject<User>()
+            val user2 = user2Doc.get().await().toObject<User>()
+
+            val batch = firestore.batch()
+            if (user1 != null && !user1.contactIds.contains(firstContactId) &&
+                user2 != null && !user2.contactIds.contains(secondContactId)
+            ) {
+                batch.update(user1Doc, USER_CONTACT_IDS_FIELD, user1.contactIds + firstContactId)
+                batch.update(user2Doc, USER_CONTACT_IDS_FIELD, user2.contactIds + secondContactId)
+                batch.set(contactColRef.document(firstContactId), firstContact)
+                batch.set(contactColRef.document(secondContactId), secondContact)
+                // Save to Room DB for caching
             }
 
-            if (!existingIds2.contains(secondContactId)) {
-                transaction.update(
-                    userColRef.document(secondContact.userId),
-                    USER_CONTACT_IDS_FIELD,
-                    existingIds2 + secondContactId
-                )
-                transaction.set(
-                    contactColRef.document(secondContactId),
-                    secondContact
-                )
-                // Create a room
-                var id: String?
-                transaction.set(
-                    roomColRef.document().also {
-                        id = it.id
-                    },
-                    Room(createdAt = getCurrentTimestamp())
-                )
-                transaction.update(
-                    contactColRef.document(firstContactId),
-                    CONTACT_ROOM_ID,
-                    id
-                )
-                transaction.update(
-                    contactColRef.document(secondContactId),
-                    CONTACT_ROOM_ID,
-                    id
-                )
-            }
-
-
-            null
+            batch.commit().await()
         }
     }
 
@@ -129,7 +103,6 @@ class StorageServiceImpl @Inject constructor(
         getContactDocRef(contactId).snapshots().map {
             it.toObject<Contact>()
         }
-
 
 
     override suspend fun sendMessage(message: Message, roomId: String) {

@@ -17,4 +17,10 @@ object Constants {
     val ICON_SIZE = 150.dp
     val AVATAR_SIZE = 40.dp
     val COUNT_BUBBLE_SIZE = 16.dp
+
+
+    // ROOM DB
+    const val DB_TABLE_CONTACT = "contacts"
+    const val DB_TABLE_USER = "users"
+    const val DB_NAME = "smile"
 }

@@ -3,13 +3,14 @@ package com.smile.model.service
 import com.smile.model.Contact
 import com.smile.model.Message
 import com.smile.model.User
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface StorageService {
     val user: Flow<User?>
     suspend fun saveUser(user: User)
     suspend fun updateUserEmailVerification()
-    suspend fun saveContact(firstContact: Contact, secondContact: Contact)
+    suspend fun saveContact(scope: CoroutineScope, firstContact: Contact, secondContact: Contact)
 
     suspend fun findIdByEmail(email: String): String?
 

@@ -1,5 +1,6 @@
 package com.smile.ui.view_models
 
+import androidx.lifecycle.viewModelScope
 import com.smile.SmileViewModel
 import com.smile.common.ext.isValidEmail
 import com.smile.common.snackbar.SnackbarManager
@@ -68,7 +69,7 @@ class NewContactScreenViewModel @Inject constructor(
         saveContactToDb()
     }
 
-    fun saveContactToDb() {
+    private fun saveContactToDb() {
         launchCatching {
             delay(150)
             val contactUserId = storageService.findIdByEmail(uiState.value.email)
@@ -87,7 +88,7 @@ class NewContactScreenViewModel @Inject constructor(
                         firstName = it.displayName,
                         email = it.email
                     )
-                    async { storageService.saveContact(firstContact, secondContact) }.await()
+                    async { storageService.saveContact(viewModelScope, firstContact, secondContact) }.await()
                     onLoadingStateChange(false)
                 }
             }

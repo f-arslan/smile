@@ -1,6 +1,7 @@
 package com.smile.model
 
 import com.google.firebase.firestore.DocumentId
+import com.smile.model.room.RoomContact
 
 
 data class Contact(
@@ -12,4 +13,16 @@ data class Contact(
     val lastName: String = "",
     val email: String = "",
     val roomId: String = "",
-)
+) {
+    fun toRoomContact(): RoomContact {
+        return RoomContact(
+            contactId = contactId,
+            userId = userId,
+            friendId = friendId,
+            firstName = firstName,
+            lastName = lastName,
+            email = email,
+            roomId = roomId
+        )
+    }
+}

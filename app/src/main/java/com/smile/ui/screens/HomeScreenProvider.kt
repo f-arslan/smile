@@ -15,16 +15,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.smile.common.composables.AppFloActionButton
 import com.smile.common.composables.AppSearchBar
 import com.smile.common.composables.CountCircle
 import com.smile.common.composables.LetterInCircle
+import com.smile.ui.view_models.HomeScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MAX_PADDING
 import com.smile.util.Constants.MEDIUM_HIGH_PADDING
 
 @Composable
-fun HomeScreenProvider(navigate: () -> Unit) {
+fun HomeScreenProvider(navigate: () -> Unit, viewModel: HomeScreenViewModel = hiltViewModel()) {
     Scaffold(
         floatingActionButton = { AppFloActionButton(onClick = navigate) },
         topBar = {
