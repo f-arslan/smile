@@ -3,7 +3,7 @@ package com.smile.model.service
 import com.smile.model.Contact
 import com.smile.model.Message
 import com.smile.model.User
-import com.smile.model.room.RoomContact
+import com.smile.model.room.ContactEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
@@ -15,10 +15,10 @@ interface StorageService {
 
     suspend fun findIdByEmail(email: String): String?
 
-    suspend fun getContacts(scope: CoroutineScope, onDataChange: (List<List<RoomContact>>) -> Unit)
-    suspend fun getContact(contactId: String): Flow<Contact?>
+    suspend fun getContacts(scope: CoroutineScope, onDataChange: (List<List<ContactEntity>>) -> Unit)
+    suspend fun getContact(contactId: String): Flow<ContactEntity>
 
-    suspend fun sendMessage(message: Message, roomId: String)
+    suspend fun sendMessage(scope: CoroutineScope, message: Message, roomId: String)
 
     suspend fun getMessages(roomId: String): Flow<List<Message>>
 }

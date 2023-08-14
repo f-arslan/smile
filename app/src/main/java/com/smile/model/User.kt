@@ -1,7 +1,7 @@
 package com.smile.model
 
 import com.google.firebase.firestore.DocumentId
-import com.smile.model.room.RoomUser
+import com.smile.model.room.UserEntity
 
 data class User(
     @DocumentId val userId: String = "",
@@ -11,8 +11,8 @@ data class User(
     val isEmailVerified : Boolean = false,
     val contactIds: List<String> = emptyList(),
 ) {
-    fun toRoomUser(): RoomUser {
-        return RoomUser(
+    fun toRoomUser(): UserEntity {
+        return UserEntity(
             userId = userId,
             displayName = displayName,
             email = email,

@@ -2,9 +2,9 @@ package com.smile.ui.view_models
 
 import androidx.lifecycle.viewModelScope
 import com.smile.SmileViewModel
-import com.smile.model.Contact
 import com.smile.model.Message
 import com.smile.model.MessageStatus
+import com.smile.model.room.ContactEntity
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
@@ -26,7 +26,7 @@ class ChatScreenViewModel @Inject constructor(
     private val accountService: AccountService,
     logService: LogService
 ) : SmileViewModel(logService) {
-    private val _contactState = MutableStateFlow<Response<Contact>>(Response.Loading)
+    private val _contactState = MutableStateFlow<Response<ContactEntity>>(Response.Loading)
     val contactState = _contactState.asStateFlow()
 
     private val _messagesState = MutableStateFlow<Response<List<Message>>>(Response.Loading)
@@ -37,6 +37,7 @@ class ChatScreenViewModel @Inject constructor(
     fun sendMessage(text: String, roomId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             storageService.sendMessage(
+                viewModelScope,
                 Message(
                     senderId = accountService.currentUserId,
                     content = text.trim(),
@@ -51,17 +52,12 @@ class ChatScreenViewModel @Inject constructor(
     fun getContactAndMessage(contactId: String, roomId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val contactFlow = storageService.getContact(contactId)
-
             val messagesFlow = storageService.getMessages(roomId)
-
             // Combine these flow with combine operator
             combine(contactFlow, messagesFlow) { contact, messages ->
-                if (contact != null) {
-                    _contactState.value = Response.Success(contact)
-                    _messagesState.value = Response.Success(messages)
-                }
+                _contactState.value = Response.Success(contact)
+                _messagesState.value = Response.Success(messages)
             }.collect()
-
         }
     }
 

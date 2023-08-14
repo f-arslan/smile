@@ -23,4 +23,6 @@ object Constants {
     const val DB_TABLE_CONTACT = "contacts"
     const val DB_TABLE_USER = "users"
     const val DB_NAME = "smile"
+    const val DB_TABLE_ROOM = "rooms"
+    const val DB_TABLE_MESSAGE = "messages"
 }

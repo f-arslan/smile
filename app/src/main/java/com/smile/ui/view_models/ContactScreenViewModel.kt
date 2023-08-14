@@ -3,8 +3,7 @@ package com.smile.ui.view_models
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import com.smile.SmileViewModel
-import com.smile.model.Contact
-import com.smile.model.room.RoomContact
+import com.smile.model.room.ContactEntity
 import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +22,7 @@ class ContactScreenViewModel @Inject constructor(
     private val _textFieldValue = MutableStateFlow(TextFieldValue(""))
     val textFieldValue = _textFieldValue.asStateFlow()
 
-    private val _contacts = MutableStateFlow<List<List<RoomContact>>>(emptyList())
+    private val _contacts = MutableStateFlow<List<List<ContactEntity>>>(emptyList())
     val contacts = _contacts.asStateFlow()
 
     fun getContacts() {

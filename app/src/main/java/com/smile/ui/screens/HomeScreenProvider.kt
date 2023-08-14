@@ -11,15 +11,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.AppFloActionButton
 import com.smile.common.composables.AppSearchBar
 import com.smile.common.composables.CountCircle
 import com.smile.common.composables.LetterInCircle
+import com.smile.model.room.ContactEntity
+import com.smile.model.service.module.Response
 import com.smile.ui.view_models.HomeScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MAX_PADDING
@@ -27,6 +32,8 @@ import com.smile.util.Constants.MEDIUM_HIGH_PADDING
 
 @Composable
 fun HomeScreenProvider(navigate: () -> Unit, viewModel: HomeScreenViewModel = hiltViewModel()) {
+    LaunchedEffect(Unit) { viewModel.getContacts() }
+    val contacts by viewModel.contacts.collectAsStateWithLifecycle()
     Scaffold(
         floatingActionButton = { AppFloActionButton(onClick = navigate) },
         topBar = {
@@ -37,13 +44,20 @@ fun HomeScreenProvider(navigate: () -> Unit, viewModel: HomeScreenViewModel = hi
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
-            LastContactList()
+            when (val res = contacts) {
+                is Response.Success -> {
+                    LastContactList(res.data)
+                }
+
+                Response.Loading -> {} // TODO: Can be added loading state placeholder
+                else -> {}
+            }
         }
     }
 }
 
 @Composable
-fun LastContactList() {
+fun LastContactList(data: List<List<ContactEntity>>) {
 }
 
 @Composable

@@ -10,7 +10,8 @@ import com.smile.model.Contact
 import com.smile.model.Message
 import com.smile.model.Room
 import com.smile.model.User
-import com.smile.model.room.RoomContact
+import com.smile.model.room.ContactEntity
+import com.smile.model.room.RoomEntity
 import com.smile.model.room.RoomStorageService
 import com.smile.model.service.AccountService
 import com.smile.model.service.StorageService
@@ -63,10 +64,11 @@ class StorageServiceImpl @Inject constructor(
             if (user1 != null && !user1.contactIds.contains(firstContactId) &&
                 user2 != null && !user2.contactIds.contains(secondContactId)
             ) {
-                var roomId = ""
+                var roomId: String
+                val currentTime = getCurrentTimestamp()
                 batch.set(
                     roomColRef.document().also { roomId = it.id },
-                    Room(createdAt = getCurrentTimestamp())
+                    Room(createdAt = currentTime)
                 )
                 batch.update(user1Doc, USER_CONTACT_IDS_FIELD, user1.contactIds + firstContactId)
                 batch.update(user2Doc, USER_CONTACT_IDS_FIELD, user2.contactIds + secondContactId)
@@ -85,6 +87,7 @@ class StorageServiceImpl @Inject constructor(
                         roomId = roomId
                     ).toRoomContact()
                 )
+                roomStorageService.insertRoom(RoomEntity(roomId = roomId, createdAt = currentTime))
             }
             batch.commit().await()
         }
@@ -106,7 +109,7 @@ class StorageServiceImpl @Inject constructor(
 
     override suspend fun getContacts(
         scope: CoroutineScope,
-        onDataChange: (List<List<RoomContact>>) -> Unit
+        onDataChange: (List<List<ContactEntity>>) -> Unit
     ) {
         scope.launch(Dispatchers.IO) {
             val contacts = roomStorageService.getContacts().first()
@@ -117,14 +120,24 @@ class StorageServiceImpl @Inject constructor(
     }
 
     override suspend fun getContact(contactId: String) =
-        getContactDocRef(contactId).snapshots().map {
-            it.toObject<Contact>()
+        roomStorageService.getContact(contactId)
+
+
+    override suspend fun sendMessage(scope: CoroutineScope, message: Message, roomId: String) {
+        val fireStoreMessageId: String
+        roomColRef.document(roomId).collection(MESSAGE_COLLECTION).add(message).await().also {
+            fireStoreMessageId = it.id
         }
-
-
-    override suspend fun sendMessage(message: Message, roomId: String) {
-        roomColRef.document(roomId).collection(MESSAGE_COLLECTION).add(message).await()
         roomColRef.document(roomId).update(CONTACT_LAST_MESSAGE, message).await()
+        scope.launch(Dispatchers.IO) {
+            val messageId =
+                async {
+                    roomStorageService.insertMessage(
+                        message.copy(messageId = fireStoreMessageId).toMessageEntity()
+                    )
+                }.await()
+            roomStorageService.updateRoomLastMessage(roomId, messageId.toInt())
+        }
     }
 
     override suspend fun getMessages(roomId: String) = roomColRef.document(roomId).collection(
@@ -139,7 +152,6 @@ class StorageServiceImpl @Inject constructor(
     private val contactColRef by lazy { firestore.collection(CONTACT_COLLECTION) }
 
     private fun getUserDocRef(id: String) = userColRef.document(id)
-    private fun getContactDocRef(id: String) = contactColRef.document(id)
     private fun getContactColUnderUser(id: String) =
         getUserDocRef(id).collection(CONTACT_COLLECTION)
 
@@ -151,10 +163,7 @@ class StorageServiceImpl @Inject constructor(
 
         private const val USER_CONTACT_IDS_FIELD = "contactIds"
         private const val USER_EMAIL_VERIFIED = "emailVerified"
-        private const val MESSAGE_SENDER_ID = "senderId"
-        private const val MESSAGE_RECIPIENT_ID = "recipientId"
         private const val MESSAGE_TIMESTAMP = "timestamp"
         private const val CONTACT_LAST_MESSAGE = "lastMessage"
-        private const val CONTACT_ROOM_ID = "roomId"
     }
 }

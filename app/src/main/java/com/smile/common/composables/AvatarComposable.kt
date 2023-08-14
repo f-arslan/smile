@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.text.font.FontWeight
 import com.smile.util.Constants
 import com.smile.util.Constants.COUNT_BUBBLE_SIZE
+import com.smile.util.Constants.SMALL_PADDING
 import com.smile.util.Constants.VERY_SMALL_PADDING
 
 val colorStops = arrayOf(
@@ -33,7 +34,7 @@ val colorStops = arrayOf(
     1f to Color.Blue
 )
 
-const val borderWidth = 8f
+const val borderWidth = 16f
 
 @Composable
 fun UserAvatar(letter: String) {
@@ -63,7 +64,7 @@ fun UserAvatar(letter: String) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = letter, style = MaterialTheme.typography.titleLarge)
+            Text(text = letter.uppercase(), style = MaterialTheme.typography.titleLarge)
         }
     }
 }

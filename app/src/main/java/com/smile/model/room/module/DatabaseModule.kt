@@ -2,6 +2,7 @@ package com.smile.model.room.module
 
 import android.content.Context
 import androidx.room.Room
+import com.smile.util.Constants.DB_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,5 +26,3 @@ object DatabaseModule {
     @Provides
     fun provideSmileDao(db: SmileRoomDatabase) = db.smileDao()
 }
-
-const val DB_NAME = "smile"

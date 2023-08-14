@@ -1,7 +1,7 @@
 package com.smile.model
 
 import com.google.firebase.firestore.DocumentId
-import com.smile.model.room.RoomContact
+import com.smile.model.room.ContactEntity
 
 
 data class Contact(
@@ -14,8 +14,8 @@ data class Contact(
     val email: String = "",
     val roomId: String = "",
 ) {
-    fun toRoomContact(): RoomContact {
-        return RoomContact(
+    fun toRoomContact(): ContactEntity {
+        return ContactEntity(
             contactId = contactId,
             userId = userId,
             friendId = friendId,
