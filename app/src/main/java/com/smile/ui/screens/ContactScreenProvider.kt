@@ -8,16 +8,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -34,9 +31,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.ContactTopAppBar
 import com.smile.common.composables.NewContactButton
 import com.smile.common.composables.UserAvatar
-import com.smile.model.Contact
+import com.smile.model.room.RoomContact
 import com.smile.ui.view_models.ContactScreenViewModel
-import com.smile.util.Constants.AVATAR_SIZE
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.HIGH_PLUS_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
@@ -68,7 +64,7 @@ fun ContactScreenProvider(
 @Composable
 fun ContactScreen(
     textFieldValue: TextFieldValue,
-    groupContacts: List<List<Contact>>,
+    groupContacts: List<List<RoomContact>>,
     onValueChange: (TextFieldValue) -> Unit,
     popUp: () -> Unit,
     navigateNewContact: () -> Unit,
@@ -94,7 +90,7 @@ fun ContactScreen(
 @Composable
 fun ContactListWithLetter(
     label: String,
-    contacts: List<Contact>,
+    contacts: List<RoomContact>,
     onContactClick: (String, String) -> Unit
 ) {
     Column(

@@ -25,6 +25,7 @@ The app is built using the following technologies and tools:
 - Kotlin
 - Jetpack Compose
 - Firebase Firestore
+- Room Persistence Library (for local caching)
 - Firebase Authentication
 - Hilt for dependency injection
 - Material Design 3

@@ -8,14 +8,18 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
 import com.smile.model.Contact
 import com.smile.model.Message
+import com.smile.model.Room
 import com.smile.model.User
+import com.smile.model.room.RoomContact
 import com.smile.model.room.RoomStorageService
 import com.smile.model.service.AccountService
 import com.smile.model.service.StorageService
+import com.smile.util.getCurrentTimestamp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -59,13 +63,29 @@ class StorageServiceImpl @Inject constructor(
             if (user1 != null && !user1.contactIds.contains(firstContactId) &&
                 user2 != null && !user2.contactIds.contains(secondContactId)
             ) {
+                var roomId = ""
+                batch.set(
+                    roomColRef.document().also { roomId = it.id },
+                    Room(createdAt = getCurrentTimestamp())
+                )
                 batch.update(user1Doc, USER_CONTACT_IDS_FIELD, user1.contactIds + firstContactId)
                 batch.update(user2Doc, USER_CONTACT_IDS_FIELD, user2.contactIds + secondContactId)
-                batch.set(contactColRef.document(firstContactId), firstContact)
-                batch.set(contactColRef.document(secondContactId), secondContact)
+                batch.set(
+                    getContactColUnderUser(user1Doc.id).document(firstContactId),
+                    firstContact.copy(roomId = roomId)
+                )
+                batch.set(
+                    getContactColUnderUser(user2Doc.id).document(secondContactId),
+                    secondContact.copy(roomId = roomId)
+                )
                 // Save to Room DB for caching
+                roomStorageService.insertContact(
+                    firstContact.copy(
+                        contactId = firstContactId,
+                        roomId = roomId
+                    ).toRoomContact()
+                )
             }
-
             batch.commit().await()
         }
     }
@@ -85,17 +105,14 @@ class StorageServiceImpl @Inject constructor(
     }
 
     override suspend fun getContacts(
-        onDataChange: (List<List<Contact>>) -> Unit
+        scope: CoroutineScope,
+        onDataChange: (List<List<RoomContact>>) -> Unit
     ) {
-        firestore.runTransaction { transition ->
-            val contactIds = transition.get(getUserDocRef(auth.currentUserId))
-                .get(USER_CONTACT_IDS_FIELD) as List<String>
-
-            val contacts = contactIds.asSequence()
-                .map { transition.get(getContactDocRef(it)).toObject(Contact::class.java) }
-                .filterNotNull()
-
-            onDataChange(contacts.groupBy { it.friendId }.values.toList())
+        scope.launch(Dispatchers.IO) {
+            val contacts = roomStorageService.getContacts().first()
+            val groupedContacts =
+                contacts.groupBy { it.firstName.first().toString() }.values.toList()
+            onDataChange(groupedContacts)
         }
     }
 
@@ -123,6 +140,8 @@ class StorageServiceImpl @Inject constructor(
 
     private fun getUserDocRef(id: String) = userColRef.document(id)
     private fun getContactDocRef(id: String) = contactColRef.document(id)
+    private fun getContactColUnderUser(id: String) =
+        getUserDocRef(id).collection(CONTACT_COLLECTION)
 
     companion object {
         private const val CONTACT_COLLECTION = "contacts"

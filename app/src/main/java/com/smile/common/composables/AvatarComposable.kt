@@ -80,7 +80,7 @@ fun LetterInCircle(letter: String) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = letter, style = MaterialTheme.typography.titleLarge)
+            Text(text = letter.uppercase(), style = MaterialTheme.typography.titleLarge)
         }
     }
 }

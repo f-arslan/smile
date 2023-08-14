@@ -12,25 +12,17 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.smile.common.snackbar.SnackbarManager
-import com.smile.ui.screens.graph.SmileRoutes.CHAT_SCREEN
-import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
-import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
-import com.smile.ui.screens.graph.SmileRoutes.NEW_CONTACT_SCREEN
-import com.smile.ui.screens.graph.SmileRoutes.ONBOARDING_SCREEN
-import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import com.smile.ui.screens.graph.appGraph
 import com.smile.ui.view_models.AppViewModel
 import com.smile.util.Constants.MEDIUM_PADDING
@@ -53,7 +45,7 @@ fun SmileApp(viewModel: AppViewModel = hiltViewModel()) {
                 }
             )
         }) {
-            NavHost(navController = appState.navController, startDestination = HOME_SCREEN) {
+            NavHost(navController = appState.navController, startDestination = LOGIN_SCREEN) {
                 appGraph(appState)
             }
         }

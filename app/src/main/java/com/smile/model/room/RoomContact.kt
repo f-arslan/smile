@@ -7,7 +7,7 @@ import com.smile.util.Constants.DB_TABLE_CONTACT
 
 @Entity(tableName = DB_TABLE_CONTACT)
 data class RoomContact(
-    @PrimaryKey(autoGenerate = true) val id: Int = -1,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val contactId: String = "",
     val userId: String = "",
     val friendId: String = "",

@@ -2,6 +2,7 @@ package com.smile.common.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,7 +30,7 @@ fun AppSearchBar(
     onActiveChange: (Boolean) -> Unit,
     onMenuClick: () -> Unit
 ) {
-    Row(modifier = Modifier.padding(MEDIUM_PADDING)) {
+    Row(modifier = Modifier.fillMaxWidth().padding(MEDIUM_PADDING)) {
         SearchBar(
             query = query,
             onQueryChange = onQueryChange,

@@ -18,7 +18,6 @@ data class User(
             email = email,
             profilePictureUrl = profilePictureUrl,
             isEmailVerified = isEmailVerified,
-            contactIds = contactIds
         )
     }
 }
