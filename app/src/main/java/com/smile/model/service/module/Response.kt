@@ -14,10 +14,3 @@ fun <T, R> Response<T>.map(transform: (T) -> R): Response<R> {
         is Response.Loading -> Response.Loading
     }
 }
-
-fun <T> Response<T>.getOrElse(default: T): T {
-    return when(this) {
-        is Response.Success -> data
-        else -> default
-    }
-}

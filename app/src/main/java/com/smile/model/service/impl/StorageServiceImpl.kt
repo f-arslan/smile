@@ -16,6 +16,7 @@ import com.smile.model.room.RoomStorageService
 import com.smile.model.service.AccountService
 import com.smile.model.service.StorageService
 import com.smile.util.getCurrentTimestamp
+import com.smile.util.turnListToGroupByLetter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -113,8 +114,7 @@ class StorageServiceImpl @Inject constructor(
     ) {
         scope.launch(Dispatchers.IO) {
             val contacts = roomStorageService.getContacts().first()
-            val groupedContacts =
-                contacts.groupBy { it.firstName.first().toString() }.values.toList()
+            val groupedContacts = turnListToGroupByLetter(contacts)
             onDataChange(groupedContacts)
         }
     }
@@ -123,7 +123,12 @@ class StorageServiceImpl @Inject constructor(
         roomStorageService.getContact(contactId)
 
 
-    override suspend fun sendMessage(scope: CoroutineScope, message: Message, roomId: String) {
+    override suspend fun sendMessage(
+        scope: CoroutineScope,
+        message: Message,
+        roomId: String,
+        contactId: String
+    ) {
         val fireStoreMessageId: String
         roomColRef.document(roomId).collection(MESSAGE_COLLECTION).add(message).await().also {
             fireStoreMessageId = it.id
@@ -137,6 +142,7 @@ class StorageServiceImpl @Inject constructor(
                     )
                 }.await()
             roomStorageService.updateRoomLastMessage(roomId, messageId.toInt())
+            roomStorageService.updateContactLastMessage(contactId, messageId.toInt())
         }
     }
 
@@ -149,7 +155,6 @@ class StorageServiceImpl @Inject constructor(
 
     private val roomColRef by lazy { firestore.collection(ROOM_COLLECTION) }
     private val userColRef by lazy { firestore.collection(USER_COLLECTION) }
-    private val contactColRef by lazy { firestore.collection(CONTACT_COLLECTION) }
 
     private fun getUserDocRef(id: String) = userColRef.document(id)
     private fun getContactColUnderUser(id: String) =

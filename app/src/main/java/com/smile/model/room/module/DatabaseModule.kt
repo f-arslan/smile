@@ -22,7 +22,6 @@ object DatabaseModule {
             DB_NAME
         ).build()
 
-    @Singleton
     @Provides
     fun provideSmileDao(db: SmileRoomDatabase) = db.smileDao()
 }

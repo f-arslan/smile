@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.smile.util.Constants.MEDIUM_HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
@@ -30,35 +31,34 @@ fun AppSearchBar(
     onActiveChange: (Boolean) -> Unit,
     onMenuClick: () -> Unit
 ) {
-    Row(modifier = Modifier.fillMaxWidth().padding(MEDIUM_PADDING)) {
-        SearchBar(
-            query = query,
-            onQueryChange = onQueryChange,
-            onSearch = onSearch,
-            active = isActive,
-            onActiveChange = onActiveChange,
-            placeholder = {
-                Row(horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)) {
-                    Icon(
-                        painter = painterResource(id = AppDrawable.baseline_search_24),
-                        contentDescription = stringResource(id = AppText.search)
-                    )
-                    Text(text = stringResource(id = AppText.search_messages))
-                }
-            },
-            trailingIcon = {
-                IconButton(onClick = {}) { UserAvatar(letter = userLetter) }
-            },
-            leadingIcon = {
-                DefaultIconButton(
-                    AppDrawable.baseline_menu_24,
-                    AppText.menu,
-                    onMenuClick
+    SearchBar(
+        query = query,
+        onQueryChange = onQueryChange,
+        onSearch = onSearch,
+        active = isActive,
+        onActiveChange = onActiveChange,
+        placeholder = {
+            Row(horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)) {
+                Icon(
+                    painter = painterResource(id = AppDrawable.baseline_search_24),
+                    contentDescription = stringResource(id = AppText.search)
                 )
+                Text(text = stringResource(id = AppText.search_messages))
             }
-        ) {
+        },
+        trailingIcon = {
+            IconButton(onClick = {}) { UserAvatar(letter = userLetter) }
+        },
+        leadingIcon = {
+            DefaultIconButton(
+                AppDrawable.baseline_menu_24,
+                AppText.menu,
+                onMenuClick
+            )
+        },
+        modifier = Modifier.fillMaxWidth().padding(MEDIUM_PADDING)
+    ) {
 
-        }
     }
 }
 

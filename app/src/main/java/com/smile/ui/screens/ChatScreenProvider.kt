@@ -77,7 +77,7 @@ fun ChatScreenProvider(
             contact = (contactState as Response.Success<ContactEntity>).data,
             popUp = popUp,
             onMessageSent = { message ->
-                viewModel.sendMessage(message, roomId)
+                viewModel.sendMessage(message, roomId, contactId)
             },
             messages = (messages as Response.Success<List<Message>>).data,
             currentUserId = viewModel.currentUserId

@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.text.font.FontWeight
 import com.smile.util.Constants
 import com.smile.util.Constants.COUNT_BUBBLE_SIZE
-import com.smile.util.Constants.SMALL_PADDING
 import com.smile.util.Constants.VERY_SMALL_PADDING
 
 val colorStops = arrayOf(
@@ -87,7 +86,7 @@ fun LetterInCircle(letter: String) {
 }
 
 @Composable
-fun CountCircle(letter: String, fontWeight: FontWeight = FontWeight.Normal) {
+fun CountCircle(letter: String) {
     Surface(
         modifier = Modifier
             .size(COUNT_BUBBLE_SIZE)
@@ -98,7 +97,11 @@ fun CountCircle(letter: String, fontWeight: FontWeight = FontWeight.Normal) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = letter, style = MaterialTheme.typography.labelSmall, fontWeight = fontWeight)
+            Text(
+                text = letter,
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }

@@ -15,4 +15,5 @@ data class ContactEntity(
     val lastName: String = "",
     val email: String = "",
     val roomId: String = "",
+    val lastMessageId: String = ""
 )

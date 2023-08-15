@@ -34,7 +34,7 @@ class ChatScreenViewModel @Inject constructor(
 
     val currentUserId = accountService.currentUserId
 
-    fun sendMessage(text: String, roomId: String) {
+    fun sendMessage(text: String, roomId: String, contactId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             storageService.sendMessage(
                 viewModelScope,
@@ -44,7 +44,8 @@ class ChatScreenViewModel @Inject constructor(
                     timestamp = getCurrentTimestamp(),
                     status = MessageStatus.SENT
                 ),
-                roomId
+                roomId,
+                contactId
             )
         }
     }
@@ -60,5 +61,4 @@ class ChatScreenViewModel @Inject constructor(
             }.collect()
         }
     }
-
 }
