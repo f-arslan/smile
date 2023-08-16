@@ -7,6 +7,7 @@ import com.smile.model.room.ContactEntity
 import com.smile.model.room.HomeContactEntity
 import com.smile.model.room.MessageEntity
 import com.smile.model.room.RoomEntity
+import com.smile.model.room.SearchHistoryQueryEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -22,7 +23,6 @@ interface SmileDao {
     @Query("Update rooms SET lastMessageId = :lastMessageId WHERE roomId = :roomId")
     suspend fun updateRoomLastMessage(roomId: String, lastMessageId: Int)
 
-    // Update last message id in contacts
     @Query("Update contacts SET lastMessageId = :lastMessageId WHERE contactId = :contactId")
     suspend fun updateContactLastMessage(contactId: String, lastMessageId: Int)
 
@@ -34,4 +34,10 @@ interface SmileDao {
             "contacts.lastName, contacts.roomId, messages.content, messages.timestamp FROM contacts " +
             "INNER JOIN messages on contacts.lastMessageId = messages.id ORDER BY messages.timestamp DESC")
     fun getContactsWithLastMessage(): Flow<List<HomeContactEntity>>
+
+    @Insert
+    suspend fun insertSearchHistoryQuery(searchHistory: SearchHistoryQueryEntity)
+
+    @Query("SELECT * FROM searchHistoryQueries ORDER BY timestamp DESC LIMIT 5")
+    fun getSearchHistoryQuery(): Flow<List<SearchHistoryQueryEntity>>
 }

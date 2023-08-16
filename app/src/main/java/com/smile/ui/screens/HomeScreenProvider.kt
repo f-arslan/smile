@@ -1,6 +1,5 @@
 package com.smile.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -24,28 +26,46 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.AppFloActionButton
 import com.smile.common.composables.AppSearchBar
+import com.smile.common.composables.FunctionalityNotAvailablePopup
 import com.smile.common.composables.LetterInCircle
 import com.smile.model.room.HomeContactEntity
 import com.smile.model.service.module.Response
 import com.smile.ui.view_models.HomeScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MAX_PADDING
-import com.smile.util.Constants.MEDIUM_HIGH_PADDING
 import com.smile.util.isTodayOrDate
+
 
 @Composable
 fun HomeScreenProvider(navigate: () -> Unit, viewModel: HomeScreenViewModel = hiltViewModel()) {
-    LaunchedEffect(Unit) { viewModel.getContacts() }
+    LaunchedEffect(Unit) { viewModel.getData() }
     val contacts by viewModel.contacts.collectAsStateWithLifecycle()
-    Log.d("HomeScreenProvider", "contacts: $contacts")
+    val user by viewModel.user.collectAsStateWithLifecycle()
+    val searchHistoryQueries by viewModel.searchHistoryQueries.collectAsStateWithLifecycle()
+    val searchHistoryContacts by viewModel.searchHistoryContacts.collectAsStateWithLifecycle()
+
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+    val searchIsActive by viewModel.searchIsActive.collectAsStateWithLifecycle()
+    var notFunctionalState by remember { mutableStateOf(false) }
+    if (notFunctionalState) {
+        FunctionalityNotAvailablePopup { notFunctionalState = false }
+    }
     Scaffold(
         floatingActionButton = { AppFloActionButton(onClick = navigate) },
         topBar = {
             AppSearchBar(
-                userLetter = "A", "A", false,
-                {}, {}, {}, {}
-            )
-        }
+                userResponse = user,
+                query = searchQuery,
+                isActive = searchIsActive,
+                searchHistoryQueriesResponse = searchHistoryQueries,
+                searchHistoryContactsResponse = searchHistoryContacts,
+                onQueryChange = viewModel::onSearchQueryChange,
+                onSearch = viewModel::onSearchClick,
+                onActiveChange = viewModel::onSearchActiveChange,
+                onMenuClick = {}) {
+
+            }
+        },
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (val res = contacts) {

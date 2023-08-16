@@ -25,4 +25,5 @@ object Constants {
     const val DB_NAME = "smile"
     const val DB_TABLE_ROOM = "rooms"
     const val DB_TABLE_MESSAGE = "messages"
+    const val DB_TABLE_SEARCH_HISTORY_QUERY = "searchHistoryQueries"
 }

@@ -95,9 +95,7 @@ fun ChatScreen(
     currentUserId: String
 ) {
     var notFunctionalState by remember { mutableStateOf(false) }
-    if (notFunctionalState) {
-        FunctionalityNotAvailablePopup { notFunctionalState = false }
-    }
+    if (notFunctionalState) { FunctionalityNotAvailablePopup { notFunctionalState = false } }
     val scrollState = rememberLazyListState()
     val topBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState)

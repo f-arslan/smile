@@ -1,7 +1,6 @@
 package com.smile.model.room
 
 import com.smile.model.room.module.SmileDao
-import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 
@@ -24,5 +23,10 @@ class RoomStorageService @Inject constructor(
         return smileDao.insertMessage(message)
     }
     fun getContactsWithNonEmptyLastMessageId() = smileDao.getContactsWithLastMessage()
+
+    suspend fun insertSearchHistoryQuery(searchHistoryQuery: SearchHistoryQueryEntity) =
+        smileDao.insertSearchHistoryQuery(searchHistoryQuery)
+
+    fun getSearchHistoryQuery() = smileDao.getSearchHistoryQuery()
 
 }

@@ -21,6 +21,7 @@
     <string name="cancel">Cancel</string>
     <string name="search">Search</string>
     <string name="menu">Menu</string>
+    <string name="history">History</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
