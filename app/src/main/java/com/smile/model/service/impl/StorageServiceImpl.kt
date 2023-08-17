@@ -1,5 +1,7 @@
 package com.smile.model.service.impl
 
+import android.util.Log
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.dataObjects
@@ -114,8 +116,48 @@ class StorageServiceImpl @Inject constructor(
     ) {
         scope.launch(Dispatchers.IO) {
             val contacts = roomStorageService.getContacts().first()
-            val groupedContacts = turnListToGroupByLetter(contacts)
-            onDataChange(groupedContacts)
+            // Give user data from Room DB, not updated one
+            onDataChange(turnListToGroupByLetter(contacts))
+
+            getContactColUnderUser(auth.currentUserId).snapshots().map { it.documentChanges }
+                .collect {
+                    // Observe changes for each document
+                    it.forEach { documentChange ->
+                        val contact = documentChange.document.toObject<Contact>()
+                        when (documentChange.type) {
+                            DocumentChange.Type.ADDED -> {
+                                Log.d("StorageServiceImpl", "Added")
+                                val isExist =
+                                    async { roomStorageService.isContactExist(contact.contactId) }.await()
+                                if (!isExist)
+                                    roomStorageService.insertContact(contact.toRoomContact())
+                            }
+
+                            DocumentChange.Type.MODIFIED -> {
+                                roomStorageService.updateContact(
+                                    contact.contactId,
+                                    contact.firstName,
+                                    contact.lastName
+                                )
+                            }
+
+                            DocumentChange.Type.REMOVED -> {
+                                roomStorageService.deleteContact(contact.contactId)
+                                // get contactIds under user
+                                val userDoc = getUserDocRef(auth.currentUserId).get().await()
+                                val user = userDoc.toObject<User>()
+                                val contactIds = user?.contactIds ?: emptyList()
+                                // remove contactId from user
+                                getUserDocRef(auth.currentUserId).update(
+                                    USER_CONTACT_IDS_FIELD,
+                                    contactIds.filter { id -> id != contact.contactId }
+                                ).await()
+                                // TODO: Handle delete for both sides
+                            }
+                        }
+                    }
+                    onDataChange(turnListToGroupByLetter(roomStorageService.getContacts().first()))
+                }
         }
     }
 

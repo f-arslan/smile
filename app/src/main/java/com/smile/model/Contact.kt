@@ -13,6 +13,7 @@ data class Contact(
     val lastName: String = "",
     val email: String = "",
     val roomId: String = "",
+    val lastMessageId: String = ""
 ) {
     fun toRoomContact(): ContactEntity {
         return ContactEntity(
@@ -22,7 +23,8 @@ data class Contact(
             firstName = firstName,
             lastName = lastName,
             email = email,
-            roomId = roomId
+            roomId = roomId,
+            lastMessageId = lastMessageId
         )
     }
 }

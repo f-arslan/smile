@@ -102,7 +102,7 @@ fun ContactListWithLetter(
         }
         Spacer(Modifier.height(MEDIUM_PADDING))
         LazyColumn {
-            items(contacts, key = { it.contactId }) {
+            items(contacts) {
                 ContactItem(name = "${it.firstName} ${it.lastName}") {
                     onContactClick(it.contactId, it.roomId)
                 }

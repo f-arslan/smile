@@ -45,6 +45,7 @@ import com.smile.model.room.SearchHistoryQueryEntity
 import com.smile.model.service.module.Response
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
+import com.smile.util.Constants.NO_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
 
@@ -68,6 +69,10 @@ fun AppSearchBar(
         modifier = Modifier
             .fillMaxWidth()
             .statusBarsPadding()
+            .padding(
+                start = if (isActive) NO_PADDING else MEDIUM_PADDING,
+                end = if (isActive) NO_PADDING else MEDIUM_PADDING
+            )
             .semantics {
                 isTraversalGroup = true
             }
