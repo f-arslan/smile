@@ -1,14 +1,18 @@
 package com.smile.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -19,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,11 +38,18 @@ import com.smile.model.service.module.Response
 import com.smile.ui.view_models.HomeScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MAX_PADDING
+import com.smile.util.Constants.MEDIUM_HIGH_PADDING
+import com.smile.util.Constants.MEDIUM_PADDING
+import com.smile.util.Constants.SMALL_PADDING
 import com.smile.util.isTodayOrDate
 
 
 @Composable
-fun HomeScreenProvider(navigate: () -> Unit, viewModel: HomeScreenViewModel = hiltViewModel()) {
+fun HomeScreenProvider(
+    navigate: () -> Unit,
+    navigateToChat: (String, String) -> Unit,
+    viewModel: HomeScreenViewModel = hiltViewModel()
+) {
     LaunchedEffect(Unit) { viewModel.getData() }
     val contacts by viewModel.contacts.collectAsStateWithLifecycle()
     val user by viewModel.user.collectAsStateWithLifecycle()
@@ -62,9 +74,10 @@ fun HomeScreenProvider(navigate: () -> Unit, viewModel: HomeScreenViewModel = hi
                 onQueryChange = viewModel::onSearchQueryChange,
                 onSearch = viewModel::onSearchClick,
                 onActiveChange = viewModel::onSearchActiveChange,
-                onMenuClick = {}) {
-
-            }
+                onMenuClick = {},
+                onAvatarClick = {},
+                onContactClick = navigateToChat
+            )
         },
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
@@ -73,6 +86,7 @@ fun HomeScreenProvider(navigate: () -> Unit, viewModel: HomeScreenViewModel = hi
                 is Response.Success -> {
                     LastContactList(data = res.data)
                 }
+
                 else -> {}
             }
         }
@@ -81,7 +95,11 @@ fun HomeScreenProvider(navigate: () -> Unit, viewModel: HomeScreenViewModel = hi
 
 @Composable
 fun LastContactList(data: List<HomeContactEntity>) {
-    LazyColumn {
+    LazyColumn(
+        contentPadding = PaddingValues(MEDIUM_PADDING), verticalArrangement = Arrangement.spacedBy(
+            MEDIUM_PADDING
+        )
+    ) {
         items(data, key = { it.contactId }) { contact ->
             LastContactItem(contact)
         }
@@ -90,7 +108,12 @@ fun LastContactList(data: List<HomeContactEntity>) {
 
 @Composable
 fun LastContactItem(contact: HomeContactEntity) {
-    Row(modifier = Modifier.padding(HIGH_PADDING)) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(HIGH_PADDING))
+        .clickable { }
+        .padding(MEDIUM_HIGH_PADDING)
+    ) {
         LetterInCircle(letter = contact.firstName.first().uppercase())
         Spacer(Modifier.width(HIGH_PADDING))
         Column {
@@ -111,6 +134,7 @@ fun LastContactItem(contact: HomeContactEntity) {
                     fontWeight = FontWeight.SemiBold
                 )
             }
+            Spacer(modifier = Modifier.height(SMALL_PADDING))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -120,7 +144,7 @@ fun LastContactItem(contact: HomeContactEntity) {
                     maxLines = 2,
                     modifier = Modifier.weight(1f),
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyMedium,
                 )
                 Spacer(Modifier.width(MAX_PADDING))
             }

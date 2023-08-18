@@ -1,6 +1,5 @@
 package com.smile.model.service.impl
 
-import android.util.Log
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -126,10 +125,7 @@ class StorageServiceImpl @Inject constructor(
                         val contact = documentChange.document.toObject<Contact>()
                         when (documentChange.type) {
                             DocumentChange.Type.ADDED -> {
-                                Log.d("StorageServiceImpl", "Added")
-                                val isExist =
-                                    async { roomStorageService.isContactExist(contact.contactId) }.await()
-                                if (!isExist)
+                                if (!roomStorageService.isContactExist(contact.contactId))
                                     roomStorageService.insertContact(contact.toRoomContact())
                             }
 
@@ -143,11 +139,9 @@ class StorageServiceImpl @Inject constructor(
 
                             DocumentChange.Type.REMOVED -> {
                                 roomStorageService.deleteContact(contact.contactId)
-                                // get contactIds under user
                                 val userDoc = getUserDocRef(auth.currentUserId).get().await()
                                 val user = userDoc.toObject<User>()
                                 val contactIds = user?.contactIds ?: emptyList()
-                                // remove contactId from user
                                 getUserDocRef(auth.currentUserId).update(
                                     USER_CONTACT_IDS_FIELD,
                                     contactIds.filter { id -> id != contact.contactId }

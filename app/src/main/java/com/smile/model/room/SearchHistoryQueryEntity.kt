@@ -9,4 +9,6 @@ data class SearchHistoryQueryEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val query: String = "",
     val timeStamp: Long = 0L,
+    val contactId: String = "",
+    val roomId: String = ""
 )

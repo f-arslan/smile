@@ -22,6 +22,7 @@
     <string name="search">Search</string>
     <string name="menu">Menu</string>
     <string name="history">History</string>
+    <string name="contact">Contact</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>

@@ -51,44 +51,58 @@ class HomeScreenViewModel @Inject constructor(
 
     fun onSearchQueryChange(query: String) {
         _searchQuery.value = query
-        if (_contacts.value is Response.Success && _searchQueries.value is Response.Success) {
-            // Get query than update _searchHistoryQueries and _searchHistoryContacts
+        val contactsResponse = _contacts.value
+        val searchQueriesResponse = _searchQueries.value
+
+        if (contactsResponse is Response.Success && searchQueriesResponse is Response.Success) {
             val searchQuery = _searchQuery.value
-            val contacts = (_contacts.value as Response.Success).data
-            val searchQueries = (_searchQueries.value as Response.Success).data
+            val contacts = contactsResponse.data
+            val searchQueries = searchQueriesResponse.data
+
             val filteredQueries = searchQueries.filter { it.query.contains(searchQuery) }
-            _searchHistoryQueries.value = Response.Success(filteredQueries)
-            _searchHistoryContacts.value = Response.Success(
+
+            val filteredContacts = if (searchQuery.length >= 3) {
                 contacts.filter {
-                    it.firstName.contains(searchQuery) || it.lastName.contains(
-                        searchQuery
-                    )
+                    it.firstName.contains(searchQuery, ignoreCase = true) ||
+                            it.lastName.contains(searchQuery, ignoreCase = true)
                 }.takeLast(5)
-            )
+            } else {
+                emptyList()  // Clear the list if searchQuery size is smaller than 3
+            }
+
+            _searchHistoryQueries.value = Response.Success(filteredQueries)
+            _searchHistoryContacts.value = Response.Success(filteredContacts)
         }
     }
 
+
     fun onSearchClick(searchQuery: String) {
         launchCatching {
-            when (val res = _searchQueries.value) {
-                is Response.Success -> {
-                    val queries = res.data.map { it.query }
-                    if (!queries.contains(searchQuery)) {
-                        insertSearchHistoryQuery(searchQuery)
-                    }
-                }
+            val contactsResponse = _contacts.value
+            val searchQueriesResponse = _searchQueries.value
 
-                else -> {}
+            if (contactsResponse is Response.Success && searchQueriesResponse is Response.Success) {
+                val contactNames = contactsResponse.data.map { "${it.firstName} ${it.lastName}" }
+                val queries = searchQueriesResponse.data.map { it.query }.toHashSet()
+
+                if (searchQuery in contactNames && searchQuery !in queries) {
+                    val index = contactNames.indexOf(searchQuery)
+                    val contactId = contactsResponse.data[index].contactId
+                    val roomId = contactsResponse.data[index].roomId
+                    insertSearchHistoryQuery(contactId, roomId, searchQuery)
+                }
             }
         }
     }
 
-    private fun insertSearchHistoryQuery(searchQuery: String) {
+    private fun insertSearchHistoryQuery(contactId: String, roomId: String, searchQuery: String) {
         launchCatching {
             roomStorageService.insertSearchHistoryQuery(
                 SearchHistoryQueryEntity(
                     query = searchQuery,
-                    timeStamp = getCurrentTimestamp()
+                    timeStamp = getCurrentTimestamp(),
+                    contactId = contactId,
+                    roomId = roomId
                 )
             )
         }

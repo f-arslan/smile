@@ -35,7 +35,12 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
         LoginScreenProvider { destination -> appState.clearAndNavigate(destination) }
     }
     composable(HOME_SCREEN) {
-        HomeScreenProvider(navigate = {appState.navigate(CONTACT_SCREEN)})
+        HomeScreenProvider(
+            navigate = { appState.navigate(CONTACT_SCREEN) },
+            navigateToChat = { contactId, roomId ->
+                appState.navigate("$CHAT_SCREEN/$contactId/$roomId")
+            }
+        )
     }
 
     composable(CONTACT_SCREEN) {

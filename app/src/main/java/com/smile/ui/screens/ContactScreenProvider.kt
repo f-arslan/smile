@@ -3,6 +3,7 @@ package com.smile.ui.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,8 +36,11 @@ import com.smile.model.room.ContactEntity
 import com.smile.ui.view_models.ContactScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.HIGH_PLUS_PADDING
+import com.smile.util.Constants.MAX_PADDING
+import com.smile.util.Constants.MEDIUM_HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.util.Constants.SMALL_PADDING
+import com.smile.util.Constants.VERY_HIGH_PADDING
 
 @Composable
 fun ContactScreenProvider(
@@ -81,7 +85,11 @@ fun ContactScreen(
         Column(modifier = Modifier.padding(paddingValues)) {
             NewContactButton(navigateNewContact)
             for (contact in groupContacts) {
-                ContactListWithLetter(contact[0].firstName.substring(0, 1), contact, navigateChatScreen)
+                ContactListWithLetter(
+                    contact[0].firstName.substring(0, 1),
+                    contact,
+                    navigateChatScreen
+                )
             }
         }
     }
@@ -100,8 +108,10 @@ fun ContactListWithLetter(
             Spacer(Modifier.width(HIGH_PLUS_PADDING))
             Text(text = label.uppercase(), style = MaterialTheme.typography.titleMedium)
         }
-        Spacer(Modifier.height(MEDIUM_PADDING))
-        LazyColumn {
+        Spacer(modifier = Modifier.height(SMALL_PADDING))
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
+        ) {
             items(contacts) {
                 ContactItem(name = "${it.firstName} ${it.lastName}") {
                     onContactClick(it.contactId, it.roomId)
@@ -119,7 +129,7 @@ fun ContactItem(name: String, onContactClick: () -> Unit) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(HIGH_PADDING))
             .clickable { onContactClick() }
-            .padding(horizontal = SMALL_PADDING, vertical = MEDIUM_PADDING),
+            .padding(MEDIUM_HIGH_PADDING),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(HIGH_PADDING)
     ) {

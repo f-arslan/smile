@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
@@ -30,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -62,7 +64,8 @@ fun AppSearchBar(
     onSearch: (String) -> Unit,
     onActiveChange: (Boolean) -> Unit,
     onMenuClick: () -> Unit,
-    onAvatarClick: () -> Unit
+    onAvatarClick: () -> Unit,
+    onContactClick: (String, String) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Box(
@@ -96,17 +99,27 @@ fun AppSearchBar(
                 }
             },
             trailingIcon = {
-                IconButton(onClick = onAvatarClick) {
-                    when (userResponse) {
-                        is Response.Success -> {
-                            val user = userResponse.data
-                            val userLetter = user.displayName.first().toString()
-                            UserAvatar(letter = userLetter)
-                        }
+                if (!isActive)
+                    IconButton(onClick = onAvatarClick) {
+                        when (userResponse) {
+                            is Response.Success -> {
+                                val user = userResponse.data
+                                val userLetter = user.displayName.first().toString()
+                                UserAvatar(letter = userLetter)
+                            }
 
-                        else -> {}
+                            else -> {}
+                        }
                     }
-                }
+                else
+                    IconButton(onClick = { onQueryChange("") }) {
+                        Icon(
+                            painter = painterResource(id = AppDrawable.outline_cancel_24),
+                            contentDescription = stringResource(
+                                id = AppText.cancel
+                            )
+                        )
+                    }
             },
             leadingIcon = {
                 DefaultIconButton(
@@ -123,45 +136,59 @@ fun AppSearchBar(
         ) {
             if (searchHistoryContactsResponse is Response.Success && searchHistoryQueriesResponse is Response.Success) {
                 LazyColumn(
-                    contentPadding = PaddingValues(HIGH_PADDING),
-                    verticalArrangement = Arrangement.spacedBy(
-                        MEDIUM_PADDING
-                    )
+                    contentPadding = PaddingValues(MEDIUM_PADDING),
+                    verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
                 ) {
-                    items(searchHistoryQueriesResponse.data) {
-                        SearchHistoryItem(query = it.query)
-                    }
-                    if (searchHistoryContactsResponse.data.isNotEmpty())
-                        item { Divider() }
-                    items(searchHistoryContactsResponse.data) {
+                    items(searchHistoryQueriesResponse.data) { queryEntity ->
                         SearchHistoryItem(
-                            query = "${it.firstName} ${it.lastName}",
-                            isHistory = false
-                        )
+                            query = queryEntity.query,
+                            onContactClick = {
+                                onContactClick(
+                                    queryEntity.contactId,
+                                    queryEntity.roomId
+                                )
+                            })
+                    }
+                    if (searchHistoryQueriesResponse.data.isNotEmpty() && searchHistoryContactsResponse.data.isNotEmpty()) {
+                        item { Divider() }
+                    }
+                    items(searchHistoryContactsResponse.data) { contactEntity ->
+                        val contactName = "${contactEntity.firstName} ${contactEntity.lastName}"
+                        SearchHistoryItem(
+                            query = contactName,
+                            isHistory = false,
+                            onContactClick = {
+                                onContactClick(
+                                    contactEntity.contactId,
+                                    contactEntity.roomId
+                                )
+                            })
                     }
                 }
             }
+
         }
     }
 }
 
 @Composable
-fun SearchHistoryItem(query: String, isHistory: Boolean = true) {
+fun SearchHistoryItem(query: String, isHistory: Boolean = true, onContactClick: () -> Unit) {
+    val icon = if (isHistory) AppDrawable.outline_history_24 else AppDrawable.outline_person_24
+    val contentDescription = if (isHistory) AppText.history else AppText.contact
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(MEDIUM_PADDING),
+            .clip(RoundedCornerShape(HIGH_PADDING))
+            .clickable { onContactClick() }
+            .padding(HIGH_PADDING),
         horizontalArrangement = Arrangement.spacedBy(
             HIGH_PADDING
         )
     ) {
-        if (isHistory)
-            Icon(
-                painter = painterResource(id = AppDrawable.outline_history_24),
-                contentDescription = stringResource(
-                    id = AppText.history
-                )
-            )
+        Icon(
+            painter = painterResource(id = icon),
+            contentDescription = stringResource(id = contentDescription)
+        )
         Text(text = query, fontWeight = FontWeight.SemiBold)
     }
 }
@@ -236,5 +263,5 @@ fun AppSearchBarPreview() {
         searchHistoryContactsResponse = Response.Loading,
         onQueryChange = {},
         onSearch = {},
-        onActiveChange = {}, {}, {})
+        onActiveChange = {}, {}, {}, { r, v -> })
 }

@@ -51,4 +51,8 @@ interface SmileDao {
 
     @Query("UPDATE contacts SET firstName = :firstName, lastName = :lastName WHERE contactId = :contactId")
     suspend fun updateContact(contactId: String, firstName: String, lastName: String)
+
+    // Delete Search History
+    @Query("DELETE FROM searchHistoryQueries")
+    suspend fun deleteSearchHistory()
 }
