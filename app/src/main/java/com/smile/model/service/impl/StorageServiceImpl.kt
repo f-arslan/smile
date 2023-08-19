@@ -188,9 +188,13 @@ class StorageServiceImpl @Inject constructor(
         it.toObjects<Message>()
     }
 
+    override suspend fun saveFcmToken(token: String) {
+        tokenColRef.document(auth.currentUserId).set(mapOf("token" to token)).await()
+    }
 
     private val roomColRef by lazy { firestore.collection(ROOM_COLLECTION) }
     private val userColRef by lazy { firestore.collection(USER_COLLECTION) }
+    private val tokenColRef by lazy { firestore.collection(TOKEN_COLLECTION) }
 
     private fun getUserDocRef(id: String) = userColRef.document(id)
     private fun getContactColUnderUser(id: String) =
@@ -201,6 +205,7 @@ class StorageServiceImpl @Inject constructor(
         private const val USER_COLLECTION = "users"
         private const val MESSAGE_COLLECTION = "messages"
         private const val ROOM_COLLECTION = "rooms"
+        private const val TOKEN_COLLECTION = "tokens"
 
         private const val USER_CONTACT_IDS_FIELD = "contactIds"
         private const val USER_EMAIL_VERIFIED = "emailVerified"

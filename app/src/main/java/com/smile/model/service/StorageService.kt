@@ -26,4 +26,6 @@ interface StorageService {
     )
 
     suspend fun getMessages(roomId: String): Flow<List<Message>>
+
+    suspend fun saveFcmToken(token: String)
 }
