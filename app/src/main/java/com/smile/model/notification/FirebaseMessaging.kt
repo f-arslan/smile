@@ -17,9 +17,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.smile.R.drawable as AppDrawable
 
-class FirebaseMessaging @Inject constructor(
-    private val storageService: StorageService
-) : FirebaseMessagingService() {
+class FirebaseMessaging : FirebaseMessagingService() {
+
+    @Inject
+    lateinit var storageService: StorageService
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
         Log.d("FirebaseMessaging", "onMessageReceived: ${message.data}")

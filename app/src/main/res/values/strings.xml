@@ -23,6 +23,7 @@
     <string name="menu">Menu</string>
     <string name="history">History</string>
     <string name="contact">Contact</string>
+    <string name="ok">OK</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
@@ -81,5 +82,10 @@
     <string name="require_first_name">First name is required.</string>
     <string name="require_last_name">Last name is required.</string>
 
-
+    <!-- FCM -->
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="request_notification_permission">Request permission</string>
+    <string name="notification_permission_title">Notification permission</string>
+    <string name="notification_permission_description">The notification permission is important for this app. Please grant the permission.</string>
+    <string name="notification_permission_settings">The notification permission is important for this app. Please navigate to your device settings and enable notifications for Smile.</string>
 </resources>

@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.crashlytics.ktx)
     implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.messaging.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -109,4 +110,11 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
+
+    // Retrofit
+    implementation (libs.retrofit2.retrofit)
+    implementation (libs.converter.gson)
+
+    // Permission
+    implementation(libs.accompanist.permissions)
 }
