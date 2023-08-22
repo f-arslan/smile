@@ -20,4 +20,6 @@ open class SmileViewModel(private val logService: LogService): ViewModel() {
             },
             block = block
         )
+
+
 }

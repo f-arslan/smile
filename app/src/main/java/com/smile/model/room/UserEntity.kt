@@ -13,4 +13,5 @@ data class UserEntity(
     val email: String = "",
     val profilePictureUrl: String = "",
     val isEmailVerified : Boolean = false,
+    val fcmToken: String = "",
 )

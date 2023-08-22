@@ -45,7 +45,7 @@ class ChatScreenViewModel @Inject constructor(
                     status = MessageStatus.SENT
                 ),
                 roomId,
-                contactId
+                contactId,
             )
         }
     }

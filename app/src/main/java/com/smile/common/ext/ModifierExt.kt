@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.util.Constants.NO_PADDING

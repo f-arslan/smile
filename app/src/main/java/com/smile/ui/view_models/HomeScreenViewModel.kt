@@ -1,5 +1,8 @@
 package com.smile.ui.view_models
 
+import android.util.Log
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.smile.SmileViewModel
 import com.smile.model.User
 import com.smile.model.room.HomeContactEntity
@@ -12,6 +15,7 @@ import com.smile.util.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -116,6 +120,7 @@ class HomeScreenViewModel @Inject constructor(
         }
         getCurrentUser()
         getSearchHistoryQueries()
+        saveFcmToken()
     }
 
     private fun getCurrentUser() {
@@ -124,6 +129,16 @@ class HomeScreenViewModel @Inject constructor(
                 if (it != null) {
                     _user.value = Response.Success(it)
                 }
+            }
+        }
+    }
+
+    private fun saveFcmToken() {
+        launchCatching {
+            val currentUser = storageService.getUser()
+            if (currentUser != null && currentUser.fcmToken.isEmpty()) {
+                val token = Firebase.messaging.token.await()
+                storageService.saveFcmToken(token)
             }
         }
     }

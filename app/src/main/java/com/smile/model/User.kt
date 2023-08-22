@@ -10,6 +10,7 @@ data class User(
     val profilePictureUrl: String = "",
     val isEmailVerified : Boolean = false,
     val contactIds: List<String> = emptyList(),
+    val fcmToken: String = "",
 ) {
     fun toRoomUser(): UserEntity {
         return UserEntity(
@@ -18,6 +19,7 @@ data class User(
             email = email,
             profilePictureUrl = profilePictureUrl,
             isEmailVerified = isEmailVerified,
+            fcmToken = fcmToken
         )
     }
 }

@@ -14,6 +14,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,6 +32,7 @@ import com.google.accompanist.permissions.shouldShowRationale
 import com.smile.common.composables.PermissionDialog
 import com.smile.common.composables.RationaleDialog
 import com.smile.common.snackbar.SnackbarManager
+import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import com.smile.ui.screens.graph.appGraph
 import com.smile.ui.view_models.AppViewModel
@@ -57,7 +59,7 @@ fun SmileApp(viewModel: AppViewModel = hiltViewModel()) {
                 }
             )
         }) {
-            NavHost(navController = appState.navController, startDestination = LOGIN_SCREEN) {
+            NavHost(navController = appState.navController, startDestination = HOME_SCREEN) {
                 appGraph(appState)
             }
         }
@@ -87,7 +89,8 @@ fun rememberAppState(
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun RequestNotificationPermissionDialog() {
-    val permissionState = rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+    val permissionState =
+        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
 
     if (!permissionState.status.isGranted) {
         if (permissionState.status.shouldShowRationale) RationaleDialog()

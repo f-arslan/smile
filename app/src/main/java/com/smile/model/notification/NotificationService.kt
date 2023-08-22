@@ -1,5 +1,6 @@
 package com.smile.model.notification
 
+import com.smile.model.notification.models.PushNotification
 import com.smile.util.Secrets.CONTENT_TYPE
 import com.smile.util.Secrets.SERVER_KEY
 import okhttp3.ResponseBody

@@ -1,5 +1,6 @@
 package com.smile.model.service.impl
 
+import android.util.Log
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -11,6 +12,9 @@ import com.smile.model.Contact
 import com.smile.model.Message
 import com.smile.model.Room
 import com.smile.model.User
+import com.smile.model.notification.models.PushNotification
+import com.smile.model.notification.models.NotificationData
+import com.smile.model.notification.RetrofitObject
 import com.smile.model.room.ContactEntity
 import com.smile.model.room.RoomEntity
 import com.smile.model.room.RoomStorageService
@@ -158,7 +162,6 @@ class StorageServiceImpl @Inject constructor(
     override suspend fun getContact(contactId: String) =
         roomStorageService.getContact(contactId)
 
-
     override suspend fun sendMessage(
         scope: CoroutineScope,
         message: Message,
@@ -166,19 +169,42 @@ class StorageServiceImpl @Inject constructor(
         contactId: String
     ) {
         val fireStoreMessageId: String
-        roomColRef.document(roomId).collection(MESSAGE_COLLECTION).add(message).await().also {
-            fireStoreMessageId = it.id
-        }
-        roomColRef.document(roomId).update(CONTACT_LAST_MESSAGE, message).await()
+        val batch = firestore.batch()
+        val messageRef = roomColRef.document(roomId).collection(MESSAGE_COLLECTION).document()
+        batch.set(messageRef, message)
+        fireStoreMessageId = messageRef.id
+        batch.update(roomColRef.document(roomId), CONTACT_LAST_MESSAGE, message)
         scope.launch(Dispatchers.IO) {
-            val messageId =
-                async {
-                    roomStorageService.insertMessage(
-                        message.copy(messageId = fireStoreMessageId).toMessageEntity()
-                    )
-                }.await()
+            val messageId = async {
+                roomStorageService.insertMessage(
+                    message.copy(messageId = fireStoreMessageId).toMessageEntity()
+                )
+            }.await()
             roomStorageService.updateRoomLastMessage(roomId, messageId.toInt())
             roomStorageService.updateContactLastMessage(contactId, messageId.toInt())
+        }
+        batch.commit().await()
+        sendPushNotification(message, contactId, roomId)
+    }
+
+    private suspend fun sendPushNotification(message: Message, contactId: String, roomId: String) {
+        val friendId = contactId.split("_")[1]
+        val userDoc = getUserDocRef(friendId).get().await().toObject<User>()
+            ?: throw Exception("User not found")
+        if (userDoc.fcmToken.isEmpty()) throw Exception("User has no fcm token")
+        val data = NotificationData(
+            token = userDoc.fcmToken,
+            title = userDoc.displayName,
+            body = message.content,
+            roomId = roomId,
+            contactId = contactId
+        )
+        val pushNotification = PushNotification(to = userDoc.fcmToken, data = data)
+        val response = RetrofitObject.notificationApi?.postNotification(pushNotification)
+        if (response != null && response.isSuccessful) {
+            Log.d("StorageServiceImpl", "Notification sent successfully")
+        } else {
+            throw Exception("Retrofit error: ${response?.errorBody()?.string()}")
         }
     }
 
@@ -189,12 +215,15 @@ class StorageServiceImpl @Inject constructor(
     }
 
     override suspend fun saveFcmToken(token: String) {
-        tokenColRef.document(auth.currentUserId).set(mapOf("token" to token)).await()
+        getUserDocRef(auth.currentUserId).update(USER_FCM_TOKEN, token).await()
     }
+
+    override suspend fun getUser() =
+        getUserDocRef(auth.currentUserId).get().await().toObject<User>()
+
 
     private val roomColRef by lazy { firestore.collection(ROOM_COLLECTION) }
     private val userColRef by lazy { firestore.collection(USER_COLLECTION) }
-    private val tokenColRef by lazy { firestore.collection(TOKEN_COLLECTION) }
 
     private fun getUserDocRef(id: String) = userColRef.document(id)
     private fun getContactColUnderUser(id: String) =
@@ -205,11 +234,11 @@ class StorageServiceImpl @Inject constructor(
         private const val USER_COLLECTION = "users"
         private const val MESSAGE_COLLECTION = "messages"
         private const val ROOM_COLLECTION = "rooms"
-        private const val TOKEN_COLLECTION = "tokens"
 
         private const val USER_CONTACT_IDS_FIELD = "contactIds"
         private const val USER_EMAIL_VERIFIED = "emailVerified"
         private const val MESSAGE_TIMESTAMP = "timestamp"
         private const val CONTACT_LAST_MESSAGE = "lastMessage"
+        private const val USER_FCM_TOKEN = "fcmToken"
     }
 }
