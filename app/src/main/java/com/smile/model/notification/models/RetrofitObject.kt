@@ -1,5 +1,6 @@
-package com.smile.model.notification
+package com.smile.model.notification.models
 
+import com.smile.model.notification.NotificationService
 import com.smile.util.Secrets.BASE_URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

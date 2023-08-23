@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.smile.ui.screens.ChatScreen
+import com.smile.ui.screens.ChatScreenProvider
 import com.smile.ui.theme.SmileTheme
 import dagger.hilt.android.AndroidEntryPoint
 

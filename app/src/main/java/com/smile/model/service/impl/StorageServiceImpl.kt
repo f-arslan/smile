@@ -14,7 +14,7 @@ import com.smile.model.Room
 import com.smile.model.User
 import com.smile.model.notification.models.PushNotification
 import com.smile.model.notification.models.NotificationData
-import com.smile.model.notification.RetrofitObject
+import com.smile.model.notification.models.RetrofitObject
 import com.smile.model.room.ContactEntity
 import com.smile.model.room.RoomEntity
 import com.smile.model.room.RoomStorageService

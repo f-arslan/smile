@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.smile.SmileAppState
 import com.smile.ui.screens.ChatScreenProvider
 import com.smile.ui.screens.ContactScreenProvider
@@ -65,7 +66,7 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
             navArgument("roomId") {
                 type = NavType.StringType
             }
-        )
+        ),
     ) {
         ChatScreenProvider(
             contactId = it.arguments?.getString("contactId") ?: "",
