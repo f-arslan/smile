@@ -25,9 +25,7 @@ interface StorageService {
         contactId: String
     )
 
-    suspend fun getLastMessageInRoom(roomId: String): Flow<Message>
-
-    suspend fun getMessages(roomId: String): Flow<List<Message>>
+    suspend fun getMessages(scope: CoroutineScope, roomId: String, contactId: String): Flow<List<Message>>
 
     suspend fun saveFcmToken(token: String)
 

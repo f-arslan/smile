@@ -171,7 +171,11 @@ class StorageServiceImpl @Inject constructor(
         batch.set(messageRef, message)
         batch.update(roomColRef.document(roomId), CONTACT_LAST_MESSAGE, message)
         scope.launch(Dispatchers.IO) {
-            roomStorageService.updateContactLastMessage(contactId, message.content)
+            roomStorageService.updateContactLastMessage(
+                contactId,
+                message.content,
+                message.timestamp
+            )
         }
         batch.commit().await()
         sendPushNotification(message, contactId, roomId)
@@ -198,16 +202,35 @@ class StorageServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMessages(roomId: String) = roomColRef.document(roomId).collection(
-        MESSAGE_COLLECTION
-    ).orderBy(MESSAGE_TIMESTAMP, Query.Direction.DESCENDING).snapshots().map {
-        it.toObjects<Message>()
+    override suspend fun getMessages(
+        scope: CoroutineScope,
+        roomId: String,
+        contactId: String
+    ): Flow<List<Message>> {
+        // Listen changes in room collection if there is update in last message update the db
+        roomColRef.document(roomId).addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.e("StorageServiceImpl", "Error while listening to room collection", error)
+                return@addSnapshotListener
+            }
+            value ?: throw Exception("Room not found")
+            val room = value.toObject<Room>() ?: throw Exception("Room not found")
+            scope.launch(Dispatchers.IO) {
+                roomStorageService.updateContactLastMessage(
+                    contactId,
+                    room.lastMessage.content,
+                    room.lastMessage.timestamp
+                )
+            }
+        }
+
+        return roomColRef.document(roomId).collection(
+            MESSAGE_COLLECTION
+        ).orderBy(MESSAGE_TIMESTAMP, Query.Direction.DESCENDING).snapshots().map {
+            it.toObjects<Message>()
+        }
     }
 
-    override suspend fun getLastMessageInRoom(roomId: String) =
-        getRoomDocRef(roomId).snapshots().map {
-            it.toObject<Room>()?.lastMessage ?: throw Exception("Room not found")
-        }
 
     override suspend fun saveFcmToken(token: String) {
         getUserDocRef(auth.currentUserId).update(USER_FCM_TOKEN, token).await()
@@ -221,7 +244,6 @@ class StorageServiceImpl @Inject constructor(
     private val userColRef by lazy { firestore.collection(USER_COLLECTION) }
 
     private fun getUserDocRef(id: String) = userColRef.document(id)
-    private fun getRoomDocRef(id: String) = roomColRef.document(id)
     private fun getContactColUnderUser(id: String) =
         getUserDocRef(id).collection(CONTACT_COLLECTION)
 

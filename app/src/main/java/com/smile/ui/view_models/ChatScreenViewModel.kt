@@ -53,7 +53,7 @@ class ChatScreenViewModel @Inject constructor(
     fun getContactAndMessage(contactId: String, roomId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val contactFlow = storageService.getContact(contactId)
-            val messagesFlow = storageService.getMessages(roomId)
+            val messagesFlow = storageService.getMessages(viewModelScope, roomId, contactId)
             // Combine these flow with combine operator
             combine(contactFlow, messagesFlow) { contact, messages ->
                 _contactState.value = Response.Success(contact)
