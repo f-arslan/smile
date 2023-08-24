@@ -45,7 +45,7 @@ fun RegisterScreenProvider(
         mutableStateOf(false)
     }
     if (verificationState) {
-        VerificationDialog(text = AppText.email_confirmation_body) {
+        VerificationDialog {
             verificationState = false
             openAndPopUp(LOGIN_SCREEN)
         }

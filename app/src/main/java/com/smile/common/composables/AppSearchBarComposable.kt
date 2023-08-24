@@ -42,7 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smile.model.User
-import com.smile.model.room.HomeContactEntity
+import com.smile.model.room.ContactEntity
 import com.smile.model.room.SearchHistoryQueryEntity
 import com.smile.model.service.module.Response
 import com.smile.util.Constants.HIGH_PADDING
@@ -59,7 +59,7 @@ fun AppSearchBar(
     query: String,
     isActive: Boolean,
     searchHistoryQueriesResponse: Response<List<SearchHistoryQueryEntity>>,
-    searchHistoryContactsResponse: Response<List<HomeContactEntity>>,
+    searchHistoryContactsResponse: Response<List<ContactEntity>>,
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
     onActiveChange: (Boolean) -> Unit,

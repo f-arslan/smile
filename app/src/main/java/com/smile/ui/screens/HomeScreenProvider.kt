@@ -33,7 +33,7 @@ import com.smile.common.composables.AppFloActionButton
 import com.smile.common.composables.AppSearchBar
 import com.smile.common.composables.FunctionalityNotAvailablePopup
 import com.smile.common.composables.LetterInCircle
-import com.smile.model.room.HomeContactEntity
+import com.smile.model.room.ContactEntity
 import com.smile.model.service.module.Response
 import com.smile.ui.view_models.HomeScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
@@ -95,7 +95,7 @@ fun HomeScreenProvider(
 }
 
 @Composable
-fun LastContactList(data: List<HomeContactEntity>) {
+fun LastContactList(data: List<ContactEntity>) {
     LazyColumn(
         contentPadding = PaddingValues(MEDIUM_PADDING), verticalArrangement = Arrangement.spacedBy(
             MEDIUM_PADDING
@@ -108,7 +108,7 @@ fun LastContactList(data: List<HomeContactEntity>) {
 }
 
 @Composable
-fun LastContactItem(contact: HomeContactEntity) {
+fun LastContactItem(contact: ContactEntity) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(HIGH_PADDING))
@@ -130,7 +130,7 @@ fun LastContactItem(contact: HomeContactEntity) {
                 )
                 Spacer(Modifier.width(MAX_PADDING))
                 Text(
-                    text = isTodayOrDate(contact.timestamp.toLong()),
+                    text = isTodayOrDate(contact.lastMessageTimeStamp),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -141,7 +141,7 @@ fun LastContactItem(contact: HomeContactEntity) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = contact.content,
+                    text = contact.lastMessage,
                     maxLines = 2,
                     modifier = Modifier.weight(1f),
                     overflow = TextOverflow.Ellipsis,
@@ -157,7 +157,7 @@ fun LastContactItem(contact: HomeContactEntity) {
 @Composable
 fun LastContactPreview() {
     LastContactItem(
-        HomeContactEntity(
+        ContactEntity(
             id = 4344,
             contactId = "dicunt",
             userId = "tota",
@@ -165,8 +165,8 @@ fun LastContactPreview() {
             firstName = "Mindy Lamb",
             lastName = "Jimmy Bradshaw",
             roomId = "mutat",
-            content = "quidam",
-            timestamp = "ornare"
+            lastMessage = "quidam",
+            lastMessageTimeStamp = 1619116800000
         )
     )
 }

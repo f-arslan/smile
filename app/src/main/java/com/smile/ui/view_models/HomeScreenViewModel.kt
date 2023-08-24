@@ -1,11 +1,10 @@
 package com.smile.ui.view_models
 
-import android.util.Log
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.smile.SmileViewModel
 import com.smile.model.User
-import com.smile.model.room.HomeContactEntity
+import com.smile.model.room.ContactEntity
 import com.smile.model.room.RoomStorageService
 import com.smile.model.room.SearchHistoryQueryEntity
 import com.smile.model.service.LogService
@@ -25,7 +24,7 @@ class HomeScreenViewModel @Inject constructor(
     logService: LogService
 ) : SmileViewModel(logService) {
     private val _contacts =
-        MutableStateFlow<Response<List<HomeContactEntity>>>(Response.Loading)
+        MutableStateFlow<Response<List<ContactEntity>>>(Response.Loading)
     val contacts = _contacts.asStateFlow()
 
     private val _searchQueries =
@@ -36,7 +35,7 @@ class HomeScreenViewModel @Inject constructor(
     val searchHistoryQueries = _searchHistoryQueries.asStateFlow()
 
     private val _searchHistoryContacts =
-        MutableStateFlow<Response<List<HomeContactEntity>>>(Response.Loading)
+        MutableStateFlow<Response<List<ContactEntity>>>(Response.Loading)
     val searchHistoryContacts = _searchHistoryContacts.asStateFlow()
 
     private val _searchQuery = MutableStateFlow("")
@@ -114,9 +113,7 @@ class HomeScreenViewModel @Inject constructor(
 
     fun getData() {
         launchCatching {
-            roomStorageService.getContactsWithNonEmptyLastMessageId().collect {
-                _contacts.value = Response.Success(it)
-            }
+           // Get contact and modify
         }
         getCurrentUser()
         getSearchHistoryQueries()

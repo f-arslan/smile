@@ -1,14 +1,9 @@
 package com.smile.model.room.module
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
 import com.smile.model.room.ContactEntity
-import com.smile.model.room.HomeContactEntity
-import com.smile.model.room.MessageEntity
-import com.smile.model.room.RoomEntity
 import com.smile.model.room.SearchHistoryQueryEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -20,22 +15,9 @@ interface SmileDao {
     fun getContacts(): Flow<List<ContactEntity>>
     @Query("SELECT * FROM contacts WHERE contactId = :contactId")
     fun getContact(contactId: String): Flow<ContactEntity>
-    @Insert
-    suspend fun insertRoom(room: RoomEntity)
-    @Query("Update rooms SET lastMessageId = :lastMessageId WHERE roomId = :roomId")
-    suspend fun updateRoomLastMessage(roomId: String, lastMessageId: Int)
 
-    @Query("Update contacts SET lastMessageId = :lastMessageId WHERE contactId = :contactId")
-    suspend fun updateContactLastMessage(contactId: String, lastMessageId: Int)
-
-    @Insert
-    suspend fun insertMessage(message: MessageEntity): Long
-
-
-    @Query("SELECT contacts.id, contacts.contactId, contacts.userId, contacts.friendId, contacts.firstName, " +
-            "contacts.lastName, contacts.roomId, messages.content, messages.timestamp FROM contacts " +
-            "INNER JOIN messages on contacts.lastMessageId = messages.id ORDER BY messages.timestamp DESC")
-    fun getContactsWithLastMessage(): Flow<List<HomeContactEntity>>
+    @Query("Update contacts SET lastMessage = :lastMessage WHERE contactId = :contactId")
+    suspend fun updateContactLastMessage(contactId: String, lastMessage: String)
 
     @Insert
     suspend fun insertSearchHistoryQuery(searchHistory: SearchHistoryQueryEntity)
@@ -51,8 +33,4 @@ interface SmileDao {
 
     @Query("UPDATE contacts SET firstName = :firstName, lastName = :lastName WHERE contactId = :contactId")
     suspend fun updateContact(contactId: String, firstName: String, lastName: String)
-
-    // Delete Search History
-    @Query("DELETE FROM searchHistoryQueries")
-    suspend fun deleteSearchHistory()
 }

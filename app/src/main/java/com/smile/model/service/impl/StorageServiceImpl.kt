@@ -12,11 +12,10 @@ import com.smile.model.Contact
 import com.smile.model.Message
 import com.smile.model.Room
 import com.smile.model.User
-import com.smile.model.notification.models.PushNotification
 import com.smile.model.notification.models.NotificationData
+import com.smile.model.notification.models.PushNotification
 import com.smile.model.notification.models.RetrofitObject
 import com.smile.model.room.ContactEntity
-import com.smile.model.room.RoomEntity
 import com.smile.model.room.RoomStorageService
 import com.smile.model.service.AccountService
 import com.smile.model.service.StorageService
@@ -93,7 +92,6 @@ class StorageServiceImpl @Inject constructor(
                         roomId = roomId
                     ).toRoomContact()
                 )
-                roomStorageService.insertRoom(RoomEntity(roomId = roomId, createdAt = currentTime))
             }
             batch.commit().await()
         }
@@ -168,20 +166,12 @@ class StorageServiceImpl @Inject constructor(
         roomId: String,
         contactId: String
     ) {
-        val fireStoreMessageId: String
         val batch = firestore.batch()
         val messageRef = roomColRef.document(roomId).collection(MESSAGE_COLLECTION).document()
         batch.set(messageRef, message)
-        fireStoreMessageId = messageRef.id
         batch.update(roomColRef.document(roomId), CONTACT_LAST_MESSAGE, message)
         scope.launch(Dispatchers.IO) {
-            val messageId = async {
-                roomStorageService.insertMessage(
-                    message.copy(messageId = fireStoreMessageId).toMessageEntity()
-                )
-            }.await()
-            roomStorageService.updateRoomLastMessage(roomId, messageId.toInt())
-            roomStorageService.updateContactLastMessage(contactId, messageId.toInt())
+            roomStorageService.updateContactLastMessage(contactId, message.content)
         }
         batch.commit().await()
         sendPushNotification(message, contactId, roomId)
@@ -214,6 +204,11 @@ class StorageServiceImpl @Inject constructor(
         it.toObjects<Message>()
     }
 
+    override suspend fun getLastMessageInRoom(roomId: String) =
+        getRoomDocRef(roomId).snapshots().map {
+            it.toObject<Room>()?.lastMessage ?: throw Exception("Room not found")
+        }
+
     override suspend fun saveFcmToken(token: String) {
         getUserDocRef(auth.currentUserId).update(USER_FCM_TOKEN, token).await()
     }
@@ -226,6 +221,7 @@ class StorageServiceImpl @Inject constructor(
     private val userColRef by lazy { firestore.collection(USER_COLLECTION) }
 
     private fun getUserDocRef(id: String) = userColRef.document(id)
+    private fun getRoomDocRef(id: String) = roomColRef.document(id)
     private fun getContactColUnderUser(id: String) =
         getUserDocRef(id).collection(CONTACT_COLLECTION)
 
