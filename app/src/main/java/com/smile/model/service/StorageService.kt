@@ -2,6 +2,7 @@ package com.smile.model.service
 
 import com.smile.model.Contact
 import com.smile.model.Message
+import com.smile.model.Room
 import com.smile.model.User
 import com.smile.model.room.ContactEntity
 import kotlinx.coroutines.CoroutineScope
@@ -16,6 +17,7 @@ interface StorageService {
     suspend fun findIdByEmail(email: String): String?
 
     suspend fun getContacts(scope: CoroutineScope, onDataChange: (List<List<ContactEntity>>) -> Unit)
+
     suspend fun getContact(contactId: String): Flow<ContactEntity>
 
     suspend fun sendMessage(
@@ -30,4 +32,6 @@ interface StorageService {
     suspend fun saveFcmToken(token: String)
 
     suspend fun getUser(): User?
+
+    fun getNonEmptyMessageRooms(userId: String): Flow<List<Room>>
 }

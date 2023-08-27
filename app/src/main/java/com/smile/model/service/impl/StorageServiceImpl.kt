@@ -73,7 +73,10 @@ class StorageServiceImpl @Inject constructor(
                 val currentTime = getCurrentTimestamp()
                 batch.set(
                     roomColRef.document().also { roomId = it.id },
-                    Room(createdAt = currentTime)
+                    Room(
+                        createdAt = currentTime,
+                        contacts = listOf(firstContact, secondContact),
+                    )
                 )
                 batch.update(user1Doc, USER_CONTACT_IDS_FIELD, user1.contactIds + firstContactId)
                 batch.update(user2Doc, USER_CONTACT_IDS_FIELD, user2.contactIds + secondContactId)
@@ -239,6 +242,11 @@ class StorageServiceImpl @Inject constructor(
     override suspend fun getUser() =
         getUserDocRef(auth.currentUserId).get().await().toObject<User>()
 
+    override fun getNonEmptyMessageRooms(userId: String): Flow<List<Room>> {
+        return roomColRef.whereArrayContains(ROOM_USER_IDS, userId).snapshots().map {
+            it.toObjects<Room>()
+        }
+    }
 
     private val roomColRef by lazy { firestore.collection(ROOM_COLLECTION) }
     private val userColRef by lazy { firestore.collection(USER_COLLECTION) }
@@ -258,5 +266,6 @@ class StorageServiceImpl @Inject constructor(
         private const val MESSAGE_TIMESTAMP = "timestamp"
         private const val CONTACT_LAST_MESSAGE = "lastMessage"
         private const val USER_FCM_TOKEN = "fcmToken"
+        private const val ROOM_USER_IDS = "userIds"
     }
 }

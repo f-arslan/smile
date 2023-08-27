@@ -7,6 +7,7 @@ import com.smile.model.User
 import com.smile.model.room.ContactEntity
 import com.smile.model.room.RoomStorageService
 import com.smile.model.room.SearchHistoryQueryEntity
+import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
 import com.smile.model.service.module.Response
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val roomStorageService: RoomStorageService,
     private val storageService: StorageService,
+    private val accountService: AccountService,
     logService: LogService
 ) : SmileViewModel(logService) {
     private val _contacts =
@@ -111,13 +113,31 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+
     fun getData() {
-        launchCatching {
-           // Get contact and modify
-        }
+        getRooms()
         getCurrentUser()
         getSearchHistoryQueries()
         saveFcmToken()
+    }
+
+    private fun getRooms() {
+        launchCatching {
+            storageService.getNonEmptyMessageRooms(accountService.currentUserId).collect {
+                val nonEmptyRooms = it.filter { room -> room.lastMessage.content.isNotEmpty() }
+                val contactEntities = mutableListOf<ContactEntity>()
+                for (room in nonEmptyRooms) {
+                    val friendContact =
+                        room.contacts.filter { it.contactId != accountService.currentUserId }[0]
+                    val contactEntity = friendContact.toRoomContact().copy(
+                        lastMessage = room.lastMessage.content,
+                        lastMessageTimeStamp = room.lastMessage.timestamp
+                    )
+                    contactEntities.add(contactEntity)
+                }
+                _contacts.value = Response.Success(contactEntities)
+            }
+        }
     }
 
     private fun getCurrentUser() {

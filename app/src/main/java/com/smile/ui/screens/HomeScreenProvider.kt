@@ -50,8 +50,7 @@ fun HomeScreenProvider(
     navigateToChat: (String, String) -> Unit,
     viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.getData() }
+    LaunchedEffect(Unit) { viewModel.getData() }
     val contacts by viewModel.contacts.collectAsStateWithLifecycle()
     val user by viewModel.user.collectAsStateWithLifecycle()
     val searchHistoryQueries by viewModel.searchHistoryQueries.collectAsStateWithLifecycle()
