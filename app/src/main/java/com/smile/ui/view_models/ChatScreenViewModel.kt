@@ -40,6 +40,7 @@ class ChatScreenViewModel @Inject constructor(
                 viewModelScope,
                 Message(
                     senderId = accountService.currentUserId,
+                    contactId = contactId,
                     content = text.trim(),
                     timestamp = getCurrentTimestamp(),
                     status = MessageStatus.SENT

@@ -1,5 +1,7 @@
 package com.smile.ui.view_models
 
+import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.smile.SmileViewModel
@@ -115,27 +117,26 @@ class HomeScreenViewModel @Inject constructor(
 
 
     fun getData() {
-        getRooms()
         getCurrentUser()
         getSearchHistoryQueries()
         saveFcmToken()
     }
 
-    private fun getRooms() {
+    private fun getContacts() {
         launchCatching {
-            storageService.getNonEmptyMessageRooms(accountService.currentUserId).collect {
-                val nonEmptyRooms = it.filter { room -> room.lastMessage.content.isNotEmpty() }
-                val contactEntities = mutableListOf<ContactEntity>()
-                for (room in nonEmptyRooms) {
-                    val friendContact =
-                        room.contacts.filter { it.contactId != accountService.currentUserId }[0]
-                    val contactEntity = friendContact.toRoomContact().copy(
-                        lastMessage = room.lastMessage.content,
-                        lastMessageTimeStamp = room.lastMessage.timestamp
-                    )
-                    contactEntities.add(contactEntity)
+            storageService.getContacts(viewModelScope) {
+                // get room from firestore with contactEntity roomId field
+                it.forEach {
+                    it.roomId
                 }
-                _contacts.value = Response.Success(contactEntities)
+            }
+        }
+    }
+
+    private fun getRoomContacts() {
+        launchCatching {
+            roomStorageService.getContacts().collect {
+                _contacts.value = Response.Success(it)
             }
         }
     }

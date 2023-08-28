@@ -16,7 +16,10 @@ interface StorageService {
 
     suspend fun findIdByEmail(email: String): String?
 
-    suspend fun getContacts(scope: CoroutineScope, onDataChange: (List<List<ContactEntity>>) -> Unit)
+    suspend fun getContacts(
+        scope: CoroutineScope,
+        onDataChange: (List<ContactEntity>) -> Unit
+    )
 
     suspend fun getContact(contactId: String): Flow<ContactEntity>
 
@@ -27,11 +30,18 @@ interface StorageService {
         contactId: String
     )
 
-    suspend fun getMessages(scope: CoroutineScope, roomId: String, contactId: String): Flow<List<Message>>
+    suspend fun getMessages(
+        scope: CoroutineScope,
+        roomId: String,
+        contactId: String
+    ): Flow<List<Message>>
 
     suspend fun saveFcmToken(token: String)
 
     suspend fun getUser(): User?
 
-    fun getNonEmptyMessageRooms(userId: String): Flow<List<Room>>
+    fun getNonEmptyMessageRooms(
+        roomIds: List<String>,
+        onDataChange: (List<Room>) -> Unit
+    )
 }

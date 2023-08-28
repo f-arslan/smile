@@ -6,6 +6,7 @@ import com.smile.SmileViewModel
 import com.smile.model.room.ContactEntity
 import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
+import com.smile.util.turnListToGroupByLetter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +29,7 @@ class ContactScreenViewModel @Inject constructor(
     fun getContacts() {
         viewModelScope.launch {
             storageService.getContacts(viewModelScope) {
-                _contacts.value = it.reversed()
+                _contacts.value = turnListToGroupByLetter(it).reversed()
             }
         }
     }

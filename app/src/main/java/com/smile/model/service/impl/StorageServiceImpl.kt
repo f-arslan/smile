@@ -62,21 +62,18 @@ class StorageServiceImpl @Inject constructor(
             val user1Doc = user1Task.await()
             val user2Doc = user2Task.await()
 
-            val user1 = user1Doc.get().await().toObject<User>()
-            val user2 = user2Doc.get().await().toObject<User>()
-
+            val user1 = user1Doc.get().await().toObject<User>() ?: throw Exception("User not found")
+            val user2 = user2Doc.get().await().toObject<User>() ?: throw Exception("User not found")
             val batch = firestore.batch()
-            if (user1 != null && !user1.contactIds.contains(firstContactId) &&
-                user2 != null && !user2.contactIds.contains(secondContactId)
+            if (!user1.contactIds.contains(firstContactId) && !user2.contactIds.contains(
+                    secondContactId
+                )
             ) {
                 var roomId: String
                 val currentTime = getCurrentTimestamp()
                 batch.set(
                     roomColRef.document().also { roomId = it.id },
-                    Room(
-                        createdAt = currentTime,
-                        contacts = listOf(firstContact, secondContact),
-                    )
+                    Room(roomId = roomId, createdAt = currentTime)
                 )
                 batch.update(user1Doc, USER_CONTACT_IDS_FIELD, user1.contactIds + firstContactId)
                 batch.update(user2Doc, USER_CONTACT_IDS_FIELD, user2.contactIds + secondContactId)
@@ -116,12 +113,12 @@ class StorageServiceImpl @Inject constructor(
 
     override suspend fun getContacts(
         scope: CoroutineScope,
-        onDataChange: (List<List<ContactEntity>>) -> Unit
+        onDataChange: (List<ContactEntity>) -> Unit
     ) {
         scope.launch(Dispatchers.IO) {
             val contacts = roomStorageService.getContacts().first()
             // Give user data from Room DB, not updated one
-            onDataChange(turnListToGroupByLetter(contacts))
+            onDataChange(contacts)
 
             getContactColUnderUser(auth.currentUserId).snapshots().map { it.documentChanges }
                 .collect {
@@ -155,7 +152,7 @@ class StorageServiceImpl @Inject constructor(
                             }
                         }
                     }
-                    onDataChange(turnListToGroupByLetter(roomStorageService.getContacts().first()))
+                    onDataChange(roomStorageService.getContacts().first())
                 }
         }
     }
@@ -242,9 +239,17 @@ class StorageServiceImpl @Inject constructor(
     override suspend fun getUser() =
         getUserDocRef(auth.currentUserId).get().await().toObject<User>()
 
-    override fun getNonEmptyMessageRooms(userId: String): Flow<List<Room>> {
-        return roomColRef.whereArrayContains(ROOM_USER_IDS, userId).snapshots().map {
-            it.toObjects<Room>()
+    override fun getNonEmptyMessageRooms(
+        roomIds: List<String>,
+        onDataChange: (List<Room>) -> Unit
+    ) {
+        roomColRef.get().addOnSuccessListener {
+            if (!it.isEmpty) {
+                val rooms = it.toObjects<Room>()
+                val nonEmptyRooms = rooms.filter { room -> roomIds.contains(room.roomId) }
+                Log.d("StorageServiceImpl", "getNonEmptyMessageRooms: $nonEmptyRooms")
+                onDataChange(nonEmptyRooms)
+            }
         }
     }
 
@@ -266,6 +271,6 @@ class StorageServiceImpl @Inject constructor(
         private const val MESSAGE_TIMESTAMP = "timestamp"
         private const val CONTACT_LAST_MESSAGE = "lastMessage"
         private const val USER_FCM_TOKEN = "fcmToken"
-        private const val ROOM_USER_IDS = "userIds"
+        private const val USER_ROOM_IDS = "roomIds"
     }
 }
