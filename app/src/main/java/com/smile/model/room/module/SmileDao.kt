@@ -31,6 +31,6 @@ interface SmileDao {
     @Query("SELECT EXISTS(SELECT * FROM contacts WHERE contactId = :contactId)")
     fun isContactExist(contactId: String): Boolean
 
-    @Query("UPDATE contacts SET firstName = :firstName, lastName = :lastName WHERE contactId = :contactId")
-    suspend fun updateContact(contactId: String, firstName: String, lastName: String)
+    @Query("UPDATE contacts SET firstName = :firstName, lastName = :lastName, roomId = :roomId WHERE contactId = :contactId")
+    suspend fun updateContact(contactId: String, firstName: String, lastName: String, roomId: String)
 }

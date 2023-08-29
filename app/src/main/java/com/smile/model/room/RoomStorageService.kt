@@ -25,6 +25,6 @@ class RoomStorageService @Inject constructor(
 
     fun isContactExist(contactId: String) = smileDao.isContactExist(contactId)
 
-    suspend fun updateContact(contactId: String, firstName: String, lastName: String) =
-        smileDao.updateContact(contactId, firstName, lastName)
+    suspend fun updateContact(contactId: String, firstName: String, lastName: String, roomId: String) =
+        smileDao.updateContact(contactId, firstName, lastName, roomId)
 }

@@ -9,6 +9,7 @@ data class User(
     val profilePictureUrl: String = "",
     val isEmailVerified : Boolean = false,
     val contactIds: List<String> = emptyList(),
+    val roomIds: List<String> = emptyList(),
     val fcmToken: String = "",
 )
 

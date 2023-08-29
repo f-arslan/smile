@@ -1,5 +1,6 @@
 package com.smile.ui.view_models
 
+import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import com.smile.SmileViewModel
@@ -29,6 +30,7 @@ class ContactScreenViewModel @Inject constructor(
     fun getContacts() {
         viewModelScope.launch {
             storageService.getContacts(viewModelScope) {
+                Log.d("ContactScreenViewModel", "getContacts: $it")
                 _contacts.value = turnListToGroupByLetter(it).reversed()
             }
         }

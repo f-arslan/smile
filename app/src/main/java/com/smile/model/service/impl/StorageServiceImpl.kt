@@ -20,7 +20,6 @@ import com.smile.model.room.RoomStorageService
 import com.smile.model.service.AccountService
 import com.smile.model.service.StorageService
 import com.smile.util.getCurrentTimestamp
-import com.smile.util.turnListToGroupByLetter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -73,7 +72,14 @@ class StorageServiceImpl @Inject constructor(
                 val currentTime = getCurrentTimestamp()
                 batch.set(
                     roomColRef.document().also { roomId = it.id },
-                    Room(roomId = roomId, createdAt = currentTime)
+                    Room(
+                        roomId = roomId,
+                        createdAt = currentTime,
+                        contacts = listOf(
+                            firstContact.copy(contactId = firstContactId),
+                            secondContact.copy(contactId = secondContactId)
+                        ),
+                    )
                 )
                 batch.update(user1Doc, USER_CONTACT_IDS_FIELD, user1.contactIds + firstContactId)
                 batch.update(user2Doc, USER_CONTACT_IDS_FIELD, user2.contactIds + secondContactId)
@@ -85,6 +91,12 @@ class StorageServiceImpl @Inject constructor(
                     getContactColUnderUser(user2Doc.id).document(secondContactId),
                     secondContact.copy(roomId = roomId)
                 )
+                if (!user1.roomIds.contains(roomId)) {
+                    batch.update(user1Doc, USER_ROOM_IDS, user1.roomIds + roomId)
+                }
+                if (!user2.roomIds.contains(roomId)) {
+                    batch.update(user2Doc, USER_ROOM_IDS, user2.roomIds + roomId)
+                }
                 // Save to Room DB for caching
                 roomStorageService.insertContact(
                     firstContact.copy(
@@ -135,7 +147,8 @@ class StorageServiceImpl @Inject constructor(
                                 roomStorageService.updateContact(
                                     contact.contactId,
                                     contact.firstName,
-                                    contact.lastName
+                                    contact.lastName,
+                                    contact.roomId
                                 )
                             }
 
@@ -185,7 +198,10 @@ class StorageServiceImpl @Inject constructor(
         val friendId = contactId.split("_")[1]
         val userDoc = getUserDocRef(friendId).get().await().toObject<User>()
             ?: throw Exception("User not found")
-        if (userDoc.fcmToken.isEmpty()) throw Exception("User has no fcm token")
+        if (userDoc.fcmToken.isEmpty()) {
+            Log.d("StorageServiceImpl", "User fcm token is empty")
+            return
+        }
         val data = NotificationData(
             token = userDoc.fcmToken,
             title = userDoc.displayName,
@@ -243,13 +259,9 @@ class StorageServiceImpl @Inject constructor(
         roomIds: List<String>,
         onDataChange: (List<Room>) -> Unit
     ) {
-        roomColRef.get().addOnSuccessListener {
-            if (!it.isEmpty) {
-                val rooms = it.toObjects<Room>()
-                val nonEmptyRooms = rooms.filter { room -> roomIds.contains(room.roomId) }
-                Log.d("StorageServiceImpl", "getNonEmptyMessageRooms: $nonEmptyRooms")
-                onDataChange(nonEmptyRooms)
-            }
+        roomColRef.whereIn(ROOM_ID, roomIds).addSnapshotListener { querySnapshot, _ ->
+            val rooms = querySnapshot?.toObjects<Room>() ?: throw Exception("Room not found")
+            onDataChange(rooms.filter { room -> roomIds.contains(room.roomId) })
         }
     }
 
@@ -272,5 +284,6 @@ class StorageServiceImpl @Inject constructor(
         private const val CONTACT_LAST_MESSAGE = "lastMessage"
         private const val USER_FCM_TOKEN = "fcmToken"
         private const val USER_ROOM_IDS = "roomIds"
+        private const val ROOM_ID = "roomId"
     }
 }

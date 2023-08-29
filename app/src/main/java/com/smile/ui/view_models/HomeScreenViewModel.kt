@@ -1,7 +1,6 @@
 package com.smile.ui.view_models
 
 import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.smile.SmileViewModel
@@ -122,21 +121,29 @@ class HomeScreenViewModel @Inject constructor(
         saveFcmToken()
     }
 
-    private fun getContacts() {
-        launchCatching {
-            storageService.getContacts(viewModelScope) {
-                // get room from firestore with contactEntity roomId field
-                it.forEach {
-                    it.roomId
-                }
-            }
-        }
-    }
 
-    private fun getRoomContacts() {
+    private fun getRoomContacts(roomIds: List<String>) {
         launchCatching {
-            roomStorageService.getContacts().collect {
-                _contacts.value = Response.Success(it)
+            storageService.getNonEmptyMessageRooms(roomIds) {
+                val contactEntities = mutableListOf<ContactEntity>()
+                it.forEach { room ->
+                    val friendContact =
+                        room.contacts.first { contact -> contact.userId == accountService.currentUserId }
+                    contactEntities.add(
+                        ContactEntity(
+                            contactId = accountService.currentUserId + "_" + friendContact.friendId,
+                            userId = accountService.currentUserId,
+                            friendId = friendContact.userId,
+                            firstName = friendContact.firstName,
+                            lastName = friendContact.lastName,
+                            email = friendContact.email,
+                            roomId = room.roomId,
+                            lastMessage = room.lastMessage.content,
+                            lastMessageTimeStamp = room.lastMessage.timestamp
+                        )
+                    )
+                }
+                _contacts.value = Response.Success(contactEntities.toList())
             }
         }
     }
@@ -146,6 +153,7 @@ class HomeScreenViewModel @Inject constructor(
             storageService.user.collect {
                 if (it != null) {
                     _user.value = Response.Success(it)
+                    getRoomContacts(it.roomIds)
                 }
             }
         }

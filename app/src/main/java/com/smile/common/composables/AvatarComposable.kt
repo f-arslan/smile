@@ -22,16 +22,20 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import com.smile.util.Constants
 import com.smile.util.Constants.COUNT_BUBBLE_SIZE
 import com.smile.util.Constants.VERY_SMALL_PADDING
 
-val colorStops = arrayOf(
-    0.0f to Color.Yellow,
-    0.2f to Color.Red,
-    1f to Color.Blue
-)
+@Composable
+fun colorStops(): Array<out Pair<Float, Color>> {
+    return arrayOf(
+        0.0f to MaterialTheme.colorScheme.primaryContainer,
+        0.4f to MaterialTheme.colorScheme.primary,
+        1f to MaterialTheme.colorScheme.primaryContainer
+    )
+}
 
 const val borderWidth = 16f
 
@@ -41,23 +45,24 @@ fun UserAvatar(letter: String) {
     val rotationAnimation = infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
-        animationSpec = infiniteRepeatable(tween(1000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(3000, easing = LinearEasing)),
         label = "Rotation Animation"
     )
+    val colors = colorStops()
     Surface(
         modifier = Modifier
             .size(Constants.AVATAR_SIZE)
             .drawBehind {
                 rotate(rotationAnimation.value) {
                     drawCircle(
-                        Brush.horizontalGradient(colorStops = colorStops),
+                        Brush.horizontalGradient(colorStops = colors),
                         style = Stroke(borderWidth)
                     )
                 }
             }
             .padding(VERY_SMALL_PADDING)
             .clip(CircleShape),
-        color = MaterialTheme.colorScheme.primary
+        color = MaterialTheme.colorScheme.primaryContainer
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

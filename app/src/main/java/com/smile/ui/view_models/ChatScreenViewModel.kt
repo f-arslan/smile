@@ -35,19 +35,23 @@ class ChatScreenViewModel @Inject constructor(
     val currentUserId = accountService.currentUserId
 
     fun sendMessage(text: String, roomId: String, contactId: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            storageService.sendMessage(
-                viewModelScope,
-                Message(
-                    senderId = accountService.currentUserId,
-                    contactId = contactId,
-                    content = text.trim(),
-                    timestamp = getCurrentTimestamp(),
-                    status = MessageStatus.SENT
-                ),
-                roomId,
-                contactId,
-            )
+        if (_contactState.value is Response.Success) {
+            val contact = (_contactState.value as Response.Success<ContactEntity>).data
+            viewModelScope.launch(Dispatchers.IO) {
+                storageService.sendMessage(
+                    viewModelScope,
+                    Message(
+                        senderId = accountService.currentUserId,
+                        contactId = contactId,
+                        contactName = contact.firstName + " " + contact.lastName,
+                        content = text.trim(),
+                        timestamp = getCurrentTimestamp(),
+                        status = MessageStatus.SENT
+                    ),
+                    roomId,
+                    contactId,
+                )
+            }
         }
     }
 

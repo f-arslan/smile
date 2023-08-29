@@ -84,7 +84,7 @@ fun HomeScreenProvider(
             when (val res = contacts) {
                 Response.Loading -> {}
                 is Response.Success -> {
-                    LastContactList(data = res.data)
+                    LastContactList(data = res.data, navigateToChat)
                 }
 
                 else -> {}
@@ -94,24 +94,24 @@ fun HomeScreenProvider(
 }
 
 @Composable
-fun LastContactList(data: List<ContactEntity>) {
+fun LastContactList(data: List<ContactEntity>, onContactClick: (String, String) -> Unit) {
     LazyColumn(
         contentPadding = PaddingValues(MEDIUM_PADDING), verticalArrangement = Arrangement.spacedBy(
             MEDIUM_PADDING
         )
     ) {
         items(data, key = { it.contactId }) { contact ->
-            LastContactItem(contact)
+            LastContactItem(contact, onContactClick)
         }
     }
 }
 
 @Composable
-fun LastContactItem(contact: ContactEntity) {
+fun LastContactItem(contact: ContactEntity, onContactClick: (String, String) -> Unit) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(HIGH_PADDING))
-        .clickable { }
+        .clickable { onContactClick(contact.contactId, contact.roomId) }
         .padding(MEDIUM_HIGH_PADDING)
     ) {
         LetterInCircle(letter = contact.firstName.first().uppercase())
@@ -166,7 +166,8 @@ fun LastContactPreview() {
             roomId = "mutat",
             lastMessage = "quidam",
             lastMessageTimeStamp = 1619116800000
-        )
+        ),
+        { _, _ ->}
     )
 }
 
