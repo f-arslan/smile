@@ -33,6 +33,7 @@ import com.smile.common.composables.LetterInCircle
 import com.smile.common.composables.NewContactButton
 import com.smile.model.room.ContactEntity
 import com.smile.ui.view_models.ContactScreenViewModel
+import com.smile.util.Constants.AVATAR_SIZE
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.HIGH_PLUS_PADDING
 import com.smile.util.Constants.MEDIUM_HIGH_PADDING
@@ -130,7 +131,7 @@ fun ContactItem(name: String, onContactClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(HIGH_PADDING)
     ) {
-        LetterInCircle(letter = name.substring(0, 1))
+        LetterInCircle(letter = name.substring(0, 1), size = AVATAR_SIZE)
         Text(text = name, style = MaterialTheme.typography.titleMedium)
     }
 }

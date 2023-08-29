@@ -82,6 +82,11 @@
     <string name="require_first_name">First name is required.</string>
     <string name="require_last_name">Last name is required.</string>
 
+    <!-- Profile Screen -->
+    <string name="profile_screen">Profile Screen</string>
+    <string name="logout">Log Out</string>
+    <string name="next">Next</string>
+
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="request_notification_permission">Request permission</string>

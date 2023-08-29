@@ -36,6 +36,7 @@ import com.smile.common.composables.LetterInCircle
 import com.smile.model.room.ContactEntity
 import com.smile.model.service.module.Response
 import com.smile.ui.view_models.HomeScreenViewModel
+import com.smile.util.Constants.AVATAR_SIZE
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MAX_PADDING
 import com.smile.util.Constants.MEDIUM_HIGH_PADDING
@@ -114,7 +115,7 @@ fun LastContactItem(contact: ContactEntity, onContactClick: (String, String) -> 
         .clickable { onContactClick(contact.contactId, contact.roomId) }
         .padding(MEDIUM_HIGH_PADDING)
     ) {
-        LetterInCircle(letter = contact.firstName.first().uppercase())
+        LetterInCircle(letter = contact.firstName.first().uppercase(), size = AVATAR_SIZE)
         Spacer(Modifier.width(HIGH_PADDING))
         Column {
             Row(
