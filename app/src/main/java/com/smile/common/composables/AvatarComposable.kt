@@ -106,7 +106,7 @@ fun LetterInCircle(letter: String, size: Dp) {
 }
 
 @Composable
-fun LetterInCircle(letter: String) {
+fun LetterInCircle(letter: Char) {
     val infiniteTransition = rememberInfiniteTransition(label = "Infinity Transition")
     val rotationAnimation = infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -179,5 +179,5 @@ fun CountCircle(letter: String) {
 @Preview(showBackground = true)
 @Composable
 fun IconPreview() {
-    IconCircle(icon = AppDrawable.round_logout_24)
+    IconCircle(icon = AppDrawable.round_logout_24, iconDesc = AppText.logout)
 }

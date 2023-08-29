@@ -86,6 +86,9 @@
     <string name="profile_screen">Profile Screen</string>
     <string name="logout">Log Out</string>
     <string name="next">Next</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="app_info">Application Information</string>
 
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
