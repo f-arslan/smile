@@ -13,6 +13,7 @@ import com.smile.ui.screens.NewContactScreenProvider
 import com.smile.ui.screens.OnBoardingScreen
 import com.smile.ui.screens.ProfileScreenProvider
 import com.smile.ui.screens.RegisterScreenProvider
+import com.smile.ui.screens.SplashScreenProvider
 import com.smile.ui.screens.graph.SmileRoutes.CHAT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
@@ -21,8 +22,10 @@ import com.smile.ui.screens.graph.SmileRoutes.NEW_CONTACT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.ONBOARDING_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.SPLASH_SCREEN
 
 fun NavGraphBuilder.appGraph(appState: SmileAppState) {
+
     composable(ONBOARDING_SCREEN) {
         OnBoardingScreen { destination ->
             appState.clearAndNavigate(destination)
@@ -84,5 +87,9 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
             clearAndNavigate = { appState.clearAndNavigate(LOGIN_SCREEN) },
             navigate = {}
         )
+    }
+
+    composable(SPLASH_SCREEN) {
+        SplashScreenProvider(clearAndNavigate = { appState.clearAndNavigate(it) })
     }
 }

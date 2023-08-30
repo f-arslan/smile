@@ -79,8 +79,8 @@ fun FunctionalityNotAvailablePopup(onDismiss: () -> Unit) {
         onDismissRequest = onDismiss,
         text = {
             Text(
-                text = "Working on \uD83D\uDE48",
-                style = MaterialTheme.typography.bodyMedium
+                text = stringResource(AppText.working_on),
+                style = MaterialTheme.typography.titleMedium
             )
         },
         confirmButton = {

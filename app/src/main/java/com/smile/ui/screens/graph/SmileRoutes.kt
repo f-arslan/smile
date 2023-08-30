@@ -9,4 +9,5 @@ object SmileRoutes {
     const val NEW_CONTACT_SCREEN = "new_contact_screen"
     const val CHAT_SCREEN = "chat_screen"
     const val PROFILE_SCREEN = "profile_screen"
+    const val SPLASH_SCREEN = "splash_screen"
 }

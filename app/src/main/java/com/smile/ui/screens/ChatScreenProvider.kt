@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
@@ -60,6 +61,8 @@ import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.HIGH_PLUS_PADDING
 import com.smile.util.Constants.MEDIUM_HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
+import com.smile.util.Constants.SMALL_PADDING
+import com.smile.util.Constants.VERY_SMALL_PADDING
 import com.smile.util.isTodayOrDate
 import com.smile.util.timestampToDate
 
@@ -194,10 +197,12 @@ fun ChatItemBubble(message: Message, isUserMe: Boolean) {
                     modifier = Modifier.padding(MEDIUM_HIGH_PADDING)
                 )
             }
+            Spacer(Modifier.padding(VERY_SMALL_PADDING))
             AnimatedVisibility(visible = isTimestampVisible.value) {
                 Text(
                     text = timestampToDate(message.timestamp),
                     style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(start = SMALL_PADDING, end = SMALL_PADDING)
                 )
             }
         }

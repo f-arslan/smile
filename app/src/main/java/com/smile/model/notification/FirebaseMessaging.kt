@@ -9,11 +9,30 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.smile.MainActivity
+import com.smile.model.service.StorageService
 import com.smile.util.Secrets.CHANNEL_ID
 import com.smile.util.Secrets.CHANNEL_NAME
+import dagger.Binds
+import dagger.Component
+import dagger.Module
+import dagger.hilt.DefineComponent
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 import com.smile.R.drawable as AppDrawable
 
-class FirebaseMessaging : FirebaseMessagingService() {
+class FirebaseMessaging: FirebaseMessagingService() {
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface FirebaseMessagingEntryPoint {
+        fun storageService(): StorageService
+    }
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
@@ -51,5 +70,10 @@ class FirebaseMessaging : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
+        Log.d("FirebaseMessaging", "onNewToken: $token")
+        CoroutineScope(Dispatchers.IO).launch {
+            val hiltEntryPoint = EntryPointAccessors.fromApplication(applicationContext, FirebaseMessagingEntryPoint::class.java)
+            hiltEntryPoint.storageService().saveFcmToken(token)
+        }
     }
 }

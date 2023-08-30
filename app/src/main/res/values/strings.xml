@@ -24,6 +24,7 @@
     <string name="history">History</string>
     <string name="contact">Contact</string>
     <string name="ok">OK</string>
+    <string name="working_on">Working on… 🙈</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>

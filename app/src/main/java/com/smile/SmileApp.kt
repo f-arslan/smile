@@ -20,7 +20,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -31,16 +30,14 @@ import com.google.accompanist.permissions.shouldShowRationale
 import com.smile.common.composables.PermissionDialog
 import com.smile.common.composables.RationaleDialog
 import com.smile.common.snackbar.SnackbarManager
-import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
-import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.SPLASH_SCREEN
 import com.smile.ui.screens.graph.appGraph
-import com.smile.ui.view_models.AppViewModel
 import com.smile.util.Constants.MEDIUM_PADDING
 import kotlinx.coroutines.CoroutineScope
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SmileApp(viewModel: AppViewModel = hiltViewModel()) {
+fun SmileApp() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         RequestNotificationPermissionDialog()
     }
@@ -58,7 +55,10 @@ fun SmileApp(viewModel: AppViewModel = hiltViewModel()) {
                 }
             )
         }) {
-            NavHost(navController = appState.navController, startDestination = LOGIN_SCREEN) {
+            NavHost(
+                navController = appState.navController,
+                startDestination = SPLASH_SCREEN,
+            ) {
                 appGraph(appState)
             }
         }
