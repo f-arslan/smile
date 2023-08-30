@@ -117,4 +117,7 @@ dependencies {
 
     // Permission
     implementation(libs.accompanist.permissions)
+
+    // Lottie
+    implementation(libs.lottie.compose)
 }

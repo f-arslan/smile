@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +34,7 @@ import com.smile.model.User
 import com.smile.model.service.module.Response
 import com.smile.ui.view_models.ProfileScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
+import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
 
@@ -43,6 +45,7 @@ fun ProfileScreenProvider(
     navigate: (String) -> Unit,
     viewModel: ProfileScreenViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(Unit) { viewModel.getUser() }
     val user by viewModel.user.collectAsStateWithLifecycle()
     if (user is Response.Success) {
         val letter = (user as Response.Success<User>).data.displayName.first()
@@ -95,6 +98,7 @@ fun ProfileItem(
             .clickable {
                 onClick()
             }
+            .padding(MEDIUM_PADDING)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

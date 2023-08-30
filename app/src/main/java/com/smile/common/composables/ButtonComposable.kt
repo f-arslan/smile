@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.smile.util.Constants
+import com.smile.util.Constants.SMALL_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
 
@@ -40,8 +42,20 @@ fun FloAppButton(@DrawableRes icon: Int, @StringRes contentDescription: Int, onC
 
 @Composable
 fun DefaultButton(@StringRes text: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Button(modifier = modifier, onClick = onClick) {
-        Text(text = stringResource(id = text))
+    Button(
+        modifier = modifier, onClick = onClick, elevation = ButtonDefaults.buttonElevation(
+            SMALL_PADDING
+        ),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+    ) {
+        Text(
+            text = stringResource(id = text),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(SMALL_PADDING)
+        )
     }
 }
 
@@ -92,6 +106,6 @@ fun NewContactButton(onClick: () -> Unit) {
 @Composable
 private fun ButtonPreview() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        AppFloActionButton({})
+        DefaultButton(text = AppText.login, onClick = {}, Modifier.fillMaxWidth())
     }
 }

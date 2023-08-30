@@ -35,6 +35,8 @@ import com.smile.common.composables.FunctionalityNotAvailablePopup
 import com.smile.common.composables.LetterInCircle
 import com.smile.model.room.ContactEntity
 import com.smile.model.service.module.Response
+import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import com.smile.ui.view_models.HomeScreenViewModel
 import com.smile.util.Constants.AVATAR_SIZE
 import com.smile.util.Constants.HIGH_PADDING
@@ -47,7 +49,7 @@ import com.smile.util.isTodayOrDate
 
 @Composable
 fun HomeScreenProvider(
-    navigate: () -> Unit,
+    navigate: (String) -> Unit,
     navigateToChat: (String, String) -> Unit,
     viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
@@ -64,7 +66,7 @@ fun HomeScreenProvider(
         FunctionalityNotAvailablePopup { notFunctionalState = false }
     }
     Scaffold(
-        floatingActionButton = { AppFloActionButton(onClick = navigate) },
+        floatingActionButton = { AppFloActionButton(onClick = { navigate(CONTACT_SCREEN) }) },
         topBar = {
             AppSearchBar(
                 userResponse = user,
@@ -76,7 +78,7 @@ fun HomeScreenProvider(
                 onSearch = viewModel::onSearchClick,
                 onActiveChange = viewModel::onSearchActiveChange,
                 onMenuClick = {},
-                onAvatarClick = {},
+                onAvatarClick = { navigate(PROFILE_SCREEN) },
                 onContactClick = navigateToChat
             )
         },
@@ -168,7 +170,7 @@ fun LastContactPreview() {
             lastMessage = "quidam",
             lastMessageTimeStamp = 1619116800000
         ),
-        { _, _ ->}
+        { _, _ -> }
     )
 }
 

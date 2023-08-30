@@ -179,7 +179,7 @@ fun ChatItemBubble(message: Message, isUserMe: Boolean) {
         horizontalArrangement = if (isUserMe) Arrangement.End else Arrangement.Start,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(horizontalAlignment = Alignment.End) {
             Surface(
                 color = backgroundBubbleColor, shape = ChatBubbleShape,
                 modifier = Modifier.clickable(

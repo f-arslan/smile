@@ -1,8 +1,5 @@
 package com.smile.ui.view_models
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.smile.SmileViewModel
 import com.smile.common.ext.isValidEmail
@@ -12,13 +9,14 @@ import com.smile.common.snackbar.SnackbarManager
 import com.smile.model.User
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
-import com.smile.model.service.SignUpResponse
 import com.smile.model.service.StorageService
 import com.smile.model.service.module.Response
-import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.smile.R.string as AppText
@@ -27,7 +25,9 @@ data class RegisterUiState(
     val name: String = "fatih",
     val email: String = "fatiharslanedu@gmail.com",
     val password: String = "Mkal858858",
-    val rePassword: String = "Mkal858858"
+    val rePassword: String = "Mkal858858",
+    val verificationState: Boolean = false,
+    val loadingState: Boolean = false
 )
 
 @HiltViewModel
@@ -36,45 +36,41 @@ class RegisterScreenViewModel @Inject constructor(
     private val storageService: StorageService,
     logService: LogService
 ) : SmileViewModel(logService) {
-    private var _uiState by mutableStateOf(RegisterUiState())
-
-    private var signUpResponse by mutableStateOf<SignUpResponse>(Response.Success(false))
-    private var sendEmailVerificationResponse by mutableStateOf<Response<Boolean>>(
-        Response.Success(
-            false
-        )
-    )
-
-    val uiState: RegisterUiState
-        get() = _uiState
+    private val _uiState = MutableStateFlow(RegisterUiState())
+    val uiState = _uiState.asStateFlow()
 
     private val email
-        get() = uiState.email.trim()
-
-    private val name
-        get() = uiState.name.trim()
+        get() = uiState.value.email
 
     private val password
-        get() = uiState.password
+        get() = uiState.value.password
+
+    fun onLoadingStateChange(loadingState: Boolean) {
+        _uiState.value = _uiState.value.copy(loadingState = loadingState)
+    }
+
+    fun onVerificationStateChange(verificationState: Boolean) {
+        _uiState.value = _uiState.value.copy(verificationState = verificationState)
+    }
 
     fun onNameChange(newValue: String) {
-        _uiState = _uiState.copy(name = newValue)
+        _uiState.value = _uiState.value.copy(name = newValue)
     }
 
     fun onEmailChange(newValue: String) {
-        _uiState = _uiState.copy(email = newValue)
+        _uiState.value = _uiState.value.copy(email = newValue)
     }
 
     fun onPasswordChange(newValue: String) {
-        _uiState = _uiState.copy(password = newValue)
+        _uiState.value = _uiState.value.copy(password = newValue)
     }
 
     fun onRePasswordChange(newValue: String) {
-        _uiState = _uiState.copy(rePassword = newValue)
+        _uiState.value = _uiState.value.copy(rePassword = newValue)
     }
 
-    fun onSignUpClick(openAndPopUp: () -> Unit) {
-
+    fun onSignUpClick() {
+        onLoadingStateChange(true)
         if (!email.isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return
@@ -83,38 +79,40 @@ class RegisterScreenViewModel @Inject constructor(
             SnackbarManager.showMessage(AppText.password_error)
             return
         }
-        if (!password.passwordMatches(uiState.rePassword)) {
+        if (!password.passwordMatches(uiState.value.rePassword)) {
             SnackbarManager.showMessage(AppText.password_match_error)
             return
         }
-        if (name.isBlank()) {
+        if (uiState.value.name.isBlank()) {
             SnackbarManager.showMessage(AppText.require_first_name)
             return
         }
-        viewModelScope.launch {
-            async {
-                signUpResponse = accountService.firebaseSignUpWithEmailAndPassword(email, password)
-            }.await()
-            if (signUpResponse is Response.Failure) {
-                SnackbarManager.showMessage((signUpResponse as Response.Failure).e.message.toString())
-                return@launch
+        viewModelScope.launch(Dispatchers.IO) {
+            val signUpResponse = accountService.firebaseSignUpWithEmailAndPassword(
+                email = email,
+                password = password
+            )
+            if (signUpResponse is Response.Success)
+            {
+                async { accountService.sendEmailVerification() }.await()
+                saveToDatabase()
+                onLoadingStateChange(false)
+                delay(100)
+                onVerificationStateChange(true)
             }
-            if (signUpResponse is Response.Success && !(signUpResponse as Response.Success<Boolean>).data)
-                return@launch
-            async { sendEmailVerificationResponse = accountService.sendEmailVerification() }.await()
-            if (sendEmailVerificationResponse is Response.Failure) {
-                SnackbarManager.showMessage((sendEmailVerificationResponse as Response.Failure).e.message.toString())
-                return@launch
-            }
-            saveToDatabase()
-            openAndPopUp()
         }
     }
 
 
     private fun saveToDatabase() {
         viewModelScope.launch(Dispatchers.IO) {
-            storageService.saveUser(User(accountService.currentUserId, name, email))
+            storageService.saveUser(
+                User(
+                    accountService.currentUserId,
+                    uiState.value.name,
+                    uiState.value.email
+                )
+            )
         }
     }
 

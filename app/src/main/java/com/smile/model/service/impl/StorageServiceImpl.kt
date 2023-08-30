@@ -259,6 +259,10 @@ class StorageServiceImpl @Inject constructor(
         roomIds: List<String>,
         onDataChange: (List<Room>) -> Unit
     ) {
+        if (roomIds.isEmpty()) {
+            Log.e("StorageServiceImpl", "Room ids is empty")
+            return
+        }
         roomColRef.whereIn(ROOM_ID, roomIds).addSnapshotListener { querySnapshot, _ ->
             val rooms = querySnapshot?.toObjects<Room>() ?: throw Exception("Room not found")
             onDataChange(rooms.filter { room -> roomIds.contains(room.roomId) })

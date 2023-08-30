@@ -1,21 +1,20 @@
 package com.smile.ui.view_models
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.smile.SmileViewModel
 import com.smile.common.ext.isValidEmail
 import com.smile.common.snackbar.SnackbarManager
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
-import com.smile.model.service.SignInResponse
 import com.smile.model.service.StorageService
 import com.smile.model.service.module.Response
-import com.smile.model.service.module.map
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.smile.R.string as AppText
@@ -31,62 +30,66 @@ class LoginScreenViewModel @Inject constructor(
     private val storageService: StorageService,
     logService: LogService
 ) : SmileViewModel(logService) {
-    private var _uiState by mutableStateOf(LoginUiState("fatiharslanedu@gmail.com", "Mkal858858"))
-    val uiState: LoginUiState
-        get() = _uiState
 
-    private val signInResponse = mutableStateOf<SignInResponse>(Response.Success(false))
-    private var emailVerification = mutableStateOf(false)
+
+    private val _uiState = MutableStateFlow(LoginUiState("fatiharslanedu@gmail.com", "Mkal858858"))
+    val uiState = _uiState.asStateFlow()
+
+    private val _loadingState = MutableStateFlow(false)
+    val loadingState = _loadingState.asStateFlow()
+
+    fun onLoadingStateChange(loadingState: Boolean) {
+        _loadingState.value = loadingState
+    }
 
     fun onEmailChange(newValue: String) {
-        _uiState = _uiState.copy(email = newValue)
+        _uiState.value = _uiState.value.copy(email = newValue)
     }
 
     fun onPasswordChange(newValue: String) {
-        _uiState = _uiState.copy(password = newValue)
+        _uiState.value = _uiState.value.copy(password = newValue)
     }
 
     fun onLoginClick(openAndPopUp: (String) -> Unit) {
-        if (!uiState.email.isValidEmail()) {
+        if (!uiState.value.email.isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return
         }
-        if (uiState.password.isBlank()) {
+        if (uiState.value.password.isBlank()) {
             SnackbarManager.showMessage(AppText.empty_password_error)
             return
         }
-
+        onLoadingStateChange(true)
         launchCatching {
-            signInResponse.value =
-                accountService.firebaseSignInWithEmailAndPassword(uiState.email, uiState.password)
-            signInResponse.value.map { loggedIn ->
-                if (!loggedIn) {
-                    SnackbarManager.showMessage(AppText.email_or_password_error)
-                    return@map
-                }
-                if (emailVerification.value) {
+            val signInResponse =
+                accountService.firebaseSignInWithEmailAndPassword(
+                    uiState.value.email,
+                    uiState.value.password
+                )
+            if (signInResponse is Response.Success) {
+                async { accountService.reloadFirebaseUser() }.await()
+                if (accountService.isEmailVerified) {
+                    onLoadingStateChange(false)
+                    delay(100L)
                     openAndPopUp(HOME_SCREEN)
                 } else {
                     SnackbarManager.showMessage(AppText.please_verify_email)
-                    return@map
                 }
+            } else {
+                SnackbarManager.showMessage(AppText.email_or_password_error)
             }
+            onLoadingStateChange(false)
         }
     }
 
 
     fun checkEmailVerification() {
         viewModelScope.launch(Dispatchers.IO) {
-            accountService.reloadFirebaseUser()
-            if (accountService.isEmailVerified) {
-                storageService.updateUserEmailVerification()
-                emailVerification.value = true
-            }
+            async { accountService.reloadFirebaseUser() }.await()
         }
     }
 
     fun onGoogleLoginClick() {
 
     }
-
 }

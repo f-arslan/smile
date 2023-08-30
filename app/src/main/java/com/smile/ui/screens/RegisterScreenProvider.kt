@@ -12,18 +12,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.DefaultButton
 import com.smile.common.composables.DefaultTextField
 import com.smile.common.composables.FloAppButton
 import com.smile.common.composables.FormWrapper
+import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.PasswordTextField
 import com.smile.common.composables.RegisterHeader
 import com.smile.common.composables.VerificationDialog
@@ -34,19 +35,21 @@ import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterScreenProvider(
     viewModel: RegisterScreenViewModel = hiltViewModel(),
     openAndPopUp: (String) -> Unit
 ) {
 
-    val uiState = viewModel.uiState
-    var verificationState by rememberSaveable {
-        mutableStateOf(false)
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    if (uiState.loadingState) {
+        LoadingAnimationDialog { viewModel.onLoadingStateChange(false) }
     }
-    if (verificationState) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    if (uiState.verificationState) {
         VerificationDialog {
-            verificationState = false
+            viewModel.onVerificationStateChange(false)
             openAndPopUp(LOGIN_SCREEN)
         }
     }
@@ -57,9 +60,8 @@ fun RegisterScreenProvider(
         onPasswordChange = viewModel::onPasswordChange,
         onConfirmPasswordChange = viewModel::onRePasswordChange,
         onSignUpClick = {
-            viewModel.onSignUpClick {
-                verificationState = true
-            }
+            viewModel.onSignUpClick()
+            keyboardController?.hide()
         },
         onGoogleClick = viewModel::onGoogleClick,
         onAlreadyHaveAccountClick = { openAndPopUp(LOGIN_SCREEN) }
