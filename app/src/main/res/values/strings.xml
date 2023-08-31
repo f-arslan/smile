@@ -25,6 +25,8 @@
     <string name="contact">Contact</string>
     <string name="ok">OK</string>
     <string name="working_on">Working on… 🙈</string>
+    <string name="skip">Skip</string>
+    <string name="enable_notifications">Enable Notifications</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
@@ -90,6 +92,11 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="change_password">Change Password</string>
     <string name="app_info">Application Information</string>
+
+    <!-- Notification Screen -->
+    <string name="notification_permission">Notification Permission</string>
+    <string name="notification_title">Stay Connected!</string>
+    <string name="notification_desc">Turn on notifications to receive messages from friends instantly. Stay in the loop and reply promptly.</string>
 
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>

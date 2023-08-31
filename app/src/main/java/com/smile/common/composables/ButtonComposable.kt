@@ -54,7 +54,6 @@ fun DefaultButton(@StringRes text: Int, onClick: () -> Unit, modifier: Modifier 
         Text(
             text = stringResource(id = text),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(SMALL_PADDING)
         )
     }
 }
