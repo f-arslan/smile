@@ -182,7 +182,12 @@ class StorageServiceImpl @Inject constructor(
         val batch = firestore.batch()
         val messageRef = roomColRef.document(roomId).collection(MESSAGE_COLLECTION).document()
         batch.set(messageRef, message)
-        batch.update(roomColRef.document(roomId), CONTACT_LAST_MESSAGE, message)
+        Log.d("StorageServiceImpl", "Message id: ${messageRef.id}")
+        batch.update(roomColRef.document(roomId), CONTACT_LAST_MESSAGE, message).runCatching {
+        }.onFailure {
+            Log.e("StorageServiceImpl", "Error while updating last message", it)
+        }
+        Log.d("StorageServiceImpl", "Contact id: $contactId")
         scope.launch(Dispatchers.IO) {
             roomStorageService.updateContactLastMessage(
                 contactId,
@@ -263,8 +268,10 @@ class StorageServiceImpl @Inject constructor(
             Log.e("StorageServiceImpl", "Room ids is empty")
             return
         }
-        roomColRef.whereIn(ROOM_ID, roomIds).addSnapshotListener { querySnapshot, _ ->
-            val rooms = querySnapshot?.toObjects<Room>() ?: throw Exception("Room not found")
+        roomColRef.whereIn(ROOM_ID, roomIds).addSnapshotListener { querySnapshot, error ->
+            Log.d("StorageServiceImpl", "Room ids: $roomIds")
+            Log.d("StorageServiceImpl", "Room error: $error")
+            val rooms = querySnapshot?.toObjects<Room>() ?: emptyList()
             onDataChange(rooms.filter { room -> roomIds.contains(room.roomId) })
         }
     }
