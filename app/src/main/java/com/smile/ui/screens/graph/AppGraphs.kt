@@ -10,6 +10,7 @@ import com.smile.ui.screens.ContactScreenProvider
 import com.smile.ui.screens.HomeScreenProvider
 import com.smile.ui.screens.LoginScreenProvider
 import com.smile.ui.screens.NewContactScreenProvider
+import com.smile.ui.screens.NotificationScreenProvider
 import com.smile.ui.screens.OnBoardingScreen
 import com.smile.ui.screens.ProfileScreenProvider
 import com.smile.ui.screens.RegisterScreenProvider
@@ -19,6 +20,7 @@ import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.NEW_CONTACT_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.NOTIFICATION_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.ONBOARDING_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
@@ -44,7 +46,8 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
             navigate = { appState.navigate(it) },
             navigateToChat = { contactId, roomId ->
                 appState.navigate("$CHAT_SCREEN/$contactId/$roomId")
-            }
+            },
+            clearAndNavigate = { appState.clearAndNavigate(NOTIFICATION_SCREEN) }
         )
     }
 
@@ -91,5 +94,9 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
 
     composable(SPLASH_SCREEN) {
         SplashScreenProvider(clearAndNavigate = { appState.clearAndNavigate(it) })
+    }
+
+    composable(NOTIFICATION_SCREEN) {
+        NotificationScreenProvider(clearAndNavigate = { appState.clearAndNavigate(HOME_SCREEN) })
     }
 }

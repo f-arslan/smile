@@ -2,6 +2,7 @@ package com.smile.ui.view_models
 
 import androidx.lifecycle.viewModelScope
 import com.smile.SmileViewModel
+import com.smile.model.Contact
 import com.smile.model.Message
 import com.smile.model.MessageStatus
 import com.smile.model.room.ContactEntity
@@ -26,7 +27,7 @@ class ChatScreenViewModel @Inject constructor(
     private val accountService: AccountService,
     logService: LogService
 ) : SmileViewModel(logService) {
-    private val _contactState = MutableStateFlow<Response<ContactEntity>>(Response.Loading)
+    private val _contactState = MutableStateFlow<Response<Contact>>(Response.Loading)
     val contactState = _contactState.asStateFlow()
 
     private val _messagesState = MutableStateFlow<Response<List<Message>>>(Response.Loading)
@@ -36,7 +37,7 @@ class ChatScreenViewModel @Inject constructor(
 
     fun sendMessage(text: String, roomId: String, contactId: String) {
         if (_contactState.value is Response.Success) {
-            val contact = (_contactState.value as Response.Success<ContactEntity>).data
+            val contact = (_contactState.value as Response.Success<Contact>).data
             viewModelScope.launch(Dispatchers.IO) {
                 storageService.sendMessage(
                     viewModelScope,
@@ -59,7 +60,6 @@ class ChatScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val contactFlow = storageService.getContact(contactId)
             val messagesFlow = storageService.getMessages(viewModelScope, roomId, contactId)
-            // Combine these flow with combine operator
             combine(contactFlow, messagesFlow) { contact, messages ->
                 _contactState.value = Response.Success(contact)
                 _messagesState.value = Response.Success(messages)

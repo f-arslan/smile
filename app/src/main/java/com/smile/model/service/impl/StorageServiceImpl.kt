@@ -24,8 +24,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -64,14 +64,15 @@ class StorageServiceImpl @Inject constructor(
             val user1 = user1Doc.get().await().toObject<User>() ?: throw Exception("User not found")
             val user2 = user2Doc.get().await().toObject<User>() ?: throw Exception("User not found")
             val batch = firestore.batch()
+            var roomId: String = ""
             if (!user1.contactIds.contains(firstContactId) && !user2.contactIds.contains(
                     secondContactId
                 )
             ) {
-                var roomId: String
                 val currentTime = getCurrentTimestamp()
+                val roomRef = async { roomColRef.document() }.await().also { roomId = it.id }
                 batch.set(
-                    roomColRef.document().also { roomId = it.id },
+                    roomRef,
                     Room(
                         roomId = roomId,
                         createdAt = currentTime,
@@ -85,11 +86,11 @@ class StorageServiceImpl @Inject constructor(
                 batch.update(user2Doc, USER_CONTACT_IDS_FIELD, user2.contactIds + secondContactId)
                 batch.set(
                     getContactColUnderUser(user1Doc.id).document(firstContactId),
-                    firstContact.copy(roomId = roomId)
+                    firstContact.copy(roomId = roomId, contactId = firstContactId)
                 )
                 batch.set(
                     getContactColUnderUser(user2Doc.id).document(secondContactId),
-                    secondContact.copy(roomId = roomId)
+                    secondContact.copy(roomId = roomId, contactId = secondContactId)
                 )
                 if (!user1.roomIds.contains(roomId)) {
                     batch.update(user1Doc, USER_ROOM_IDS, user1.roomIds + roomId)
@@ -97,15 +98,19 @@ class StorageServiceImpl @Inject constructor(
                 if (!user2.roomIds.contains(roomId)) {
                     batch.update(user2Doc, USER_ROOM_IDS, user2.roomIds + roomId)
                 }
-                // Save to Room DB for caching
-                roomStorageService.insertContact(
-                    firstContact.copy(
-                        contactId = firstContactId,
-                        roomId = roomId
-                    ).toRoomContact()
-                )
             }
             batch.commit().await()
+            // Save to Room DB for caching
+            if (roomId.isEmpty()) {
+                Log.e("StorageServiceImpl", "Room id is empty")
+                return@launch
+            }
+            roomStorageService.insertContact(
+                firstContact.copy(
+                    contactId = firstContactId,
+                    roomId = roomId
+                ).toRoomContact()
+            )
         }
     }
 
@@ -127,51 +132,28 @@ class StorageServiceImpl @Inject constructor(
         scope: CoroutineScope,
         onDataChange: (List<ContactEntity>) -> Unit
     ) {
-        scope.launch(Dispatchers.IO) {
-            val contacts = roomStorageService.getContacts().first()
-            // Give user data from Room DB, not updated one
-            onDataChange(contacts)
-
-            getContactColUnderUser(auth.currentUserId).snapshots().map { it.documentChanges }
-                .collect {
-                    // Observe changes for each document
-                    it.forEach { documentChange ->
-                        val contact = documentChange.document.toObject<Contact>()
-                        when (documentChange.type) {
-                            DocumentChange.Type.ADDED -> {
-                                if (!roomStorageService.isContactExist(contact.contactId))
-                                    roomStorageService.insertContact(contact.toRoomContact())
-                            }
-
-                            DocumentChange.Type.MODIFIED -> {
-                                roomStorageService.updateContact(
-                                    contact.contactId,
-                                    contact.firstName,
-                                    contact.lastName,
-                                    contact.roomId
-                                )
-                            }
-
-                            DocumentChange.Type.REMOVED -> {
-                                roomStorageService.deleteContact(contact.contactId)
-                                val userDoc = getUserDocRef(auth.currentUserId).get().await()
-                                val user = userDoc.toObject<User>()
-                                val contactIds = user?.contactIds ?: emptyList()
-                                getUserDocRef(auth.currentUserId).update(
-                                    USER_CONTACT_IDS_FIELD,
-                                    contactIds.filter { id -> id != contact.contactId }
-                                ).await()
-                                // TODO: Handle delete for both sides
-                            }
+        getUserDocRef(auth.currentUserId).collection(CONTACT_COLLECTION).snapshots()
+            .map { querySnapshot ->
+                querySnapshot.documentChanges.mapNotNull { documentChange ->
+                    when (documentChange.type) {
+                        DocumentChange.Type.ADDED -> {
+                            documentChange.document.toObject<ContactEntity>()
+                        }
+                        DocumentChange.Type.MODIFIED -> {
+                            documentChange.document.toObject<ContactEntity>()
+                        }
+                        DocumentChange.Type.REMOVED -> {
+                            documentChange.document.toObject<ContactEntity>()
                         }
                     }
-                    onDataChange(roomStorageService.getContacts().first())
                 }
-        }
+            }.collect {
+                onDataChange(it)
+            }
     }
 
     override suspend fun getContact(contactId: String) =
-        roomStorageService.getContact(contactId)
+        getContactColUnderUser(auth.currentUserId).document(contactId).dataObjects<Contact>().mapNotNull { it }
 
     override suspend fun sendMessage(
         scope: CoroutineScope,
@@ -182,12 +164,7 @@ class StorageServiceImpl @Inject constructor(
         val batch = firestore.batch()
         val messageRef = roomColRef.document(roomId).collection(MESSAGE_COLLECTION).document()
         batch.set(messageRef, message)
-        Log.d("StorageServiceImpl", "Message id: ${messageRef.id}")
-        batch.update(roomColRef.document(roomId), CONTACT_LAST_MESSAGE, message).runCatching {
-        }.onFailure {
-            Log.e("StorageServiceImpl", "Error while updating last message", it)
-        }
-        Log.d("StorageServiceImpl", "Contact id: $contactId")
+        batch.update(roomColRef.document(roomId), CONTACT_LAST_MESSAGE, message)
         scope.launch(Dispatchers.IO) {
             roomStorageService.updateContactLastMessage(
                 contactId,
@@ -269,10 +246,8 @@ class StorageServiceImpl @Inject constructor(
             return
         }
         roomColRef.whereIn(ROOM_ID, roomIds).addSnapshotListener { querySnapshot, error ->
-            Log.d("StorageServiceImpl", "Room ids: $roomIds")
-            Log.d("StorageServiceImpl", "Room error: $error")
             val rooms = querySnapshot?.toObjects<Room>() ?: emptyList()
-            onDataChange(rooms.filter { room -> roomIds.contains(room.roomId) })
+            onDataChange(rooms.filter { room -> roomIds.contains(room.roomId) && room.lastMessage.content.isNotEmpty() })
         }
     }
 

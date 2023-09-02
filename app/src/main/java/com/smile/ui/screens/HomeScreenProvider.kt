@@ -51,8 +51,10 @@ import com.smile.util.isTodayOrDate
 fun HomeScreenProvider(
     navigate: (String) -> Unit,
     navigateToChat: (String, String) -> Unit,
+    clearAndNavigate: () -> Unit,
     viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(Unit) {viewModel.navigateToNotificationScreen { clearAndNavigate() }}
     LaunchedEffect(Unit) { viewModel.getData() }
     val contacts by viewModel.contacts.collectAsStateWithLifecycle()
     val user by viewModel.user.collectAsStateWithLifecycle()

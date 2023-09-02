@@ -1,11 +1,9 @@
 package com.smile.model
 
-import com.google.firebase.firestore.DocumentId
 import com.smile.model.room.ContactEntity
 
 
 data class Contact(
-    @DocumentId
     val contactId: String = "",
     val userId: String = "",
     val friendId: String = "",

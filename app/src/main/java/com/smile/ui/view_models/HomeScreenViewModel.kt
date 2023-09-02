@@ -5,6 +5,10 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.smile.SmileViewModel
 import com.smile.model.User
+import com.smile.model.datastore.DataStoreRepository
+import com.smile.model.datastore.DataStoreRepository.Companion.DISABLED
+import com.smile.model.datastore.DataStoreRepository.Companion.ENABLED
+import com.smile.model.datastore.DataStoreRepository.Companion.IDLE
 import com.smile.model.room.ContactEntity
 import com.smile.model.room.RoomStorageService
 import com.smile.model.room.SearchHistoryQueryEntity
@@ -24,6 +28,7 @@ class HomeScreenViewModel @Inject constructor(
     private val roomStorageService: RoomStorageService,
     private val storageService: StorageService,
     private val accountService: AccountService,
+    private val dataStoreRepository: DataStoreRepository,
     logService: LogService
 ) : SmileViewModel(logService) {
     private val _contacts =
@@ -50,6 +55,16 @@ class HomeScreenViewModel @Inject constructor(
     private val _user = MutableStateFlow<Response<User>>(Response.Loading)
     val user = _user.asStateFlow()
 
+
+    fun navigateToNotificationScreen(clearAndNavigate: () -> Unit) {
+        launchCatching {
+            val currentNotificationState = dataStoreRepository.getNotificationsEnabled()
+            Log.d("NotificationState", currentNotificationState)
+            if (currentNotificationState == IDLE) {
+                clearAndNavigate()
+            }
+        }
+    }
 
     fun onSearchActiveChange(isActive: Boolean) {
         _searchIsActive.value = isActive

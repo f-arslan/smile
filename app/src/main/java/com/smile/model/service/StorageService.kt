@@ -21,7 +21,7 @@ interface StorageService {
         onDataChange: (List<ContactEntity>) -> Unit
     )
 
-    suspend fun getContact(contactId: String): Flow<ContactEntity>
+    suspend fun getContact(contactId: String): Flow<Contact>
 
     suspend fun sendMessage(
         scope: CoroutineScope,

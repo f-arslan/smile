@@ -52,6 +52,7 @@ import androidx.navigation.NavDeepLinkDsl
 import com.smile.common.composables.ChatField
 import com.smile.common.composables.ContactTopAppBar
 import com.smile.common.composables.FunctionalityNotAvailablePopup
+import com.smile.model.Contact
 import com.smile.model.Message
 import com.smile.model.MessageStatus
 import com.smile.model.room.ContactEntity
@@ -78,7 +79,7 @@ fun ChatScreenProvider(
     val messages by viewModel.messagesState.collectAsStateWithLifecycle()
     if (contactState is Response.Success && messages is Response.Success) {
         ChatScreen(
-            contact = (contactState as Response.Success<ContactEntity>).data,
+            contact = (contactState as Response.Success<Contact>).data,
             popUp = popUp,
             onMessageSent = { message ->
                 viewModel.sendMessage(message, roomId, contactId)
@@ -92,7 +93,7 @@ fun ChatScreenProvider(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
-    contact: ContactEntity,
+    contact: Contact,
     popUp: () -> Unit,
     onMessageSent: (String) -> Unit,
     messages: List<Message>,
