@@ -27,6 +27,7 @@
     <string name="working_on">Working on… 🙈</string>
     <string name="skip">Skip</string>
     <string name="enable_notifications">Enable Notifications</string>
+    <string name="update">Update</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
@@ -92,6 +93,7 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="change_password">Change Password</string>
     <string name="app_info">Application Information</string>
+    <string name="notification_active">Activate Notifications</string>
 
     <!-- Notification Screen -->
     <string name="notification_permission">Notification Permission</string>

@@ -1,5 +1,7 @@
 package com.smile.ui.screens.graph
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -7,6 +9,7 @@ import androidx.navigation.navArgument
 import com.smile.SmileAppState
 import com.smile.ui.screens.ChatScreenProvider
 import com.smile.ui.screens.ContactScreenProvider
+import com.smile.ui.screens.EditProfileScreenProvider
 import com.smile.ui.screens.HomeScreenProvider
 import com.smile.ui.screens.LoginScreenProvider
 import com.smile.ui.screens.NewContactScreenProvider
@@ -17,6 +20,7 @@ import com.smile.ui.screens.RegisterScreenProvider
 import com.smile.ui.screens.SplashScreenProvider
 import com.smile.ui.screens.graph.SmileRoutes.CHAT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.EDIT_PROFILE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.NEW_CONTACT_SCREEN
@@ -26,6 +30,7 @@ import com.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.SPLASH_SCREEN
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun NavGraphBuilder.appGraph(appState: SmileAppState) {
 
     composable(ONBOARDING_SCREEN) {
@@ -88,7 +93,7 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
         ProfileScreenProvider(
             popUp = { appState.popUp() },
             clearAndNavigate = { appState.clearAndNavigate(LOGIN_SCREEN) },
-            navigate = {}
+            navigate = { appState.navigate(EDIT_PROFILE_SCREEN) }
         )
     }
 
@@ -98,5 +103,9 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
 
     composable(NOTIFICATION_SCREEN) {
         NotificationScreenProvider(clearAndNavigate = { appState.clearAndNavigate(HOME_SCREEN) })
+    }
+
+    composable(EDIT_PROFILE_SCREEN) {
+        EditProfileScreenProvider(popUp = { appState.popUp() })
     }
 }

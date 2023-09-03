@@ -1,13 +1,16 @@
 package com.smile.ui.screens
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -25,6 +28,7 @@ import com.smile.common.composables.DefaultTextField
 import com.smile.common.composables.FloAppButton
 import com.smile.common.composables.FormWrapper
 import com.smile.common.composables.LoadingAnimationDialog
+import com.smile.common.composables.NavigationTopAppBar
 import com.smile.common.composables.PasswordTextField
 import com.smile.common.composables.RegisterHeader
 import com.smile.common.composables.VerificationDialog
@@ -117,6 +121,7 @@ fun RegisterScreen(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

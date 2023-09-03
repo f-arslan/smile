@@ -45,7 +45,7 @@ fun NewContactScreenProvider(
         viewModel::onFirstNameChange,
         viewModel::onLastNameChange,
         viewModel::onEmailChange,
-        viewModel::onSaveClick // TODO("LOOK IT CAN BE ERROR PRONE")
+        viewModel::onSaveClick
     )
 }
 

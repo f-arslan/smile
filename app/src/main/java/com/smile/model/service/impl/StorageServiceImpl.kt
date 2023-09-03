@@ -231,6 +231,10 @@ class StorageServiceImpl @Inject constructor(
 
 
     override suspend fun saveFcmToken(token: String) {
+        if (auth.currentUserId.isEmpty()) {
+            Log.e("StorageServiceImpl", "User id is empty")
+            return
+        }
         getUserDocRef(auth.currentUserId).update(USER_FCM_TOKEN, token).await()
     }
 

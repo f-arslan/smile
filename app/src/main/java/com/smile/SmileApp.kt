@@ -2,6 +2,8 @@ package com.smile
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +28,7 @@ import com.smile.ui.screens.graph.appGraph
 import com.smile.util.Constants.MEDIUM_PADDING
 import kotlinx.coroutines.CoroutineScope
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SmileApp() {

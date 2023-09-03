@@ -59,6 +59,7 @@ fun NotificationScreenProvider(
                 PermissionPopUp({ permissionState.launchPermissionRequest() }) {
                     viewModel.onNotificationPanelStateChange(false)
                 }
+                viewModel.setNotificationsEnabled(DISABLED)
             }
         }
     }

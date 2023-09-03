@@ -1,12 +1,15 @@
 package com.smile.common.composables
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.smile.util.Constants
+import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.util.Constants.VERY_HIGH_PADDING
 
@@ -14,7 +17,7 @@ import com.smile.util.Constants.VERY_HIGH_PADDING
 fun HeaderWrapper(content: @Composable () -> Unit) {
     Column(
         modifier = Modifier.padding(horizontal = VERY_HIGH_PADDING, vertical = MEDIUM_PADDING),
-        verticalArrangement = Arrangement.spacedBy(Constants.MEDIUM_PADDING),
+        verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         content()
@@ -22,16 +25,17 @@ fun HeaderWrapper(content: @Composable () -> Unit) {
 }
 
 @Composable
-fun FormWrapper(content: @Composable () -> Unit) {
+fun FormWrapper(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     Column(
-        modifier = Modifier.padding(
-            start = Constants.HIGH_PADDING,
-            top = Constants.MEDIUM_PADDING,
-            end = Constants.HIGH_PADDING
+        modifier = modifier.padding(
+            start = HIGH_PADDING,
+            top = MEDIUM_PADDING,
+            end = HIGH_PADDING,
         ),
-        verticalArrangement = Arrangement.spacedBy(Constants.HIGH_PADDING),
+        verticalArrangement = Arrangement.spacedBy(HIGH_PADDING),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         content()
     }
 }
+

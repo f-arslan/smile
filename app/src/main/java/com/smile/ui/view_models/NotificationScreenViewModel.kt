@@ -1,5 +1,6 @@
 package com.smile.ui.view_models
 
+import android.util.Log
 import com.smile.SmileViewModel
 import com.smile.model.datastore.DataStoreRepository
 import com.smile.model.datastore.DataStoreRepository.Companion.DISABLED
@@ -26,11 +27,11 @@ class NotificationScreenViewModel @Inject constructor(
         _notificationPanelState.value = newState
     }
 
-    fun setNotificationsEnabled(notificationState: String, clearAndNavigate: () -> Unit) {
+    fun setNotificationsEnabled(notificationState: String, clearAndNavigate: () -> Unit = {}) {
         launchCatching {
             async { dataStoreRepository.setNotificationsEnabled(notificationState)}.await()
             _notificationPanelState.value = false
-            if (notificationState == ENABLED) {
+            if (notificationState in setOf(ENABLED, DISABLED)) {
                 clearAndNavigate()
             }
         }

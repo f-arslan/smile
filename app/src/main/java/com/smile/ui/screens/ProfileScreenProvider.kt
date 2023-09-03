@@ -31,7 +31,10 @@ import com.smile.common.composables.IconCircle
 import com.smile.common.composables.LetterInCircle
 import com.smile.common.composables.NavigationTopAppBar
 import com.smile.model.User
+import com.smile.model.datastore.DataStoreRepository.Companion.DISABLED
+import com.smile.model.datastore.DataStoreRepository.Companion.ENABLED
 import com.smile.model.service.module.Response
+import com.smile.ui.screens.graph.SmileRoutes.EDIT_PROFILE_SCREEN
 import com.smile.ui.view_models.ProfileScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
@@ -45,21 +48,34 @@ fun ProfileScreenProvider(
     navigate: (String) -> Unit,
     viewModel: ProfileScreenViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit) { viewModel.getUser() }
+    LaunchedEffect(Unit) { viewModel.getUserAndNotificationState() }
     val user by viewModel.user.collectAsStateWithLifecycle()
+    val notificationState by viewModel.notificationState.collectAsStateWithLifecycle()
     if (user is Response.Success) {
         val letter = (user as Response.Success<User>).data.displayName.first()
         ProfileScreen(
+            userLetter = letter,
+            notificationState = notificationState,
             popUp = popUp,
+            onEditProfileClick = { navigate(EDIT_PROFILE_SCREEN) },
+            onApplicationInformationClick = {},
             signOutClick = { viewModel.signOut { clearAndNavigate(it) } },
-            letter
+            onNotificationActivateClick = {}
         )
     }
 }
 
 
 @Composable
-fun ProfileScreen(popUp: () -> Unit, signOutClick: () -> Unit, userLetter: Char) {
+fun ProfileScreen(
+    userLetter: Char,
+    notificationState: String,
+    popUp: () -> Unit,
+    onEditProfileClick: () -> Unit,
+    onApplicationInformationClick: () -> Unit,
+    signOutClick: () -> Unit,
+    onNotificationActivateClick: () -> Unit,
+) {
     Scaffold(
         topBar = {
             NavigationTopAppBar(AppText.profile_screen, popUp)
@@ -75,9 +91,18 @@ fun ProfileScreen(popUp: () -> Unit, signOutClick: () -> Unit, userLetter: Char)
         ) {
             LetterInCircle(userLetter)
             Spacer(modifier = Modifier.height(HIGH_PADDING))
-            ProfileItem(AppDrawable.outline_edit_24, AppText.edit_profile)
-            ProfileItem(AppDrawable.outline_lock_24, AppText.change_password)
-            ProfileItem(AppDrawable.outline_info_24, AppText.app_info)
+            ProfileItem(AppDrawable.outline_edit_24, AppText.edit_profile, onEditProfileClick)
+            ProfileItem(
+                AppDrawable.outline_info_24,
+                AppText.app_info,
+                onApplicationInformationClick
+            )
+            if (notificationState != ENABLED)
+                ProfileItem(
+                    AppDrawable.outline_notifications_active_24,
+                    AppText.notification_active,
+                    onNotificationActivateClick
+                )
             ProfileItem(AppDrawable.round_logout_24, AppText.logout, signOutClick)
         }
     }
@@ -119,6 +144,11 @@ fun ProfileItem(
 @Composable
 fun ProfilePreview() {
     ProfileScreen(
-        popUp = {}, {}, 'F'
-    )
+        userLetter = 'T',
+        notificationState = "South Dakota",
+        popUp = {},
+        onEditProfileClick = {},
+        onApplicationInformationClick = {},
+        signOutClick = {},
+        onNotificationActivateClick = {})
 }
