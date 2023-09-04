@@ -1,6 +1,5 @@
 package com.smile.ui.view_models
 
-import androidx.lifecycle.viewModelScope
 import com.smile.SmileViewModel
 import com.smile.common.ext.isValidEmail
 import com.smile.common.ext.isValidPassword
@@ -12,12 +11,10 @@ import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
 import com.smile.model.service.module.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.smile.R.string as AppText
 
@@ -87,7 +84,7 @@ class RegisterScreenViewModel @Inject constructor(
             SnackbarManager.showMessage(AppText.require_first_name)
             return
         }
-        viewModelScope.launch(Dispatchers.IO) {
+        launchCatching {
             val signUpResponse = accountService.firebaseSignUpWithEmailAndPassword(
                 email = email,
                 password = password
@@ -105,7 +102,7 @@ class RegisterScreenViewModel @Inject constructor(
 
 
     private fun saveToDatabase() {
-        viewModelScope.launch(Dispatchers.IO) {
+        launchCatching {
             storageService.saveUser(
                 User(
                     accountService.currentUserId,

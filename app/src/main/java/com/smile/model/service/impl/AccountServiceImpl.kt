@@ -10,6 +10,7 @@ import com.smile.model.service.SendEmailVerificationResponse
 import com.smile.model.service.SendPasswordResetEmailResponse
 import com.smile.model.service.SignInResponse
 import com.smile.model.service.SignUpResponse
+import com.smile.model.service.UpdatePasswordResponse
 import com.smile.model.service.module.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
@@ -74,6 +75,15 @@ class AccountServiceImpl @Inject constructor(
     override suspend fun sendPasswordResetEmail(email: String): SendPasswordResetEmailResponse {
         return try {
             auth.sendPasswordResetEmail(email).await()
+            Response.Success(true)
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
+    }
+
+    override suspend fun updatePassword(password: String): UpdatePasswordResponse {
+        return try {
+            auth.currentUser?.updatePassword(password)?.await()
             Response.Success(true)
         } catch (e: Exception) {
             Response.Failure(e)

@@ -2,7 +2,6 @@ package com.smile.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.DefaultTextField
+import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.NavigationTopAppBar
 import com.smile.common.composables.PasswordTextField
 import com.smile.ui.view_models.EditScreenUiState
@@ -37,9 +37,12 @@ import com.smile.R.string as AppText
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun EditProfileScreenProvider(popUp: () -> Unit, viewModel: EditScreenViewModel = hiltViewModel()) {
+fun EditProfileScreenProvider(clearAndNavigate: (String) -> Unit, popUp: () -> Unit, viewModel: EditScreenViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val keyboardController = LocalSoftwareKeyboardController.current
+    if (uiState.loadingState) {
+        LoadingAnimationDialog { viewModel.onLoadingStateChange(false) }
+    }
     EditProfileScreen(
         uiState,
         popUp,
@@ -47,7 +50,7 @@ fun EditProfileScreenProvider(popUp: () -> Unit, viewModel: EditScreenViewModel 
         viewModel::onPasswordChange,
         viewModel::onRePasswordChange,
         onUpdateClick = {
-            viewModel.onUpdateClick()
+            viewModel.onUpdateClick(clearAndNavigate)
             keyboardController?.hide()
         }
     )

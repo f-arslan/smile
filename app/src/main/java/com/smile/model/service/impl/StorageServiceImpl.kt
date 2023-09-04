@@ -139,9 +139,11 @@ class StorageServiceImpl @Inject constructor(
                         DocumentChange.Type.ADDED -> {
                             documentChange.document.toObject<ContactEntity>()
                         }
+
                         DocumentChange.Type.MODIFIED -> {
                             documentChange.document.toObject<ContactEntity>()
                         }
+
                         DocumentChange.Type.REMOVED -> {
                             documentChange.document.toObject<ContactEntity>()
                         }
@@ -153,7 +155,8 @@ class StorageServiceImpl @Inject constructor(
     }
 
     override suspend fun getContact(contactId: String) =
-        getContactColUnderUser(auth.currentUserId).document(contactId).dataObjects<Contact>().mapNotNull { it }
+        getContactColUnderUser(auth.currentUserId).document(contactId).dataObjects<Contact>()
+            .mapNotNull { it }
 
     override suspend fun sendMessage(
         scope: CoroutineScope,
@@ -238,6 +241,36 @@ class StorageServiceImpl @Inject constructor(
         getUserDocRef(auth.currentUserId).update(USER_FCM_TOKEN, token).await()
     }
 
+    override suspend fun updateUserName(name: String) {
+        if (auth.currentUserId.isEmpty()) {
+            Log.e("StorageServiceImpl", "User id is empty")
+            return
+        }
+        val rooms =
+            getUserDocRef(auth.currentUserId).get().await().toObject<User>()?.roomIds
+
+        val batch = firestore.batch()
+
+        rooms?.forEach { room ->
+            val roomDocRef = roomColRef.document(room)
+            val contacts = roomDocRef.get().await().toObject<Room>()?.contacts
+            contacts?.let {
+                it.forEachIndexed { index, contact ->
+                    if (auth.currentUserId == contact.userId) {
+                        val updateContact = contact.copy(firstName = name)
+                        val updatedContacts = it.toMutableList()
+                        updatedContacts[index] = updateContact
+                        batch.update(roomDocRef, ROOM_CONTACTS, updatedContacts)
+                        return@forEach
+                    }
+                }
+            }
+        }
+        batch.update(getUserDocRef(auth.currentUserId), USER_DISPLAY_NAME, name)
+        batch.commit().await()
+    }
+
+
     override suspend fun getUser() =
         getUserDocRef(auth.currentUserId).get().await().toObject<User>()
 
@@ -275,5 +308,7 @@ class StorageServiceImpl @Inject constructor(
         private const val USER_FCM_TOKEN = "fcmToken"
         private const val USER_ROOM_IDS = "roomIds"
         private const val ROOM_ID = "roomId"
+        private const val ROOM_CONTACTS = "contacts"
+        private const val USER_DISPLAY_NAME = "displayName"
     }
 }

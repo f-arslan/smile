@@ -106,6 +106,8 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
     }
 
     composable(EDIT_PROFILE_SCREEN) {
-        EditProfileScreenProvider(popUp = { appState.popUp() })
+        EditProfileScreenProvider(
+            popUp = { appState.popUp() },
+            clearAndNavigate = { appState.clearAndNavigate(it) })
     }
 }

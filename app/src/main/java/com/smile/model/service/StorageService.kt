@@ -14,6 +14,8 @@ interface StorageService {
     suspend fun updateUserEmailVerification()
     suspend fun saveContact(scope: CoroutineScope, firstContact: Contact, secondContact: Contact)
 
+    suspend fun updateUserName(name: String)
+
     suspend fun findIdByEmail(email: String): String?
 
     suspend fun getContacts(

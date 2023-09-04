@@ -13,6 +13,7 @@ typealias ReloadUserResponse = Response<Boolean>
 typealias SendPasswordResetEmailResponse = Response<Boolean>
 typealias RevokeAccessResponse = Response<Boolean>
 typealias AuthStateResponse = StateFlow<Boolean>
+typealias UpdatePasswordResponse = Response<Boolean>
 
 interface AccountService {
     val currentUserId: String
@@ -24,6 +25,8 @@ interface AccountService {
     suspend fun firebaseSignInWithEmailAndPassword(email: String, password: String): SignInResponse
 
     suspend fun reloadFirebaseUser(): ReloadUserResponse
+
+    suspend fun updatePassword(password: String): UpdatePasswordResponse
 
     suspend fun sendPasswordResetEmail(email: String): SendPasswordResetEmailResponse
 
