@@ -28,6 +28,7 @@
     <string name="skip">Skip</string>
     <string name="enable_notifications">Enable Notifications</string>
     <string name="update">Update</string>
+    <string name="confirm">Confirm</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
@@ -94,6 +95,8 @@
     <string name="change_password">Change Password</string>
     <string name="app_info">Application Information</string>
     <string name="notification_active">Activate Notifications</string>
+    <string name="password_insurance">Please re-enter your current password below. We require you to verify your identity before proceeding with the password change to ensure the security of your account.</string>
+    <string name="confirm_password">Confirm Password</string>
 
     <!-- Notification Screen -->
     <string name="notification_permission">Notification Permission</string>

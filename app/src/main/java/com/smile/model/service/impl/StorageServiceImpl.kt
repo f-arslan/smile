@@ -64,10 +64,8 @@ class StorageServiceImpl @Inject constructor(
             val user1 = user1Doc.get().await().toObject<User>() ?: throw Exception("User not found")
             val user2 = user2Doc.get().await().toObject<User>() ?: throw Exception("User not found")
             val batch = firestore.batch()
-            var roomId: String = ""
-            if (!user1.contactIds.contains(firstContactId) && !user2.contactIds.contains(
-                    secondContactId
-                )
+            var roomId = ""
+            if (!user1.contactIds.contains(firstContactId) && !user2.contactIds.contains(secondContactId)
             ) {
                 val currentTime = getCurrentTimestamp()
                 val roomRef = async { roomColRef.document() }.await().also { roomId = it.id }
@@ -256,7 +254,7 @@ class StorageServiceImpl @Inject constructor(
             val contacts = roomDocRef.get().await().toObject<Room>()?.contacts
             contacts?.let {
                 it.forEachIndexed { index, contact ->
-                    if (auth.currentUserId == contact.userId) {
+                    if (auth.currentUserId == contact.friendId) {
                         val updateContact = contact.copy(firstName = name)
                         val updatedContacts = it.toMutableList()
                         updatedContacts[index] = updateContact

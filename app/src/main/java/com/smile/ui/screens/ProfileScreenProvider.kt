@@ -31,10 +31,9 @@ import com.smile.common.composables.IconCircle
 import com.smile.common.composables.LetterInCircle
 import com.smile.common.composables.NavigationTopAppBar
 import com.smile.model.User
-import com.smile.model.datastore.DataStoreRepository.Companion.DISABLED
 import com.smile.model.datastore.DataStoreRepository.Companion.ENABLED
 import com.smile.model.service.module.Response
-import com.smile.ui.screens.graph.SmileRoutes.EDIT_PROFILE_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
 import com.smile.ui.view_models.ProfileScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
@@ -57,7 +56,7 @@ fun ProfileScreenProvider(
             userLetter = letter,
             notificationState = notificationState,
             popUp = popUp,
-            onEditProfileClick = { navigate(EDIT_PROFILE_SCREEN) },
+            onEditProfileClick = { navigate(CHANGE_PASSWORD_SCREEN) },
             onApplicationInformationClick = {},
             signOutClick = { viewModel.signOut { clearAndNavigate(it) } },
             onNotificationActivateClick = {}
@@ -91,7 +90,7 @@ fun ProfileScreen(
         ) {
             LetterInCircle(userLetter)
             Spacer(modifier = Modifier.height(HIGH_PADDING))
-            ProfileItem(AppDrawable.outline_edit_24, AppText.edit_profile, onEditProfileClick)
+            ProfileItem(AppDrawable.outline_lock_24, AppText.change_password, onEditProfileClick)
             ProfileItem(
                 AppDrawable.outline_info_24,
                 AppText.app_info,

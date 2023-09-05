@@ -18,6 +18,7 @@ typealias UpdatePasswordResponse = Response<Boolean>
 interface AccountService {
     val currentUserId: String
     val isEmailVerified: Boolean
+    val email: String
     suspend fun firebaseSignUpWithEmailAndPassword(email: String, password: String): SignUpResponse
 
     suspend fun sendEmailVerification(): SendEmailVerificationResponse

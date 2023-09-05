@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,11 +19,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
@@ -72,7 +78,9 @@ fun DefaultTextField(
 fun PasswordTextField(
     value: String,
     @StringRes label: Int,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    focusRequester: FocusRequester = FocusRequester(),
+    onConfirmClick: () -> Unit = {}
 ) {
     var isVisible by remember { mutableStateOf(false) }
     val icon =
@@ -80,9 +88,8 @@ fun PasswordTextField(
 
     val visualTransformation =
         if (isVisible) VisualTransformation.None else PasswordVisualTransformation()
-
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
         value = value,
         label = { Text(text = stringResource(id = label)) },
         shape = RoundedCornerShape(MEDIUM_PADDING),
@@ -91,6 +98,13 @@ fun PasswordTextField(
                 Icon(painter = painterResource(icon), contentDescription = null)
             }
         },
+        keyboardOptions = KeyboardOptions.Default.copy(
+            imeAction = ImeAction.Next,
+            keyboardType = KeyboardType.Password
+        ),
+        keyboardActions = KeyboardActions(
+            onNext = { onConfirmClick() }
+        ),
         onValueChange = onValueChange,
         visualTransformation = visualTransformation
     )

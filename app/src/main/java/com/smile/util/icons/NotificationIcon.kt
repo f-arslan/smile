@@ -1,4 +1,4 @@
-package com.smile.util
+package com.smile.util.icons
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType.Companion.NonZero

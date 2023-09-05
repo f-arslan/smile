@@ -11,5 +11,6 @@ object SmileRoutes {
     const val PROFILE_SCREEN = "profile_screen"
     const val SPLASH_SCREEN = "splash_screen"
     const val NOTIFICATION_SCREEN = "notification_screen"
-    const val EDIT_PROFILE_SCREEN = "edit_profile_screen"
+    const val CHANGE_PASSWORD_SCREEN = "change_password_screen"
+    const val VERIFY_PASSWORD_SCREEN = "verify_password_screen"
 }

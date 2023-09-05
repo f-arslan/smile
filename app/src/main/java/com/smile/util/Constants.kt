@@ -16,7 +16,7 @@ object Constants {
     val VERY_MAX_PADDING = 48.dp
     val ICON_SIZE = 100.dp
     val AVATAR_SIZE = 40.dp
-    val GENERAL_ICON_SIZE = 64.dp
+    val GENERAL_ICON_SIZE = 300.dp
     val COUNT_BUBBLE_SIZE = 16.dp
 
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -55,6 +56,29 @@ fun DefaultButton(@StringRes text: Int, onClick: () -> Unit, modifier: Modifier 
             text = stringResource(id = text),
             style = MaterialTheme.typography.titleMedium,
         )
+    }
+}
+
+@Composable
+fun BottomButtonWithIcon(@DrawableRes icon: Int, @StringRes iconDesc: Int, @StringRes label: Int, onClick: () -> Unit) {
+    Button(
+        onClick = onClick, modifier = Modifier
+            .fillMaxWidth()
+            .imePadding()
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(Constants.MEDIUM_PADDING),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = stringResource(iconDesc)
+            )
+            Text(
+                stringResource(label),
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
     }
 }
 
