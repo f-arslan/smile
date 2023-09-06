@@ -29,6 +29,8 @@
     <string name="enable_notifications">Enable Notifications</string>
     <string name="update">Update</string>
     <string name="confirm">Confirm</string>
+    <string name="logo">Logo</string>
+    <string name="learn_more">Learn More</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
@@ -102,6 +104,10 @@
     <string name="notification_permission">Notification Permission</string>
     <string name="notification_title">Stay Connected!</string>
     <string name="notification_desc">Turn on notifications to receive messages from friends instantly. Stay in the loop and reply promptly.</string>
+
+    <!-- Learn More Screen -->
+    <string name="app_description">Welcome to Smile, your ultimate chat companion! With Smile, connecting with friends, family, and colleagues has never been easier. Say goodbye to long waits for messages and enjoy instant, secure, and feature-rich communication right at your fingertips.</string>
+
 
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>

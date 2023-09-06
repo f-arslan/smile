@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -79,7 +80,6 @@ fun PasswordTextField(
     value: String,
     @StringRes label: Int,
     onValueChange: (String) -> Unit,
-    focusRequester: FocusRequester = FocusRequester(),
     onConfirmClick: () -> Unit = {}
 ) {
     var isVisible by remember { mutableStateOf(false) }
@@ -89,7 +89,7 @@ fun PasswordTextField(
     val visualTransformation =
         if (isVisible) VisualTransformation.None else PasswordVisualTransformation()
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+        modifier = Modifier.fillMaxWidth(),
         value = value,
         label = { Text(text = stringResource(id = label)) },
         shape = RoundedCornerShape(MEDIUM_PADDING),

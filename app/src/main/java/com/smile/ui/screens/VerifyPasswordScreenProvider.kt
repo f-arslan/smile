@@ -2,13 +2,11 @@ package com.smile.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imeNestedScroll
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -19,28 +17,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.smile.common.composables.BottomButtonWithIcon
 import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.NavigationTopAppBar
 import com.smile.common.composables.PasswordTextField
 import com.smile.ui.view_models.VerifyPasswordScreenViewModel
-import com.smile.util.Constants
 import com.smile.util.Constants.GENERAL_ICON_SIZE
 import com.smile.util.Constants.HIGH_PADDING
-import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.util.Constants.SMALL_PADDING
+import com.smile.util.keyboardAsState
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
 
@@ -64,7 +56,6 @@ fun VerifyPasswordScreenProvider(
 }
 
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun VerifyPasswordScreen(
     popUp: () -> Unit,
@@ -73,8 +64,10 @@ fun VerifyPasswordScreen(
     onConfirmClick: () -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val focusRequester = remember { FocusRequester() }
-    val context = LocalContext.current
+    val keyboard by keyboardAsState()
+    LaunchedEffect(keyboard) {
+        scrollState.animateScrollTo(Int.MAX_VALUE)
+    }
     Scaffold(topBar = { NavigationTopAppBar(AppText.confirm_password, popUp) }) {
         Column(
             modifier = Modifier
@@ -98,11 +91,8 @@ fun VerifyPasswordScreen(
                 modifier = Modifier.padding(start = SMALL_PADDING, end = SMALL_PADDING)
             )
             Spacer(modifier = Modifier.height(HIGH_PADDING))
-            PasswordTextField(password, AppText.password, onPasswordChange, focusRequester, onConfirmClick)
-            Spacer(modifier = Modifier.weight(1f))
-        }
-        LaunchedEffect(context) {
-            focusRequester.requestFocus()
+            PasswordTextField(password, AppText.password, onPasswordChange, onConfirmClick)
+            Spacer(modifier = Modifier.imePadding())
         }
     }
 }

@@ -91,17 +91,17 @@ fun ProfileScreen(
             LetterInCircle(userLetter)
             Spacer(modifier = Modifier.height(HIGH_PADDING))
             ProfileItem(AppDrawable.outline_lock_24, AppText.change_password, onEditProfileClick)
-            ProfileItem(
-                AppDrawable.outline_info_24,
-                AppText.app_info,
-                onApplicationInformationClick
-            )
             if (notificationState != ENABLED)
                 ProfileItem(
                     AppDrawable.outline_notifications_active_24,
                     AppText.notification_active,
                     onNotificationActivateClick
                 )
+            ProfileItem(
+                AppDrawable.outline_info_24,
+                AppText.app_info,
+                onApplicationInformationClick
+            )
             ProfileItem(AppDrawable.round_logout_24, AppText.logout, signOutClick)
         }
     }

@@ -19,7 +19,7 @@ import javax.inject.Inject
 class VerifyPasswordScreenViewModel @Inject constructor(
     private val accountService: AccountService,
     logService: LogService
-): SmileViewModel(logService) {
+) : SmileViewModel(logService) {
     private val _password = MutableStateFlow("")
     val password = _password.asStateFlow()
 
@@ -41,14 +41,19 @@ class VerifyPasswordScreenViewModel @Inject constructor(
         }
         onLoadingStateChange(true)
         launchCatching {
-            val signInResponse = accountService.firebaseSignInWithEmailAndPassword(accountService.email, _password.value)
+            val signInResponse = accountService.firebaseSignInWithEmailAndPassword(
+                accountService.email,
+                _password.value
+            )
             if (signInResponse is Response.Success) {
+                onLoadingStateChange(false)
+                delay(100L)
                 clearAndNavigate(CHANGE_PASSWORD_SCREEN)
-            } else {
+            } else if (signInResponse is Response.Failure) {
+                onLoadingStateChange(false)
+                delay(100L)
                 SnackbarManager.showMessage(R.string.password_match_error)
             }
-            onLoadingStateChange(false)
-            delay(50L)
         }
     }
 }

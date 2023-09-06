@@ -9,8 +9,9 @@ import com.smile.common.snackbar.SnackbarManager
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
 import com.smile.model.service.module.Response
-import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -24,7 +25,7 @@ data class ChangePasswordScreenUiState(
 )
 
 @HiltViewModel
-class EditScreenViewModel @Inject constructor(
+class ChangePasswordScreenViewModel @Inject constructor(
     private val accountService: AccountService,
     logService: LogService
 ) : SmileViewModel(logService) {
@@ -67,11 +68,14 @@ class EditScreenViewModel @Inject constructor(
             val updatePasswordResponse = accountService.updatePassword(password)
             Log.d("EditScreenViewModel", "updateUser: $updatePasswordResponse")
             if (updatePasswordResponse is Response.Success) {
-                clearAndNavigate(HOME_SCREEN)
+                onLoadingStateChange(false)
+                delay(100L)
+                clearAndNavigate(LOGIN_SCREEN)
             } else if (updatePasswordResponse is Response.Failure) {
                 SnackbarManager.showMessage(updatePasswordResponse.e.message.orEmpty())
+                onLoadingStateChange(false)
+                delay(100L)
             }
         }
-        onLoadingStateChange(false)
     }
 }

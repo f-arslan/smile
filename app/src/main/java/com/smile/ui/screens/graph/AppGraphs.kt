@@ -109,7 +109,6 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
 
     composable(CHANGE_PASSWORD_SCREEN) {
         ChangePasswordScreenProvider(
-            popUp = { appState.popUp() },
             clearAndNavigate = { route -> appState.clearAndNavigate(route) })
     }
 
