@@ -13,4 +13,5 @@ object SmileRoutes {
     const val NOTIFICATION_SCREEN = "notification_screen"
     const val CHANGE_PASSWORD_SCREEN = "change_password_screen"
     const val VERIFY_PASSWORD_SCREEN = "verify_password_screen"
+    const val LEARN_MORE_SCREEN = "learn_more_screen"
 }

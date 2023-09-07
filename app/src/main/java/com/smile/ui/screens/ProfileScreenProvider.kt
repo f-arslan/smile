@@ -34,6 +34,8 @@ import com.smile.model.User
 import com.smile.model.datastore.DataStoreRepository.Companion.ENABLED
 import com.smile.model.service.module.Response
 import com.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.LEARN_MORE_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.NOTIFICATION_SCREEN
 import com.smile.ui.view_models.ProfileScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
@@ -56,10 +58,10 @@ fun ProfileScreenProvider(
             userLetter = letter,
             notificationState = notificationState,
             popUp = popUp,
-            onEditProfileClick = { navigate(CHANGE_PASSWORD_SCREEN) },
-            onApplicationInformationClick = {},
+            onChangePasswordClick = { navigate(CHANGE_PASSWORD_SCREEN) },
+            onApplicationInformationClick = { navigate(LEARN_MORE_SCREEN) },
             signOutClick = { viewModel.signOut { clearAndNavigate(it) } },
-            onNotificationActivateClick = {}
+            onNotificationActivateClick = { navigate(NOTIFICATION_SCREEN) }
         )
     }
 }
@@ -70,7 +72,7 @@ fun ProfileScreen(
     userLetter: Char,
     notificationState: String,
     popUp: () -> Unit,
-    onEditProfileClick: () -> Unit,
+    onChangePasswordClick: () -> Unit,
     onApplicationInformationClick: () -> Unit,
     signOutClick: () -> Unit,
     onNotificationActivateClick: () -> Unit,
@@ -90,7 +92,7 @@ fun ProfileScreen(
         ) {
             LetterInCircle(userLetter)
             Spacer(modifier = Modifier.height(HIGH_PADDING))
-            ProfileItem(AppDrawable.outline_lock_24, AppText.change_password, onEditProfileClick)
+            ProfileItem(AppDrawable.outline_lock_24, AppText.change_password, onChangePasswordClick)
             if (notificationState != ENABLED)
                 ProfileItem(
                     AppDrawable.outline_notifications_active_24,
@@ -146,7 +148,7 @@ fun ProfilePreview() {
         userLetter = 'T',
         notificationState = "South Dakota",
         popUp = {},
-        onEditProfileClick = {},
+        onChangePasswordClick = {},
         onApplicationInformationClick = {},
         signOutClick = {},
         onNotificationActivateClick = {})

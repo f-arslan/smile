@@ -106,7 +106,7 @@
     <string name="notification_desc">Turn on notifications to receive messages from friends instantly. Stay in the loop and reply promptly.</string>
 
     <!-- Learn More Screen -->
-    <string name="app_description">Welcome to Smile, your ultimate chat companion! With Smile, connecting with friends, family, and colleagues has never been easier. Say goodbye to long waits for messages and enjoy instant, secure, and feature-rich communication right at your fingertips.</string>
+    <string name="app_description">With Smile, connecting with friends, family, and colleagues has never been easier. Say goodbye to long waits for messages and enjoy instant, secure, and feature-rich communication right at your fingertips.</string>
 
 
     <!-- FCM -->

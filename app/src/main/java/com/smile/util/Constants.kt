@@ -28,4 +28,13 @@ object Constants {
     const val DB_TABLE_ROOM = "rooms"
     const val DB_TABLE_MESSAGE = "messages"
     const val DB_TABLE_SEARCH_HISTORY_QUERY = "searchHistoryQueries"
+
+    // User Agreements
+    const val PRIVACY_TERM_CONDITIONS = "Privacy Policy and Terms & Conditions"
+    const val PRIVACY_POLICY = "Privacy Policy"
+    const val PRIVACY_POLICY_LINK = "https://sites.google.com/view/smile-privacy-policy/home"
+    const val TERMS_CONDITIONS = "Terms & Conditions"
+    const val TERMS_CONDITIONS_LINK = "https://sites.google.com/view/smile-terms-conditions/home"
+    const val GITHUB_DESC = "Check out this open source project on GitHub by clicking here."
+    const val GITHUB_LINK = "https://github.com/f-arslan/smile"
 }

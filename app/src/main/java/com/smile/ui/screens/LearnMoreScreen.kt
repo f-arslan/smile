@@ -1,10 +1,13 @@
 package com.smile.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -18,11 +21,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.smile.common.composables.HyperlinkText
 import com.smile.common.composables.NavigationTopAppBar
 import com.smile.ui.theme.Pacifico
+import com.smile.util.Constants.GITHUB_DESC
+import com.smile.util.Constants.GITHUB_LINK
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
+import com.smile.util.Constants.PRIVACY_POLICY
+import com.smile.util.Constants.PRIVACY_POLICY_LINK
+import com.smile.util.Constants.PRIVACY_TERM_CONDITIONS
 import com.smile.util.Constants.SMALL_ICON_SIZE
+import com.smile.util.Constants.TERMS_CONDITIONS
+import com.smile.util.Constants.TERMS_CONDITIONS_LINK
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
 
@@ -37,6 +48,7 @@ fun LearnMoreScreen(popUp: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
+            val logo = if (isSystemInDarkTheme()) AppDrawable.logo_white else AppDrawable.logo_black
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -45,7 +57,7 @@ fun LearnMoreScreen(popUp: () -> Unit) {
                     )
                 ) {
                     Image(
-                        painter = painterResource(AppDrawable.logo_black),
+                        painter = painterResource(logo),
                         contentDescription = stringResource(AppText.logo),
                         modifier = Modifier.size(SMALL_ICON_SIZE)
                     )
@@ -61,10 +73,24 @@ fun LearnMoreScreen(popUp: () -> Unit) {
                     fontWeight = FontWeight.SemiBold
                 )
             }
-            Text(
-                text = stringResource(AppText.app_description),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleMedium
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = stringResource(AppText.app_description),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(Modifier.height(HIGH_PADDING))
+                HyperlinkText(fullText = GITHUB_DESC, mapOf(
+                    GITHUB_DESC to GITHUB_LINK
+                ))
+            }
+            Spacer(Modifier)
+            Spacer(Modifier)
+            HyperlinkText(
+                fullText = PRIVACY_TERM_CONDITIONS, mapOf(
+                    PRIVACY_POLICY to PRIVACY_POLICY_LINK,
+                    TERMS_CONDITIONS to TERMS_CONDITIONS_LINK
+                )
             )
         }
     }
