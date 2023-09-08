@@ -19,6 +19,7 @@ import com.smile.model.room.ContactEntity
 import com.smile.model.room.RoomStorageService
 import com.smile.model.service.AccountService
 import com.smile.model.service.StorageService
+import com.smile.model.service.module.Response
 import com.smile.util.getCurrentTimestamp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,10 +58,8 @@ class StorageServiceImpl @Inject constructor(
         scope.launch(Dispatchers.IO) {
             val user1Task = async { getUserDocRef(firstContact.userId) }
             val user2Task = async { getUserDocRef(secondContact.userId) }
-
             val user1Doc = user1Task.await()
             val user2Doc = user2Task.await()
-
             val user1 = user1Doc.get().await().toObject<User>() ?: throw Exception("User not found")
             val user2 = user2Doc.get().await().toObject<User>() ?: throw Exception("User not found")
             val batch = firestore.batch()
@@ -113,17 +112,16 @@ class StorageServiceImpl @Inject constructor(
     }
 
 
-    override suspend fun findIdByEmail(email: String): String? {
-        var userId: String? = null
-        firestore.collection(USER_COLLECTION)
-            .whereEqualTo("email", email)
-            .get()
-            .addOnSuccessListener {
-                if (!it.isEmpty) {
-                    userId = it.documents[0].id
-                }
-            }.await()
-        return userId
+    override suspend fun findIdByEmail(email: String): Response<String> {
+        // Find email in user collection, if not return Response.Failure
+        val querySnapshot = firestore.collection(USER_COLLECTION)
+            .whereEqualTo(User::email.name, email).get().await()
+        val user = querySnapshot.toObjects<User>().firstOrNull()
+        return if (user != null) {
+            Response.Success(user.userId)
+        } else {
+            Response.Failure(Exception("User not found"))
+        }
     }
 
     override suspend fun getContacts(

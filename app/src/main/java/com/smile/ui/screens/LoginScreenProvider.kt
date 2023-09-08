@@ -39,6 +39,7 @@ import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import com.smile.ui.view_models.LoginScreenViewModel
 import com.smile.ui.view_models.LoginUiState
 import com.smile.util.Constants.HIGH_PADDING
+import com.smile.util.Constants.VERY_HIGH_PADDING
 import com.smile.R.string as AppText
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -97,7 +98,7 @@ fun LoginScreen(
             PasswordTextField(uiState.password, AppText.password, onPasswordChange)
             DefaultButton(text = AppText.login, onClick = onLoginClick, Modifier.fillMaxWidth())
         }
-        DayHeader(stringResource(AppText.or), style = MaterialTheme.typography.titleMedium)
+        DayHeader(stringResource(AppText.or), style = MaterialTheme.typography.titleMedium, height = VERY_HIGH_PADDING)
         ExtFloActionButton(
             R.drawable.google_32,
             AppText.google_icon,

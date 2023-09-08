@@ -8,6 +8,7 @@ import com.smile.model.Contact
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
+import com.smile.model.service.module.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -73,17 +74,22 @@ class NewContactScreenViewModel @Inject constructor(
         launchCatching {
             delay(150)
             val contactUserId = storageService.findIdByEmail(uiState.value.email)
+            if (contactUserId is Response.Failure) {
+                SnackbarManager.showMessage(AppText.user_not_found)
+                onLoadingStateChange(false)
+                return@launchCatching
+            }
             storageService.user.collect {
-                if (it != null && contactUserId != null) {
+                if (it != null && contactUserId is Response.Success) {
                     val firstContact = Contact(
                         userId = accountService.currentUserId,
-                        friendId = contactUserId,
+                        friendId = contactUserId.data,
                         firstName = uiState.value.firstName,
                         lastName = uiState.value.lastName,
                         email = uiState.value.email
                     )
                     val secondContact = Contact(
-                        userId = contactUserId,
+                        userId = contactUserId.data,
                         friendId = accountService.currentUserId,
                         firstName = it.displayName,
                         email = it.email

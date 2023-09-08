@@ -90,6 +90,8 @@
     <string name="save">Save</string>
     <string name="require_first_name">First name is required.</string>
     <string name="require_last_name">Last name is required.</string>
+    <string name="user_not_found">User not found.</string>
+    <string name="email_already_exists">Email already exists.</string>
 
     <!-- Profile Screen -->
     <string name="profile_screen">Profile Screen</string>

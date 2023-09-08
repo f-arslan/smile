@@ -46,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -99,7 +100,9 @@ fun ChatScreen(
     currentUserId: String
 ) {
     var notFunctionalState by remember { mutableStateOf(false) }
-    if (notFunctionalState) { FunctionalityNotAvailablePopup { notFunctionalState = false } }
+    if (notFunctionalState) {
+        FunctionalityNotAvailablePopup { notFunctionalState = false }
+    }
     val scrollState = rememberLazyListState()
     val topBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState)
@@ -140,11 +143,15 @@ fun ChatScreen(
 }
 
 @Composable
-fun DayHeader(dayString: String, style: TextStyle = MaterialTheme.typography.labelSmall) {
+fun DayHeader(
+    dayString: String,
+    style: TextStyle = MaterialTheme.typography.labelSmall,
+    height: Dp = HIGH_PADDING
+) {
     Row(
         modifier = Modifier
-            .padding(vertical = 8.dp, horizontal = 16.dp)
-            .height(24.dp)
+            .padding(vertical = MEDIUM_PADDING, horizontal = HIGH_PADDING)
+            .height(height)
     ) {
         DayHeaderLine()
         Text(

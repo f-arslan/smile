@@ -5,6 +5,7 @@ import com.smile.model.Message
 import com.smile.model.Room
 import com.smile.model.User
 import com.smile.model.room.ContactEntity
+import com.smile.model.service.module.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
@@ -16,7 +17,7 @@ interface StorageService {
 
     suspend fun updateUserName(name: String)
 
-    suspend fun findIdByEmail(email: String): String?
+    suspend fun findIdByEmail(email: String): Response<String>
 
     suspend fun getContacts(
         scope: CoroutineScope,

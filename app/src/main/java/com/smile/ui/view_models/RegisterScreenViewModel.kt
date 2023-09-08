@@ -1,5 +1,6 @@
 package com.smile.ui.view_models
 
+import androidx.compose.ui.res.stringResource
 import com.smile.SmileViewModel
 import com.smile.common.ext.isValidEmail
 import com.smile.common.ext.isValidPassword
@@ -89,13 +90,15 @@ class RegisterScreenViewModel @Inject constructor(
                 email = email,
                 password = password
             )
-            if (signUpResponse is Response.Success)
-            {
+            if (signUpResponse is Response.Success) {
                 async { accountService.sendEmailVerification() }.await()
                 saveToDatabase()
                 onLoadingStateChange(false)
                 delay(100)
                 onVerificationStateChange(true)
+            } else if (signUpResponse is Response.Failure) {
+                onLoadingStateChange(false)
+                signUpResponse.e.message?.let { SnackbarManager.showMessage(it) }
             }
         }
     }

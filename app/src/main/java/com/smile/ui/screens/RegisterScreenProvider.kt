@@ -43,6 +43,7 @@ import com.smile.ui.view_models.RegisterUiState
 import com.smile.util.Constants
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
+import com.smile.util.Constants.VERY_HIGH_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
 
@@ -120,7 +121,7 @@ fun RegisterScreen(
             )
             DefaultButton(AppText.register, onSignUpClick, Modifier.fillMaxWidth())
         }
-        DayHeader(stringResource(AppText.or), MaterialTheme.typography.titleMedium)
+        DayHeader(stringResource(AppText.or), MaterialTheme.typography.titleMedium, height = VERY_HIGH_PADDING)
         ExtFloActionButton(
             AppDrawable.google_32,
             AppText.google_icon,
