@@ -44,18 +44,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavDeepLinkDsl
 import com.smile.common.composables.ChatField
 import com.smile.common.composables.ContactTopAppBar
 import com.smile.common.composables.FunctionalityNotAvailablePopup
 import com.smile.model.Contact
 import com.smile.model.Message
 import com.smile.model.MessageStatus
-import com.smile.model.room.ContactEntity
 import com.smile.model.service.module.Response
 import com.smile.ui.view_models.ChatScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
@@ -141,17 +140,17 @@ fun ChatScreen(
 }
 
 @Composable
-fun DayHeader(dayString: String) {
+fun DayHeader(dayString: String, style: TextStyle = MaterialTheme.typography.labelSmall) {
     Row(
         modifier = Modifier
             .padding(vertical = 8.dp, horizontal = 16.dp)
-            .height(16.dp)
+            .height(24.dp)
     ) {
         DayHeaderLine()
         Text(
             text = dayString,
             modifier = Modifier.padding(horizontal = 16.dp),
-            style = MaterialTheme.typography.labelSmall,
+            style = style,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         DayHeaderLine()

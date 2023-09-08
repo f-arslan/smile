@@ -34,7 +34,7 @@ class SmileAppState(
     }
 
     fun navigate(route: String) {
-        navController.navigate(route) { launchSingleTop = true }
+        navController.navigate(route)
     }
 
     fun navigateAndPopUp(route: String, popUp: String) {

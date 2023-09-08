@@ -19,6 +19,7 @@ object Constants {
     val AVATAR_SIZE = 40.dp
     val GENERAL_ICON_SIZE = 300.dp
     val COUNT_BUBBLE_SIZE = 16.dp
+    val BUTTON_SIZE = 64.dp
 
 
     // ROOM DB
@@ -30,6 +31,7 @@ object Constants {
     const val DB_TABLE_SEARCH_HISTORY_QUERY = "searchHistoryQueries"
 
     // User Agreements
+    const val PRIVACY_POLICY_DESC = "By signing up, you agree to accept our privacy policy and terms & conditions."
     const val PRIVACY_TERM_CONDITIONS = "Privacy Policy and Terms & Conditions"
     const val PRIVACY_POLICY = "Privacy Policy"
     const val PRIVACY_POLICY_LINK = "https://sites.google.com/view/smile-privacy-policy/home"

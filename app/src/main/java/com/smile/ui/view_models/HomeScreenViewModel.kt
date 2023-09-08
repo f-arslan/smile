@@ -6,8 +6,6 @@ import com.google.firebase.messaging.ktx.messaging
 import com.smile.SmileViewModel
 import com.smile.model.User
 import com.smile.model.datastore.DataStoreRepository
-import com.smile.model.datastore.DataStoreRepository.Companion.DISABLED
-import com.smile.model.datastore.DataStoreRepository.Companion.ENABLED
 import com.smile.model.datastore.DataStoreRepository.Companion.IDLE
 import com.smile.model.room.ContactEntity
 import com.smile.model.room.RoomStorageService
@@ -82,7 +80,7 @@ class HomeScreenViewModel @Inject constructor(
 
             val filteredQueries = searchQueries.filter { it.query.contains(searchQuery) }
 
-            val filteredContacts = if (searchQuery.length >= 3) {
+            val filteredContacts = if (searchQuery.length >= 2) {
                 contacts.filter {
                     it.firstName.contains(searchQuery, ignoreCase = true) ||
                             it.lastName.contains(searchQuery, ignoreCase = true)

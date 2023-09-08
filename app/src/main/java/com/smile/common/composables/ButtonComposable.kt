@@ -7,10 +7,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -26,27 +30,40 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.smile.util.Constants
+import com.smile.util.Constants.BUTTON_SIZE
+import com.smile.util.Constants.HIGH_PADDING
+import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.util.Constants.SMALL_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
 
 
 @Composable
-fun FloAppButton(@DrawableRes icon: Int, @StringRes contentDescription: Int, onClick: () -> Unit) {
-    FloatingActionButton(onClick = onClick) {
+fun ExtFloActionButton(
+    @DrawableRes icon: Int,
+    @StringRes contentDescription: Int,
+    @StringRes label: Int,
+    onClick: () -> Unit
+) {
+    OutlinedButton(onClick = onClick, shape = RoundedCornerShape(HIGH_PADDING)) {
         Image(
             painter = painterResource(icon),
             contentDescription = stringResource(id = contentDescription)
         )
+        Spacer(Modifier.width(MEDIUM_PADDING))
+        Text(stringResource(label), style = MaterialTheme.typography.titleMedium)
     }
 }
 
 @Composable
 fun DefaultButton(@StringRes text: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
-        modifier = modifier, onClick = onClick, elevation = ButtonDefaults.buttonElevation(
+        modifier = modifier.defaultMinSize(BUTTON_SIZE),
+        onClick = onClick,
+        elevation = ButtonDefaults.buttonElevation(
             SMALL_PADDING
         ),
+        shape = RoundedCornerShape(HIGH_PADDING),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -60,7 +77,12 @@ fun DefaultButton(@StringRes text: Int, onClick: () -> Unit, modifier: Modifier 
 }
 
 @Composable
-fun BottomButtonWithIcon(@DrawableRes icon: Int, @StringRes iconDesc: Int, @StringRes label: Int, onClick: () -> Unit) {
+fun BottomButtonWithIcon(
+    @DrawableRes icon: Int,
+    @StringRes iconDesc: Int,
+    @StringRes label: Int,
+    onClick: () -> Unit
+) {
     Button(
         onClick = onClick, modifier = Modifier
             .fillMaxWidth()

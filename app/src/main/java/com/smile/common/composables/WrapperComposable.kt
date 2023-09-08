@@ -16,7 +16,6 @@ import com.smile.util.Constants.VERY_HIGH_PADDING
 @Composable
 fun HeaderWrapper(content: @Composable () -> Unit) {
     Column(
-        modifier = Modifier.padding(horizontal = VERY_HIGH_PADDING, vertical = MEDIUM_PADDING),
         verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

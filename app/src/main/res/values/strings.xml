@@ -31,6 +31,8 @@
     <string name="confirm">Confirm</string>
     <string name="logo">Logo</string>
     <string name="learn_more">Learn More</string>
+    <string name="or">Or</string>
+    <string name="continue_google">Continue with Google</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
@@ -39,7 +41,7 @@
 
     <!-- Register -->
     <string name="register_header">Join Us Today!</string>
-    <string name="register_sub_header">Welcome! We\'re so glad you\'re here. Signing up is easy and opens up a world of fun conversations.</string>
+    <string name="register_sub_header">Signing up is easy and opens up a world of fun conversations.</string>
     <string name="already_have_acc">Already have an account?</string>
     <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
     <string name="password_match_error">Passwords do not match.</string>

@@ -100,7 +100,7 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
     }
 
     composable(SPLASH_SCREEN) {
-        SplashScreenProvider(clearAndNavigate = { appState.clearAndNavigate(it) })
+        SplashScreenProvider(clearAndNavigate = { appState.navigateAndPopUp(it, SPLASH_SCREEN) })
     }
 
     composable(NOTIFICATION_SCREEN) {

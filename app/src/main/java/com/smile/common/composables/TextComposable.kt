@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 fun HyperlinkText(
     fullText: String,
     hyperLinks: Map<String, String>,
+    textStyle: TextStyle = MaterialTheme.typography.titleMedium.copy(textAlign = TextAlign.Center)
 ) {
     val annotatedString = buildAnnotatedString {
         append(fullText)
@@ -57,7 +58,7 @@ fun HyperlinkText(
 
     ClickableText(
         text = annotatedString,
-        style = MaterialTheme.typography.titleMedium.copy(textAlign = TextAlign.Center),
+        style = textStyle,
         onClick = {
             annotatedString
                 .getStringAnnotations("URL", it, it)

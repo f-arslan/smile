@@ -29,7 +29,7 @@ fun RegisterHeader() {
         )
         Text(
             text = stringResource(AppText.register_sub_header),
-            minLines = 3,
+            minLines = 2,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
@@ -46,7 +46,7 @@ fun LoginHeader() {
         Text(
             text = stringResource(AppText.login_sub_header),
             style = MaterialTheme.typography.titleMedium,
-            minLines = 2,
+            minLines = 1,
             textAlign = TextAlign.Center
         )
     }

@@ -1,10 +1,9 @@
 package com.smile.ui.screens
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +15,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -27,8 +29,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.R
 import com.smile.common.composables.DefaultButton
 import com.smile.common.composables.DefaultTextField
-import com.smile.common.composables.FloAppButton
+import com.smile.common.composables.ExtFloActionButton
 import com.smile.common.composables.FormWrapper
+import com.smile.common.composables.FunctionalityNotAvailablePopup
 import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.LoginHeader
 import com.smile.common.composables.PasswordTextField
@@ -46,19 +49,16 @@ fun LoginScreenProvider(
 ) {
     LaunchedEffect(Unit) { viewModel.checkEmailVerification() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val interactionSource = MutableInteractionSource()
     val keyboardController = LocalSoftwareKeyboardController.current
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
     if (loadingState) {
         LoadingAnimationDialog { viewModel.onLoadingStateChange(false) }
     }
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable(interactionSource, null) {
-                viewModel.checkEmailVerification()
-            }
-    ) {
+    var notFunctionalState by remember { mutableStateOf(false) }
+    if (notFunctionalState) {
+        FunctionalityNotAvailablePopup { notFunctionalState = false }
+    }
+    Surface {
         LoginScreen(
             uiState = uiState,
             onEmailChange = viewModel::onEmailChange,
@@ -67,7 +67,7 @@ fun LoginScreenProvider(
                 keyboardController?.hide()
                 viewModel.onLoginClick(openAndPopUp)
             },
-            onGoogleClick = viewModel::onGoogleLoginClick,
+            onGoogleClick = { notFunctionalState = true },
             onNotMemberClick = { openAndPopUp(REGISTER_SCREEN) }
         )
     }
@@ -85,24 +85,29 @@ fun LoginScreen(
 ) {
     Column(
         modifier = Modifier
+            .fillMaxSize()
             .statusBarsPadding()
             .padding(top = HIGH_PADDING),
         verticalArrangement = Arrangement.spacedBy(HIGH_PADDING),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LoginHeader()
         FormWrapper {
+            LoginHeader()
             DefaultTextField(uiState.email, AppText.email, onEmailChange)
             PasswordTextField(uiState.password, AppText.password, onPasswordChange)
             DefaultButton(text = AppText.login, onClick = onLoginClick, Modifier.fillMaxWidth())
         }
-        Text(
-            text = stringResource(id = AppText.or_continue_with),
-            style = MaterialTheme.typography.titleMedium
+        DayHeader(stringResource(AppText.or), style = MaterialTheme.typography.titleMedium)
+        ExtFloActionButton(
+            R.drawable.google_32,
+            AppText.google_icon,
+            AppText.continue_google,
+            onGoogleClick
         )
-        FloAppButton(R.drawable.google_32, AppText.google_icon, onGoogleClick)
+        Spacer(Modifier.weight(1f))
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(bottom = HIGH_PADDING)
         ) {
             Text(
                 text = stringResource(id = AppText.not_a_member),

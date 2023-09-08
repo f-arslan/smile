@@ -1,40 +1,47 @@
 package com.smile.ui.screens
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.DefaultButton
 import com.smile.common.composables.DefaultTextField
-import com.smile.common.composables.FloAppButton
+import com.smile.common.composables.ExtFloActionButton
 import com.smile.common.composables.FormWrapper
+import com.smile.common.composables.FunctionalityNotAvailablePopup
+import com.smile.common.composables.HyperlinkText
 import com.smile.common.composables.LoadingAnimationDialog
-import com.smile.common.composables.NavigationTopAppBar
 import com.smile.common.composables.PasswordTextField
 import com.smile.common.composables.RegisterHeader
 import com.smile.common.composables.VerificationDialog
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import com.smile.ui.view_models.RegisterScreenViewModel
 import com.smile.ui.view_models.RegisterUiState
+import com.smile.util.Constants
+import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText
@@ -57,6 +64,10 @@ fun RegisterScreenProvider(
             openAndPopUp(LOGIN_SCREEN)
         }
     }
+    var notFunctionalState by remember { mutableStateOf(false) }
+    if (notFunctionalState) {
+        FunctionalityNotAvailablePopup { notFunctionalState = false }
+    }
     RegisterScreen(
         uiState = uiState,
         onNameChange = viewModel::onNameChange,
@@ -67,7 +78,7 @@ fun RegisterScreenProvider(
             viewModel.onSignUpClick()
             keyboardController?.hide()
         },
-        onGoogleClick = viewModel::onGoogleClick,
+        onGoogleClick = { notFunctionalState = true },
         onAlreadyHaveAccountClick = { openAndPopUp(LOGIN_SCREEN) }
     )
 }
@@ -90,23 +101,36 @@ fun RegisterScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .statusBarsPadding()
+            .fillMaxSize()
+            .padding(top = HIGH_PADDING)
             .verticalScroll(scrollState)
     ) {
-        RegisterHeader()
         FormWrapper {
+            RegisterHeader()
             DefaultTextField(uiState.name, AppText.name, onNameChange)
             DefaultTextField(uiState.email, AppText.email, onEmailChange)
             PasswordTextField(uiState.password, AppText.password, onPasswordChange)
             PasswordTextField(uiState.rePassword, AppText.re_password, onConfirmPasswordChange)
+            HyperlinkText(
+                fullText = Constants.PRIVACY_POLICY_DESC, mapOf(
+                    Constants.PRIVACY_POLICY.lowercase() to Constants.PRIVACY_POLICY_LINK,
+                    Constants.TERMS_CONDITIONS.lowercase() to Constants.TERMS_CONDITIONS_LINK
+                ),
+                textStyle = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center)
+            )
             DefaultButton(AppText.register, onSignUpClick, Modifier.fillMaxWidth())
         }
-        Text(
-            text = stringResource(id = AppText.or_continue_with),
-            style = MaterialTheme.typography.titleMedium
+        DayHeader(stringResource(AppText.or), MaterialTheme.typography.titleMedium)
+        ExtFloActionButton(
+            AppDrawable.google_32,
+            AppText.google_icon,
+            AppText.continue_google,
+            onGoogleClick
         )
-        FloAppButton(AppDrawable.google_32, AppText.google_icon, onGoogleClick)
+        Spacer(Modifier.weight(1f))
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(bottom = HIGH_PADDING)
         ) {
             Text(
                 text = stringResource(id = AppText.already_have_acc),
