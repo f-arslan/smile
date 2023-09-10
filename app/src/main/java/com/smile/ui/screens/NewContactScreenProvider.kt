@@ -2,16 +2,12 @@ package com.smile.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imeNestedScroll
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,11 +41,10 @@ fun NewContactScreenProvider(
         viewModel::onFirstNameChange,
         viewModel::onLastNameChange,
         viewModel::onEmailChange,
-        viewModel::onSaveClick
+        onSaveClick = { viewModel.onSaveClick { popUp() } }
     )
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun NewContactScreen(
     popUp: () -> Unit,
@@ -69,10 +64,7 @@ fun NewContactScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .padding(vertical = MEDIUM_PADDING, horizontal = HIGH_PADDING)
-                .imePadding()
-                .imeNestedScroll()
-                .verticalScroll(scrollState),
+                .padding(vertical = MEDIUM_PADDING, horizontal = HIGH_PADDING),
             verticalArrangement = Arrangement.spacedBy(HIGH_PADDING),
         ) {
             DefaultTextField(uiState.firstName, AppText.first_name, onFirstNameChange)
@@ -84,7 +76,6 @@ fun NewContactScreen(
                 onClick = onSaveClick,
                 Modifier
                     .fillMaxWidth()
-                    .navigationBarsPadding()
                     .imePadding()
             )
         }

@@ -1,6 +1,5 @@
 package com.smile.ui.view_models
 
-import androidx.compose.ui.res.stringResource
 import com.smile.SmileViewModel
 import com.smile.common.ext.isValidEmail
 import com.smile.common.ext.isValidPassword
@@ -20,10 +19,10 @@ import javax.inject.Inject
 import com.smile.R.string as AppText
 
 data class RegisterUiState(
-    val name: String = "fatih",
-    val email: String = "fatiharslanedu@gmail.com",
-    val password: String = "Mkal858858",
-    val rePassword: String = "Mkal858858",
+    val name: String = "",
+    val email: String = "",
+    val password: String = "",
+    val rePassword: String = "",
     val verificationState: Boolean = false,
     val loadingState: Boolean = false
 )
@@ -68,7 +67,6 @@ class RegisterScreenViewModel @Inject constructor(
     }
 
     fun onSignUpClick() {
-        onLoadingStateChange(true)
         if (!email.isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return
@@ -86,6 +84,7 @@ class RegisterScreenViewModel @Inject constructor(
             return
         }
         launchCatching {
+            onLoadingStateChange(true)
             val signUpResponse = accountService.firebaseSignUpWithEmailAndPassword(
                 email = email,
                 password = password

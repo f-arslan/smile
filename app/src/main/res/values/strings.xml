@@ -98,6 +98,7 @@
     <string name="logout">Log Out</string>
     <string name="next">Next</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="change_name">Change Name</string>
     <string name="change_password">Change Password</string>
     <string name="app_info">Application Information</string>
     <string name="notification_active">Activate Notifications</string>

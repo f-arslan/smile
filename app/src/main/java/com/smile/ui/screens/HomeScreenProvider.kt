@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
@@ -117,14 +118,15 @@ fun LastContactItem(contact: ContactEntity, onContactClick: (String, String) -> 
         .fillMaxWidth()
         .clip(RoundedCornerShape(HIGH_PADDING))
         .clickable { onContactClick(contact.contactId, contact.roomId) }
-        .padding(MEDIUM_HIGH_PADDING)
+        .padding(MEDIUM_HIGH_PADDING),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         LetterInCircle(letter = contact.firstName.first().uppercase(), size = AVATAR_SIZE)
         Spacer(Modifier.width(HIGH_PADDING))
         Column {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = contact.firstName + " " + contact.lastName,

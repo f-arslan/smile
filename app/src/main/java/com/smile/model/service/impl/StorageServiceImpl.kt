@@ -34,17 +34,24 @@ import javax.inject.Inject
 class StorageServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val roomStorageService: RoomStorageService,
-    private val auth: AccountService
+    private val accountService: AccountService
 ) : StorageService {
     override val user: Flow<User?>
-        get() = firestore.collection(USER_COLLECTION).document(auth.currentUserId).dataObjects()
+        get() = firestore.collection(USER_COLLECTION).document(accountService.currentUserId)
+            .dataObjects()
 
     override suspend fun saveUser(user: User) {
-        firestore.collection(USER_COLLECTION).document(auth.currentUserId).set(user).await()
+        firestore.collection(USER_COLLECTION).document(accountService.currentUserId).set(user)
+            .await()
     }
 
     override suspend fun updateUserEmailVerification() {
-        firestore.collection(USER_COLLECTION).document(auth.currentUserId)
+        val user = getUserDocRef(accountService.currentUserId).get().await().toObject<User>()
+            ?: throw Exception("User not found")
+        if (user.isEmailVerified) {
+            return
+        }
+        getUserDocRef(accountService.currentUserId)
             .update(USER_EMAIL_VERIFIED, true).await()
     }
 
@@ -64,7 +71,9 @@ class StorageServiceImpl @Inject constructor(
             val user2 = user2Doc.get().await().toObject<User>() ?: throw Exception("User not found")
             val batch = firestore.batch()
             var roomId = ""
-            if (!user1.contactIds.contains(firstContactId) && !user2.contactIds.contains(secondContactId)
+            if (!user1.contactIds.contains(firstContactId) && !user2.contactIds.contains(
+                    secondContactId
+                )
             ) {
                 val currentTime = getCurrentTimestamp()
                 val roomRef = async { roomColRef.document() }.await().also { roomId = it.id }
@@ -128,7 +137,7 @@ class StorageServiceImpl @Inject constructor(
         scope: CoroutineScope,
         onDataChange: (List<ContactEntity>) -> Unit
     ) {
-        getUserDocRef(auth.currentUserId).collection(CONTACT_COLLECTION).snapshots()
+        getUserDocRef(accountService.currentUserId).collection(CONTACT_COLLECTION).snapshots()
             .map { querySnapshot ->
                 querySnapshot.documentChanges.mapNotNull { documentChange ->
                     when (documentChange.type) {
@@ -151,7 +160,8 @@ class StorageServiceImpl @Inject constructor(
     }
 
     override suspend fun getContact(contactId: String) =
-        getContactColUnderUser(auth.currentUserId).document(contactId).dataObjects<Contact>()
+        getContactColUnderUser(accountService.currentUserId).document(contactId)
+            .dataObjects<Contact>()
             .mapNotNull { it }
 
     override suspend fun sendMessage(
@@ -177,20 +187,22 @@ class StorageServiceImpl @Inject constructor(
 
     private suspend fun sendPushNotification(message: Message, contactId: String, roomId: String) {
         val friendId = contactId.split("_")[1]
-        val userDoc = getUserDocRef(friendId).get().await().toObject<User>()
-            ?: throw Exception("User not found")
-        if (userDoc.fcmToken.isEmpty()) {
+        val friendUserDoc = getUserDocRef(friendId).get().await().toObject<User>()
+            ?: return
+        val currentUserDisplayName = getUserDocRef(accountService.currentUserId).get().await()
+            .toObject<User>()?.displayName ?: return
+        if (friendUserDoc.fcmToken.isEmpty()) {
             Log.d("StorageServiceImpl", "User fcm token is empty")
             return
         }
         val data = NotificationData(
-            token = userDoc.fcmToken,
-            title = userDoc.displayName,
+            token = friendUserDoc.fcmToken,
+            title = currentUserDisplayName,
             body = message.content,
             roomId = roomId,
             contactId = contactId
         )
-        val pushNotification = PushNotification(to = userDoc.fcmToken, data = data)
+        val pushNotification = PushNotification(to = friendUserDoc.fcmToken, data = data)
         val response = RetrofitObject.notificationApi?.postNotification(pushNotification)
         if (response != null && response.isSuccessful) {
             Log.d("StorageServiceImpl", "Notification sent successfully")
@@ -204,7 +216,6 @@ class StorageServiceImpl @Inject constructor(
         roomId: String,
         contactId: String
     ): Flow<List<Message>> {
-        // Listen changes in room collection if there is update in last message update the db
         roomColRef.document(roomId).addSnapshotListener { value, error ->
             if (error != null) {
                 Log.e("StorageServiceImpl", "Error while listening to room collection", error)
@@ -230,29 +241,31 @@ class StorageServiceImpl @Inject constructor(
 
 
     override suspend fun saveFcmToken(token: String) {
-        if (auth.currentUserId.isEmpty()) {
+        if (accountService.currentUserId.isEmpty()) {
             Log.e("StorageServiceImpl", "User id is empty")
             return
         }
-        getUserDocRef(auth.currentUserId).update(USER_FCM_TOKEN, token).await()
+        getUserDocRef(accountService.currentUserId).update(USER_FCM_TOKEN, token).await()
     }
 
-    override suspend fun updateUserName(name: String) {
-        if (auth.currentUserId.isEmpty()) {
-            Log.e("StorageServiceImpl", "User id is empty")
-            return
-        }
+    override suspend fun updateUserName(name: String): Response<Boolean> {
+        if (accountService.currentUserId.isEmpty())
+            return Response.Failure(Exception("User id is empty".withTag()))
+
         val rooms =
-            getUserDocRef(auth.currentUserId).get().await().toObject<User>()?.roomIds
+            getUserDocRef(accountService.currentUserId).get().await().toObject<User>()?.roomIds
+                ?: return Response.Failure(Exception("Room ids is empty".withTag()))
 
         val batch = firestore.batch()
 
-        rooms?.forEach { room ->
+        rooms.forEach { room ->
             val roomDocRef = roomColRef.document(room)
-            val contacts = roomDocRef.get().await().toObject<Room>()?.contacts
-            contacts?.let {
+            val contacts =
+                roomDocRef.get().await().toObject<Room>()?.contacts
+                    ?: return Response.Failure(Exception("Contacts is empty".withTag()))
+            contacts.let {
                 it.forEachIndexed { index, contact ->
-                    if (auth.currentUserId == contact.friendId) {
+                    if (accountService.currentUserId == contact.friendId) {
                         val updateContact = contact.copy(firstName = name)
                         val updatedContacts = it.toMutableList()
                         updatedContacts[index] = updateContact
@@ -262,13 +275,14 @@ class StorageServiceImpl @Inject constructor(
                 }
             }
         }
-        batch.update(getUserDocRef(auth.currentUserId), USER_DISPLAY_NAME, name)
+        batch.update(getUserDocRef(accountService.currentUserId), USER_DISPLAY_NAME, name)
         batch.commit().await()
+        return Response.Success(true)
     }
 
 
     override suspend fun getUser() =
-        getUserDocRef(auth.currentUserId).get().await().toObject<User>()
+        getUserDocRef(accountService.currentUserId).get().await().toObject<User>()
 
     override fun getNonEmptyMessageRooms(
         roomIds: List<String>,
@@ -306,5 +320,8 @@ class StorageServiceImpl @Inject constructor(
         private const val ROOM_ID = "roomId"
         private const val ROOM_CONTACTS = "contacts"
         private const val USER_DISPLAY_NAME = "displayName"
+
+        private const val TAG = "StorageServiceImpl"
+        private fun String.withTag() = "$TAG: $this"
     }
 }

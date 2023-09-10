@@ -24,6 +24,17 @@ class DataStoreRepository @Inject constructor(
         }
     }
 
+    suspend fun setFcmToken(fcmToken: String) {
+        userDataStorePreferences.edit { preferences ->
+            preferences[FCM_TOKEN] = fcmToken
+        }
+    }
+
+    suspend fun getFcmToken(): String {
+        val preferences = userDataStorePreferences.data.first()
+        return preferences[FCM_TOKEN] ?: ""
+    }
+
     suspend fun getOnboardingScreenState(): Boolean {
         val preferences = userDataStorePreferences.data.first()
         return preferences[ONBOARDING_SCREEN_STATE] ?: false
@@ -37,6 +48,7 @@ class DataStoreRepository @Inject constructor(
     companion object {
         val NOTIFICATION_SHOW_STATE = stringPreferencesKey("notification_show_state")
         val ONBOARDING_SCREEN_STATE = booleanPreferencesKey("onboarding_screen_state")
+        val FCM_TOKEN = stringPreferencesKey("fcm_token")
         const val IDLE = "IDLE"
         const val ENABLED = "ENABLED"
         const val DISABLED = "DISABLED"

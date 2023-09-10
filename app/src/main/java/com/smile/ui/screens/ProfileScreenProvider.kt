@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,8 +24,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,11 +37,12 @@ import com.smile.common.composables.NavigationTopAppBar
 import com.smile.model.User
 import com.smile.model.datastore.DataStoreRepository.Companion.ENABLED
 import com.smile.model.service.module.Response
-import com.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LEARN_MORE_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.NAME_EDIT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.NOTIFICATION_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.VERIFY_PASSWORD_SCREEN
 import com.smile.ui.view_models.ProfileScreenViewModel
+import com.smile.util.Constants.AVATAR_SIZE
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.R.drawable as AppDrawable
@@ -50,19 +55,21 @@ fun ProfileScreenProvider(
     navigate: (String) -> Unit,
     viewModel: ProfileScreenViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit) { viewModel.getUserAndNotificationState() }
+    val context = LocalContext.current
+    LaunchedEffect(Unit) { viewModel.getUserAndNotificationState(context) }
+
     val user by viewModel.user.collectAsStateWithLifecycle()
     val notificationState by viewModel.notificationState.collectAsStateWithLifecycle()
     if (user is Response.Success) {
-        val letter = (user as Response.Success<User>).data.displayName.first()
         ProfileScreen(
-            userLetter = letter,
+            userName = (user as Response.Success<User>).data.displayName,
             notificationState = notificationState,
             popUp = popUp,
             onChangePasswordClick = { navigate(VERIFY_PASSWORD_SCREEN) },
             onApplicationInformationClick = { navigate(LEARN_MORE_SCREEN) },
             signOutClick = { viewModel.signOut { clearAndNavigate(it) } },
-            onNotificationActivateClick = { navigate(NOTIFICATION_SCREEN) }
+            onNotificationActivateClick = { navigate(NOTIFICATION_SCREEN) },
+            onEditClick = { navigate(NAME_EDIT_SCREEN) }
         )
     }
 }
@@ -70,13 +77,14 @@ fun ProfileScreenProvider(
 
 @Composable
 fun ProfileScreen(
-    userLetter: Char,
+    userName: String,
     notificationState: String,
     popUp: () -> Unit,
     onChangePasswordClick: () -> Unit,
     onApplicationInformationClick: () -> Unit,
     signOutClick: () -> Unit,
     onNotificationActivateClick: () -> Unit,
+    onEditClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -91,8 +99,9 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(HIGH_PADDING)
         ) {
-            LetterInCircle(userLetter)
-            Spacer(modifier = Modifier.height(HIGH_PADDING))
+            LetterInCircle(userName.first())
+            UserName(userName, onEditClick)
+            Spacer(modifier = Modifier.height(MEDIUM_PADDING))
             ProfileItem(AppDrawable.outline_lock_24, AppText.change_password, onChangePasswordClick)
             if (notificationState != ENABLED)
                 ProfileItem(
@@ -106,6 +115,25 @@ fun ProfileScreen(
                 onApplicationInformationClick
             )
             ProfileItem(AppDrawable.round_logout_24, AppText.logout, signOutClick)
+        }
+    }
+}
+
+@Composable
+private fun UserName(userName: String, onEditClick: () -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Spacer(modifier = Modifier.width(AVATAR_SIZE))
+        Text(
+            userName,
+            style = MaterialTheme.typography.headlineLarge,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        IconButton(onClick = onEditClick) {
+            Icon(
+                painter = painterResource(AppDrawable.outline_edit_24),
+                contentDescription = stringResource(AppText.edit_profile)
+            )
         }
     }
 }
@@ -146,11 +174,11 @@ fun ProfileItem(
 @Composable
 fun ProfilePreview() {
     ProfileScreen(
-        userLetter = 'T',
+        userName = "Fatih",
         notificationState = "South Dakota",
         popUp = {},
         onChangePasswordClick = {},
         onApplicationInformationClick = {},
         signOutClick = {},
-        onNotificationActivateClick = {})
+        onNotificationActivateClick = {}, onEditClick = {})
 }

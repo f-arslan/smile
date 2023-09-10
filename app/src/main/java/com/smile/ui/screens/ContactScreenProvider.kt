@@ -1,6 +1,5 @@
 package com.smile.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,22 +10,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.ContactTopAppBar
@@ -39,7 +36,6 @@ import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.HIGH_PLUS_PADDING
 import com.smile.util.Constants.MEDIUM_HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
-import com.smile.util.Constants.SMALL_PADDING
 
 @Composable
 fun ContactScreenProvider(
@@ -63,9 +59,8 @@ fun ContactScreenProvider(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContactScreen(
+private fun ContactScreen(
     textFieldValue: TextFieldValue,
     groupContacts: List<List<ContactEntity>>,
     onValueChange: (TextFieldValue) -> Unit,
@@ -73,56 +68,50 @@ fun ContactScreen(
     navigateNewContact: () -> Unit,
     navigateChatScreen: (String, String) -> Unit
 ) {
-    val topBarState = rememberTopAppBarState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState)
     Scaffold(
         topBar = {
             ContactTopAppBar(textFieldValue, onValueChange, popUp)
         },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             NewContactButton(navigateNewContact)
-            for (contact in groupContacts) {
-                ContactListWithLetter(
-                    contact[0].firstName.substring(0, 1),
-                    contact,
-                    navigateChatScreen
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun ContactListWithLetter(
-    label: String,
-    contacts: List<ContactEntity>,
-    onContactClick: (String, String) -> Unit
-) {
-    Column(
-        modifier = Modifier.padding(vertical = MEDIUM_PADDING, horizontal = MEDIUM_PADDING)
-    ) {
-        Row {
-            Spacer(Modifier.width(HIGH_PLUS_PADDING))
-            Text(text = label.uppercase(), style = MaterialTheme.typography.titleMedium)
-        }
-        Spacer(modifier = Modifier.height(SMALL_PADDING))
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)
-        ) {
-            items(contacts) {
-                ContactItem(name = "${it.firstName} ${it.lastName}") {
-                    onContactClick(it.contactId, it.roomId)
+            LazyColumn {
+                groupContacts.forEach {
+                    item { Letter(it[0].firstName.first()) }
+                    contactListWithLetter(
+                        it,
+                        navigateChatScreen
+                    )
+                    item { Spacer(Modifier.height(MEDIUM_PADDING)) }
                 }
             }
         }
     }
 }
 
+private fun LazyListScope.contactListWithLetter(
+    contacts: List<ContactEntity>,
+    onContactClick: (String, String) -> Unit
+) {
+    items(contacts, key = { it.contactId }) {
+        ContactItem(name = "${it.firstName} ${it.lastName}") {
+            onContactClick(it.contactId, it.roomId)
+        }
+    }
+}
+
 
 @Composable
-fun ContactItem(name: String, onContactClick: () -> Unit) {
+private fun Letter(label: Char) {
+    Row {
+        Spacer(Modifier.width(HIGH_PLUS_PADDING))
+        Text(text = label.uppercase(), style = MaterialTheme.typography.titleSmall)
+    }
+}
+
+
+@Composable
+private fun ContactItem(name: String, onContactClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -135,4 +124,16 @@ fun ContactItem(name: String, onContactClick: () -> Unit) {
         LetterInCircle(letter = name.substring(0, 1), size = AVATAR_SIZE)
         Text(text = name, style = MaterialTheme.typography.titleMedium)
     }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun ContactPreview() {
+    ContactScreen(
+        textFieldValue = TextFieldValue("Hello"),
+        groupContacts = listOf(),
+        onValueChange = {},
+        popUp = {},
+        navigateNewContact = {},
+        navigateChatScreen = { s: String, s1: String -> })
 }

@@ -174,10 +174,17 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun saveFcmToken() {
         launchCatching {
-            val currentUser = storageService.getUser()
-            if (currentUser != null && currentUser.fcmToken.isEmpty()) {
-                val token = Firebase.messaging.token.await()
+            val user = storageService.getUser() ?: return@launchCatching
+            val token = Firebase.messaging.token.await()
+            val dataStoreFCMToken = dataStoreRepository.getFcmToken()
+            if (dataStoreFCMToken == token) {
+                return@launchCatching
+            }
+            if (token != user.fcmToken) {
                 storageService.saveFcmToken(token)
+            }
+            if (dataStoreFCMToken.isBlank()) {
+                dataStoreRepository.setFcmToken(token)
             }
         }
     }

@@ -60,9 +60,11 @@ import com.smile.model.service.module.Response
 import com.smile.ui.view_models.ChatScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.HIGH_PLUS_PADDING
+import com.smile.util.Constants.MAX_PADDING
 import com.smile.util.Constants.MEDIUM_HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.util.Constants.SMALL_PADDING
+import com.smile.util.Constants.VERY_HIGH_PADDING
 import com.smile.util.Constants.VERY_SMALL_PADDING
 import com.smile.util.isTodayOrDate
 import com.smile.util.timestampToDate
@@ -183,11 +185,13 @@ fun ChatItemBubble(message: Message, isUserMe: Boolean) {
     } else {
         MaterialTheme.colorScheme.surfaceVariant
     }
+    val paddingModifier =
+        if (isUserMe) Modifier.padding(start = MAX_PADDING) else Modifier.padding(end = MAX_PADDING)
     val interactionSource = remember { MutableInteractionSource() }
     val isTimestampVisible = remember { mutableStateOf(false) }
     Row(
         horizontalArrangement = if (isUserMe) Arrangement.End else Arrangement.Start,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().then(paddingModifier)
     ) {
         Column(horizontalAlignment = Alignment.End) {
             Surface(

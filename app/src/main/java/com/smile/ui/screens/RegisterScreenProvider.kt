@@ -121,7 +121,11 @@ fun RegisterScreen(
             )
             DefaultButton(AppText.register, onSignUpClick, Modifier.fillMaxWidth())
         }
-        DayHeader(stringResource(AppText.or), MaterialTheme.typography.titleMedium, height = VERY_HIGH_PADDING)
+        DayHeader(
+            stringResource(AppText.or),
+            MaterialTheme.typography.titleMedium,
+            height = VERY_HIGH_PADDING
+        )
         ExtFloActionButton(
             AppDrawable.google_32,
             AppText.google_icon,

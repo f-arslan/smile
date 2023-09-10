@@ -13,6 +13,7 @@ import com.smile.ui.screens.ContactScreenProvider
 import com.smile.ui.screens.HomeScreenProvider
 import com.smile.ui.screens.LearnMoreScreen
 import com.smile.ui.screens.LoginScreenProvider
+import com.smile.ui.screens.NameEditScreenProvider
 import com.smile.ui.screens.NewContactScreenProvider
 import com.smile.ui.screens.NotificationScreenProvider
 import com.smile.ui.screens.OnboardingScreenProvider
@@ -26,6 +27,7 @@ import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LEARN_MORE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.NAME_EDIT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.NEW_CONTACT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.NOTIFICATION_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.ONBOARDING_SCREEN
@@ -120,5 +122,10 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
 
     composable(LEARN_MORE_SCREEN) {
         LearnMoreScreen { appState.popUp() }
+    }
+
+    composable(NAME_EDIT_SCREEN) {
+        NameEditScreenProvider(popUp = { appState.popUp() })
+
     }
 }

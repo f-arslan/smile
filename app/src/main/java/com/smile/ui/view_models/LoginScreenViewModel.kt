@@ -32,7 +32,7 @@ class LoginScreenViewModel @Inject constructor(
 ) : SmileViewModel(logService) {
 
 
-    private val _uiState = MutableStateFlow(LoginUiState("fatiharslanedu@gmail.com", "Mkal858858"))
+    private val _uiState = MutableStateFlow(LoginUiState("", ""))
     val uiState = _uiState.asStateFlow()
 
     private val _loadingState = MutableStateFlow(false)
@@ -70,6 +70,7 @@ class LoginScreenViewModel @Inject constructor(
                 async { accountService.reloadFirebaseUser() }.await()
                 if (accountService.isEmailVerified) {
                     onLoadingStateChange(false)
+                    storageService.updateUserEmailVerification()
                     delay(100L)
                     openAndPopUp(HOME_SCREEN)
                 } else {

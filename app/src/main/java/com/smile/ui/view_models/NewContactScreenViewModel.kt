@@ -51,7 +51,7 @@ class NewContactScreenViewModel @Inject constructor(
         _loadingState.value = loadingState
     }
 
-    fun onSaveClick() {
+    fun onSaveClick(popUp: () -> Unit) {
         uiState.value.apply {
             if (firstName.isBlank()) {
                 SnackbarManager.showMessage(AppText.require_first_name)
@@ -66,13 +66,12 @@ class NewContactScreenViewModel @Inject constructor(
                 return
             }
         }
-        onLoadingStateChange(true)
-        saveContactToDb()
+        saveContactToDb(popUp)
     }
 
-    private fun saveContactToDb() {
+    private fun saveContactToDb(popUp: () -> Unit) {
+        onLoadingStateChange(true)
         launchCatching {
-            delay(150)
             val contactUserId = storageService.findIdByEmail(uiState.value.email)
             if (contactUserId is Response.Failure) {
                 SnackbarManager.showMessage(AppText.user_not_found)
@@ -96,6 +95,8 @@ class NewContactScreenViewModel @Inject constructor(
                     )
                     async { storageService.saveContact(viewModelScope, firstContact, secondContact) }.await()
                     onLoadingStateChange(false)
+                    delay(100L)
+                    popUp()
                 }
             }
         }

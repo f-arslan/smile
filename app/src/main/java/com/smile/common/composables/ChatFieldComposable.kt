@@ -86,11 +86,6 @@ fun UserInputTextField(
     }
     OutlinedTextField(
         value = textFieldValue,
-        leadingIcon = {
-            DefaultIconButton(AppDrawable.baseline_mood_24, AppText.smile_icon) {
-                dialogState = true
-            }
-        },
         trailingIcon = {
             Row {
                 DefaultIconButton(AppDrawable.baseline_attach_file_24, AppText.attach_icon) {
@@ -107,7 +102,6 @@ fun UserInputTextField(
         onValueChange = { onTextChanged(it) },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         modifier = modifier,
-        maxLines = 1,
     )
 }
 
