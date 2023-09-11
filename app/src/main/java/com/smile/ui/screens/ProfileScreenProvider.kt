@@ -37,6 +37,7 @@ import com.smile.common.composables.NavigationTopAppBar
 import com.smile.model.User
 import com.smile.model.datastore.DataStoreRepository.Companion.ENABLED
 import com.smile.model.service.module.Response
+import com.smile.ui.screens.graph.SmileRoutes.DELETE_PROFILE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LEARN_MORE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.NAME_EDIT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.NOTIFICATION_SCREEN
@@ -69,7 +70,8 @@ fun ProfileScreenProvider(
             onApplicationInformationClick = { navigate(LEARN_MORE_SCREEN) },
             signOutClick = { viewModel.signOut { clearAndNavigate(it) } },
             onNotificationActivateClick = { navigate(NOTIFICATION_SCREEN) },
-            onEditClick = { navigate(NAME_EDIT_SCREEN) }
+            onEditClick = { navigate(NAME_EDIT_SCREEN) },
+            onDeleteProfileClick = { navigate(DELETE_PROFILE_SCREEN) }
         )
     }
 }
@@ -84,7 +86,8 @@ fun ProfileScreen(
     onApplicationInformationClick: () -> Unit,
     signOutClick: () -> Unit,
     onNotificationActivateClick: () -> Unit,
-    onEditClick: () -> Unit
+    onEditClick: () -> Unit,
+    onDeleteProfileClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -114,6 +117,7 @@ fun ProfileScreen(
                 AppText.app_info,
                 onApplicationInformationClick
             )
+            ProfileItem(AppDrawable.outline_delete_24, AppText.delete_profile, onDeleteProfileClick)
             ProfileItem(AppDrawable.round_logout_24, AppText.logout, signOutClick)
         }
     }
@@ -180,5 +184,5 @@ fun ProfilePreview() {
         onChangePasswordClick = {},
         onApplicationInformationClick = {},
         signOutClick = {},
-        onNotificationActivateClick = {}, onEditClick = {})
+        onNotificationActivateClick = {}, onEditClick = {}, onDeleteProfileClick = {})
 }

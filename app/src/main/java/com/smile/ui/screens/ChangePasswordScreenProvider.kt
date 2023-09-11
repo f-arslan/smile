@@ -18,7 +18,6 @@ import com.smile.common.composables.BottomButtonWithIcon
 import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.NavigationTopAppBar
 import com.smile.common.composables.PasswordTextField
-import com.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import com.smile.ui.view_models.ChangePasswordScreenUiState
 import com.smile.ui.view_models.ChangePasswordScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
@@ -28,6 +27,7 @@ import com.smile.R.string as AppText
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ChangePasswordScreenProvider(
+    popUp: () -> Unit,
     clearAndNavigate: (String) -> Unit,
     viewModel: ChangePasswordScreenViewModel = hiltViewModel()
 ) {
@@ -38,7 +38,7 @@ fun ChangePasswordScreenProvider(
     }
     ChangePasswordScreen(
         uiState,
-        clearAndNavigate = { clearAndNavigate(PROFILE_SCREEN) },
+        popUp = popUp,
         viewModel::onPasswordChange,
         viewModel::onRePasswordChange,
         onUpdateClick = {
@@ -52,12 +52,12 @@ fun ChangePasswordScreenProvider(
 @Composable
 fun ChangePasswordScreen(
     uiState: ChangePasswordScreenUiState,
-    clearAndNavigate: () -> Unit,
+    popUp: () -> Unit,
     onPasswordChange: (String) -> Unit,
     onRePasswordChange: (String) -> Unit,
     onUpdateClick: () -> Unit,
 ) {
-    Scaffold(topBar = { NavigationTopAppBar(uiState.topBarLabel, clearAndNavigate) }) {
+    Scaffold(topBar = { NavigationTopAppBar(uiState.topBarLabel, popUp) }) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -88,6 +88,6 @@ fun EditProfilePreview() {
     ),
         onPasswordChange = {},
         onRePasswordChange = {},
-        clearAndNavigate = {},
+        popUp = {},
         onUpdateClick = {})
 }

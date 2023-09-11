@@ -39,7 +39,7 @@ import com.smile.R.string as AppText
 @Composable
 fun VerifyPasswordScreenProvider(
     popUp: () -> Unit,
-    clearAndNavigate: (String) -> Unit,
+    navigate: (String) -> Unit,
     viewModel: VerifyPasswordScreenViewModel = hiltViewModel()
 ) {
     val password by viewModel.password.collectAsStateWithLifecycle()
@@ -51,7 +51,7 @@ fun VerifyPasswordScreenProvider(
         popUp,
         password,
         viewModel::onPasswordChange,
-        onConfirmClick = { viewModel.onConfirmClick { clearAndNavigate(it) } }
+        onConfirmClick = { viewModel.onConfirmClick { navigate(it) } }
     )
 }
 

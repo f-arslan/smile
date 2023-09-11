@@ -30,6 +30,12 @@ class DataStoreRepository @Inject constructor(
         }
     }
 
+    suspend fun clearAllInformation() {
+        userDataStorePreferences.edit { preferences ->
+            preferences.clear()
+        }
+    }
+
     suspend fun getFcmToken(): String {
         val preferences = userDataStorePreferences.data.first()
         return preferences[FCM_TOKEN] ?: ""

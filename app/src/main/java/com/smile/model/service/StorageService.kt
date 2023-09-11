@@ -47,4 +47,6 @@ interface StorageService {
         roomIds: List<String>,
         onDataChange: (List<Room>) -> Unit
     )
+
+    suspend fun deleteUser()
 }

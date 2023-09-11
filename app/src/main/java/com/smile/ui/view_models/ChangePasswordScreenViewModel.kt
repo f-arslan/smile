@@ -1,6 +1,5 @@
 package com.smile.ui.view_models
 
-import android.util.Log
 import androidx.annotation.StringRes
 import com.smile.SmileViewModel
 import com.smile.common.ext.isValidPassword
@@ -66,7 +65,6 @@ class ChangePasswordScreenViewModel @Inject constructor(
         onLoadingStateChange(true)
         launchCatching {
             val updatePasswordResponse = accountService.updatePassword(password)
-            Log.d("EditScreenViewModel", "updateUser: $updatePasswordResponse")
             if (updatePasswordResponse is Response.Success) {
                 onLoadingStateChange(false)
                 delay(100L)

@@ -1,5 +1,7 @@
 package com.smile.common.composables
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
@@ -104,7 +106,35 @@ fun PermissionPopUp(onRequestPermission: () -> Unit, permissionStateChange: (Boo
 }
 
 @Composable
+fun AppAlertDialog(
+    @DrawableRes icon: Int,
+    @StringRes title: Int,
+    @StringRes text: Int,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        icon = {
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = stringResource(AppText.alert_icon)
+            )
+        },
+        title = { Text(stringResource(title)) },
+        text = { Text(stringResource(text), textAlign = TextAlign.Justify) },
+        onDismissRequest = onDismiss,
+        confirmButton = { TextButton(onClick = onConfirm) { Text(stringResource(AppText.confirm)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(AppText.dismiss)) } })
+}
+
+
+@Composable
 @Preview(showBackground = true)
 fun DialogPreview() {
-    LoadingAnimationDialog(onDismiss = {})
+    AppAlertDialog(
+        icon = AppDrawable.outline_info_24,
+        title = AppText.delete_my_account,
+        text = AppText.delete_confirm_message_dialog,
+        onDismiss = {},
+        onConfirm = {})
 }

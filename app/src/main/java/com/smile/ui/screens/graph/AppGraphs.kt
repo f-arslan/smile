@@ -10,6 +10,7 @@ import com.smile.SmileAppState
 import com.smile.ui.screens.ChangePasswordScreenProvider
 import com.smile.ui.screens.ChatScreenProvider
 import com.smile.ui.screens.ContactScreenProvider
+import com.smile.ui.screens.DeleteProfileScreenProvider
 import com.smile.ui.screens.HomeScreenProvider
 import com.smile.ui.screens.LearnMoreScreen
 import com.smile.ui.screens.LoginScreenProvider
@@ -24,6 +25,7 @@ import com.smile.ui.screens.VerifyPasswordScreenProvider
 import com.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.CHAT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.DELETE_PROFILE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LEARN_MORE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
@@ -110,14 +112,14 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
     }
 
     composable(CHANGE_PASSWORD_SCREEN) {
-        ChangePasswordScreenProvider(
+        ChangePasswordScreenProvider(popUp = { appState.popUp() },
             clearAndNavigate = { route -> appState.clearAndNavigate(route) })
     }
 
     composable(VERIFY_PASSWORD_SCREEN) {
         VerifyPasswordScreenProvider(
             popUp = { appState.popUp() },
-            clearAndNavigate = { route -> appState.clearAndNavigate(route) })
+            navigate = { route -> appState.navigate(route) })
     }
 
     composable(LEARN_MORE_SCREEN) {
@@ -126,6 +128,11 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
 
     composable(NAME_EDIT_SCREEN) {
         NameEditScreenProvider(popUp = { appState.popUp() })
+    }
 
+    composable(DELETE_PROFILE_SCREEN) {
+        DeleteProfileScreenProvider(
+            popUp = { appState.popUp() },
+            clearAndNavigate = { route -> appState.clearAndNavigate(route) })
     }
 }

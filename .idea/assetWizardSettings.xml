@@ -303,8 +303,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="lock_icon" />
-                            <entry key="sourceFile" value="C:\Users\fatih\Desktop\project_file\vector\lock_icon.svg" />
+                            <entry key="outputName" value="delete_profile" />
+                            <entry key="sourceFile" value="C:\Users\fatih\Desktop\project_file\vector\delete_profile.svg" />
                           </map>
                         </option>
                       </PersistentState>

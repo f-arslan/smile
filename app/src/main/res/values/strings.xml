@@ -33,6 +33,8 @@
     <string name="learn_more">Learn More</string>
     <string name="or">Or</string>
     <string name="continue_google">Continue with Google</string>
+    <string name="alert_icon">Alert Icon</string>
+    <string name="dismiss">Dismiss</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
@@ -113,6 +115,15 @@
     <!-- Learn More Screen -->
     <string name="app_description">With Smile, connecting with friends, family, and colleagues has never been easier. Say goodbye to long waits for messages and enjoy instant, secure, and feature-rich communication right at your fingertips.</string>
 
+    <!-- Delete Profile Screen -->
+    <string name="delete_profile">Delete Profile</string>
+    <string name="delete_confirm">Profile Deletion Confirmation</string>
+    <string name="delete_confirm_sub">Are you sure you want to delete your profile? Deleting your profile means that all your account information and data will be permanently removed from our platform. Here\'s what you need to know:</string>
+    <string name="after_deleting_happening_list">• Your profile, including your username and profile picture, will be deleted.\n• All your chat history, contacts and media files will be irreversibly removed.\n• You won\'t be able to access your account or recover any data after deletion.</string>
+    <string name="important_cons">Important Considerations:</string>
+    <string name="important_cons_list">• You can create a new account with the same email address, but you will lose all previous data.\n• If you decide to come back to our platform in the future, you will start with a fresh account and no access to your previous chats.</string>
+    <string name="delete_my_account">Delete My Account</string>
+    <string name="delete_confirm_message_dialog">Are you sure you want to delete your account? This action is irreversible, and all your data will be permanently deleted.</string>
 
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>

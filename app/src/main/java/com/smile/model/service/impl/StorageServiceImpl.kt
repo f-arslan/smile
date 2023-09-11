@@ -280,6 +280,9 @@ class StorageServiceImpl @Inject constructor(
         return Response.Success(true)
     }
 
+    override suspend fun deleteUser() {
+        getUserDocRef(accountService.currentUserId).delete().await()
+    }
 
     override suspend fun getUser() =
         getUserDocRef(accountService.currentUserId).get().await().toObject<User>()

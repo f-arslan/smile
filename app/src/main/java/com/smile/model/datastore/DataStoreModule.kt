@@ -1,6 +1,8 @@
 package com.smile.model.datastore
 
+import android.app.Application
 import android.content.Context
+import android.content.res.Resources
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
@@ -32,5 +34,11 @@ object DataStoreModule {
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = { appContext.preferencesDataStoreFile(USER_PREFERENCES_NAME) }
         )
+    }
+
+    @Singleton
+    @Provides
+    fun provideResources(application: Application): Resources {
+        return application.resources
     }
 }
