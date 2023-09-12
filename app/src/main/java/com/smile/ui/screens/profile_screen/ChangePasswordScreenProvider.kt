@@ -1,4 +1,4 @@
-package com.smile.ui.screens
+package com.smile.ui.screens.profile_screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

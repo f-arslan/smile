@@ -7,21 +7,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.smile.SmileAppState
-import com.smile.ui.screens.ChangePasswordScreenProvider
 import com.smile.ui.screens.ChatScreenProvider
 import com.smile.ui.screens.ContactScreenProvider
-import com.smile.ui.screens.DeleteProfileScreenProvider
 import com.smile.ui.screens.HomeScreenProvider
-import com.smile.ui.screens.LearnMoreScreen
 import com.smile.ui.screens.LoginScreenProvider
-import com.smile.ui.screens.NameEditScreenProvider
 import com.smile.ui.screens.NewContactScreenProvider
-import com.smile.ui.screens.NotificationScreenProvider
 import com.smile.ui.screens.OnboardingScreenProvider
-import com.smile.ui.screens.ProfileScreenProvider
 import com.smile.ui.screens.RegisterScreenProvider
 import com.smile.ui.screens.SplashScreenProvider
-import com.smile.ui.screens.VerifyPasswordScreenProvider
 import com.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.CHAT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
@@ -37,6 +30,13 @@ import com.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.SPLASH_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.VERIFY_PASSWORD_SCREEN
+import com.smile.ui.screens.profile_screen.ChangePasswordScreenProvider
+import com.smile.ui.screens.profile_screen.DeleteProfileScreenProvider
+import com.smile.ui.screens.profile_screen.LearnMoreScreen
+import com.smile.ui.screens.profile_screen.NameEditScreenProvider
+import com.smile.ui.screens.profile_screen.NotificationScreenProvider
+import com.smile.ui.screens.profile_screen.ProfileScreenProvider
+import com.smile.ui.screens.profile_screen.VerifyPasswordScreenProvider
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun NavGraphBuilder.appGraph(appState: SmileAppState) {
@@ -91,6 +91,16 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
             popUp = { appState.popUp() })
     }
 
+    composable(
+        "$VERIFY_PASSWORD_SCREEN/{argument}",
+        arguments = listOf(navArgument("argument") { type = NavType.StringType })
+    ) {
+        VerifyPasswordScreenProvider(
+            prevScreen = it.arguments?.getString("argument") ?: "",
+            popUp = { appState.popUp() },
+            navigate = { route -> appState.navigate(route) })
+    }
+
     composable(NEW_CONTACT_SCREEN) {
         NewContactScreenProvider(popUp = { appState.popUp() })
     }
@@ -99,7 +109,13 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
         ProfileScreenProvider(
             popUp = { appState.popUp() },
             clearAndNavigate = { appState.clearAndNavigate(LOGIN_SCREEN) },
-            navigate = { appState.navigate(it) }
+            navigate = { appState.navigate(it) },
+            navigateWithArgument = { route, argument ->
+                appState.navigateWithArgument(
+                    route,
+                    argument
+                )
+            }
         )
     }
 
@@ -116,11 +132,6 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
             clearAndNavigate = { route -> appState.clearAndNavigate(route) })
     }
 
-    composable(VERIFY_PASSWORD_SCREEN) {
-        VerifyPasswordScreenProvider(
-            popUp = { appState.popUp() },
-            navigate = { route -> appState.navigate(route) })
-    }
 
     composable(LEARN_MORE_SCREEN) {
         LearnMoreScreen { appState.popUp() }

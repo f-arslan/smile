@@ -92,7 +92,6 @@ fun HomeScreenProvider(
                 is Response.Success -> {
                     LastContactList(data = res.data, navigateToChat)
                 }
-
                 else -> {}
             }
         }

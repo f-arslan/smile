@@ -1,4 +1,4 @@
-package com.smile.ui.screens
+package com.smile.ui.screens.profile_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -40,7 +40,8 @@ import com.smile.R.string as AppText
 fun VerifyPasswordScreenProvider(
     popUp: () -> Unit,
     navigate: (String) -> Unit,
-    viewModel: VerifyPasswordScreenViewModel = hiltViewModel()
+    viewModel: VerifyPasswordScreenViewModel = hiltViewModel(),
+    prevScreen: String
 ) {
     val password by viewModel.password.collectAsStateWithLifecycle()
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
@@ -51,7 +52,7 @@ fun VerifyPasswordScreenProvider(
         popUp,
         password,
         viewModel::onPasswordChange,
-        onConfirmClick = { viewModel.onConfirmClick { navigate(it) } }
+        onConfirmClick = { viewModel.onConfirmClick { navigate(prevScreen) } }
     )
 }
 

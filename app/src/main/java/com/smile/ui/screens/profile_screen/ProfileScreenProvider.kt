@@ -1,4 +1,4 @@
-package com.smile.ui.screens
+package com.smile.ui.screens.profile_screen
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -37,6 +37,7 @@ import com.smile.common.composables.NavigationTopAppBar
 import com.smile.model.User
 import com.smile.model.datastore.DataStoreRepository.Companion.ENABLED
 import com.smile.model.service.module.Response
+import com.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.DELETE_PROFILE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LEARN_MORE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.NAME_EDIT_SCREEN
@@ -54,6 +55,7 @@ fun ProfileScreenProvider(
     popUp: () -> Unit,
     clearAndNavigate: (String) -> Unit,
     navigate: (String) -> Unit,
+    navigateWithArgument: (String, String) -> Unit,
     viewModel: ProfileScreenViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -66,12 +68,12 @@ fun ProfileScreenProvider(
             userName = (user as Response.Success<User>).data.displayName,
             notificationState = notificationState,
             popUp = popUp,
-            onChangePasswordClick = { navigate(VERIFY_PASSWORD_SCREEN) },
+            onChangePasswordClick = { navigateWithArgument(VERIFY_PASSWORD_SCREEN, CHANGE_PASSWORD_SCREEN) },
             onApplicationInformationClick = { navigate(LEARN_MORE_SCREEN) },
             signOutClick = { viewModel.signOut { clearAndNavigate(it) } },
             onNotificationActivateClick = { navigate(NOTIFICATION_SCREEN) },
             onEditClick = { navigate(NAME_EDIT_SCREEN) },
-            onDeleteProfileClick = { navigate(DELETE_PROFILE_SCREEN) }
+            onDeleteProfileClick = { navigateWithArgument(VERIFY_PASSWORD_SCREEN, DELETE_PROFILE_SCREEN) }
         )
     }
 }

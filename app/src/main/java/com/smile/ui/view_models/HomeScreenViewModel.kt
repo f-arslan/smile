@@ -141,7 +141,8 @@ class HomeScreenViewModel @Inject constructor(
                 val contactEntities = mutableListOf<ContactEntity>()
                 it.forEach { room ->
                     val friendContact =
-                        room.contacts.first { contact -> contact.userId == accountService.currentUserId }
+                        room.contacts.firstOrNull { contact -> contact.userId == accountService.currentUserId }
+                            ?: return@forEach
                     contactEntities.add(
                         ContactEntity(
                             contactId = accountService.currentUserId + "_" + friendContact.friendId,

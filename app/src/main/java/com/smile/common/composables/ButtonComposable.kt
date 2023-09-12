@@ -60,9 +60,6 @@ fun DefaultButton(@StringRes text: Int, onClick: () -> Unit, modifier: Modifier 
     Button(
         modifier = modifier.defaultMinSize(BUTTON_SIZE),
         onClick = onClick,
-        elevation = ButtonDefaults.buttonElevation(
-            SMALL_PADDING
-        ),
         shape = RoundedCornerShape(HIGH_PADDING),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,

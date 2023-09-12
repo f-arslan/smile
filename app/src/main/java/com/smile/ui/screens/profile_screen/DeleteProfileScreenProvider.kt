@@ -1,4 +1,4 @@
-package com.smile.ui.screens
+package com.smile.ui.screens.profile_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -81,6 +81,7 @@ private fun DeleteProfileScreen(popUp: () -> Unit, onDeleteClick: () -> Unit) {
             )
             Text(stringResource(AppText.important_cons_list))
             Spacer(Modifier.weight(1f))
+            Spacer(Modifier.height(HIGH_PADDING))
             OutlinedButton(onClick = onDeleteClick, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(AppText.delete_my_account))
             }
