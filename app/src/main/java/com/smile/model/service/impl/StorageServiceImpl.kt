@@ -59,7 +59,7 @@ class StorageServiceImpl @Inject constructor(
         scope: CoroutineScope,
         firstContact: Contact,
         secondContact: Contact
-    ) {
+    )  {
         val firstContactId = firstContact.userId + "_" + firstContact.friendId
         val secondContactId = secondContact.userId + "_" + secondContact.friendId
         scope.launch(Dispatchers.IO) {
@@ -67,8 +67,8 @@ class StorageServiceImpl @Inject constructor(
             val user2Task = async { getUserDocRef(secondContact.userId) }
             val user1Doc = user1Task.await()
             val user2Doc = user2Task.await()
-            val user1 = user1Doc.get().await().toObject<User>() ?: throw Exception("User not found")
-            val user2 = user2Doc.get().await().toObject<User>() ?: throw Exception("User not found")
+            val user1 = user1Doc.get().await().toObject<User>() ?: throw Exception("User not found".withTag())
+            val user2 = user2Doc.get().await().toObject<User>() ?: throw Exception("User not found".withTag())
             val batch = firestore.batch()
             var roomId = ""
             if (!user1.contactIds.contains(firstContactId) && !user2.contactIds.contains(
@@ -122,7 +122,6 @@ class StorageServiceImpl @Inject constructor(
 
 
     override suspend fun findIdByEmail(email: String): Response<String> {
-        // Find email in user collection, if not return Response.Failure
         val querySnapshot = firestore.collection(USER_COLLECTION)
             .whereEqualTo(User::email.name, email).get().await()
         val user = querySnapshot.toObjects<User>().firstOrNull()
@@ -185,16 +184,19 @@ class StorageServiceImpl @Inject constructor(
         sendPushNotification(message, contactId, roomId)
     }
 
-    private suspend fun sendPushNotification(message: Message, contactId: String, roomId: String) {
+    private suspend fun sendPushNotification(
+        message: Message,
+        contactId: String,
+        roomId: String
+    ): Response<Boolean> {
         val friendId = contactId.split("_")[1]
         val friendUserDoc = getUserDocRef(friendId).get().await().toObject<User>()
-            ?: return
+            ?: return Response.Failure(Exception("User not found"))
         val currentUserDisplayName = getUserDocRef(accountService.currentUserId).get().await()
-            .toObject<User>()?.displayName ?: return
-        if (friendUserDoc.fcmToken.isEmpty()) {
-            Log.d("StorageServiceImpl", "User fcm token is empty")
-            return
-        }
+            .toObject<User>()?.displayName ?: return Response.Failure(Exception("User not found"))
+        if (friendUserDoc.fcmToken.isEmpty())
+            return Response.Failure(Exception("Friend fcm token is empty"))
+
         val data = NotificationData(
             token = friendUserDoc.fcmToken,
             title = currentUserDisplayName,
@@ -204,10 +206,10 @@ class StorageServiceImpl @Inject constructor(
         )
         val pushNotification = PushNotification(to = friendUserDoc.fcmToken, data = data)
         val response = RetrofitObject.notificationApi?.postNotification(pushNotification)
-        if (response != null && response.isSuccessful) {
-            Log.d("StorageServiceImpl", "Notification sent successfully")
+        return if (response != null && response.isSuccessful) {
+            Response.Success(true)
         } else {
-            throw Exception("Retrofit error: ${response?.errorBody()?.string()}")
+            Response.Failure(Exception("Retrofit error: ${response?.errorBody()?.string()}"))
         }
     }
 
@@ -290,15 +292,19 @@ class StorageServiceImpl @Inject constructor(
     override fun getNonEmptyMessageRooms(
         roomIds: List<String>,
         onDataChange: (List<Room>) -> Unit
-    ) {
+    ): Response<Boolean> {
         if (roomIds.isEmpty()) {
-            Log.e("StorageServiceImpl", "Room ids is empty")
-            return
+            return Response.Failure(Exception("Room ids is empty".withTag()))
         }
         roomColRef.whereIn(ROOM_ID, roomIds).addSnapshotListener { querySnapshot, error ->
+            if (error != null) {
+                Log.e("StorageServiceImpl", "Error while listening to room collection", error)
+                return@addSnapshotListener
+            }
             val rooms = querySnapshot?.toObjects<Room>() ?: emptyList()
             onDataChange(rooms.filter { room -> roomIds.contains(room.roomId) && room.lastMessage.content.isNotEmpty() })
         }
+        return Response.Success(true)
     }
 
     private val roomColRef by lazy { firestore.collection(ROOM_COLLECTION) }

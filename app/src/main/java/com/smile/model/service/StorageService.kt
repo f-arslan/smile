@@ -46,7 +46,7 @@ interface StorageService {
     fun getNonEmptyMessageRooms(
         roomIds: List<String>,
         onDataChange: (List<Room>) -> Unit
-    )
+    ): Response<Boolean>
 
     suspend fun deleteUser()
 }
