@@ -13,10 +13,9 @@ The Open-Source Chat App is a cross-platform chat application built from scratch
 - User authentication and registration
 - Private and group chats 
 - Multimedia sharing (images, videos, files) (under development)
-- Push notifications (under development)
+- Push notifications
 - Emojis and rich text formatting 
-- Online/offline status (under development)
-- User profiles and avatars (under development)
+- User profiles and avatars
 
 ## Tech Stack
 
