@@ -1,5 +1,9 @@
 package com.smile.ui.screens
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +30,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.android.gms.auth.api.identity.BeginSignInResult
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.GoogleAuthProvider
 import com.smile.R
 import com.smile.common.composables.DefaultButton
 import com.smile.common.composables.DefaultTextField
@@ -34,7 +41,10 @@ import com.smile.common.composables.FormWrapper
 import com.smile.common.composables.FunctionalityNotAvailablePopup
 import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.LoginHeader
+import com.smile.common.composables.OneTapSignIn
 import com.smile.common.composables.PasswordTextField
+import com.smile.common.composables.SignInWithGoogle
+import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import com.smile.ui.view_models.LoginScreenViewModel
 import com.smile.ui.view_models.LoginUiState
@@ -68,10 +78,33 @@ fun LoginScreenProvider(
                 keyboardController?.hide()
                 viewModel.onLoginClick(openAndPopUp)
             },
-            onGoogleClick = { notFunctionalState = true },
+            onGoogleClick = { viewModel.oneTapSignIn() },
             onNotMemberClick = { openAndPopUp(REGISTER_SCREEN) }
         )
     }
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                try {
+                    val credentials =
+                        viewModel.oneTapClient.getSignInCredentialFromIntent(result.data)
+                    val googleIdToken = credentials.googleIdToken
+                    val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
+                    viewModel.signInWithGoogle(googleCredentials)
+                } catch (it: ApiException) {
+                    print(it)
+                }
+            }
+        }
+
+    fun launch(signInResult: BeginSignInResult) {
+        val intent = IntentSenderRequest.Builder(signInResult.pendingIntent.intentSender).build()
+        launcher.launch(intent)
+    }
+
+    OneTapSignIn(launch = { launch(it) })
+
+    SignInWithGoogle(navigateToHomeScreen = { signedIn -> if (signedIn) openAndPopUp(HOME_SCREEN) })
 }
 
 
@@ -98,12 +131,15 @@ fun LoginScreen(
             PasswordTextField(uiState.password, AppText.password, onPasswordChange)
             DefaultButton(text = AppText.login, onClick = onLoginClick, Modifier.fillMaxWidth())
         }
-        DayHeader(stringResource(AppText.or), style = MaterialTheme.typography.titleMedium, height = VERY_HIGH_PADDING)
+        DayHeader(
+            stringResource(AppText.or),
+            style = MaterialTheme.typography.titleMedium,
+            height = VERY_HIGH_PADDING
+        )
         ExtFloActionButton(
             R.drawable.google_32,
             AppText.google_icon,
-            AppText.continue_google,
-            onGoogleClick
+            AppText.continue_google, onGoogleClick
         )
         Spacer(Modifier.weight(1f))
         Row(

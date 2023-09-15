@@ -1,12 +1,22 @@
 package com.smile.ui.view_models
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.firebase.auth.AuthCredential
 import com.smile.SmileViewModel
 import com.smile.common.ext.isValidEmail
 import com.smile.common.snackbar.SnackbarManager
+import com.smile.model.google.domain.AuthRepository
+import com.smile.model.google.domain.OneTapSignInResponse
+import com.smile.model.google.domain.SignInWithGoogleResponse
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
+import com.smile.model.service.module.GoogleResponse.Loading
+import com.smile.model.service.module.GoogleResponse.Success
 import com.smile.model.service.module.Response
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +38,8 @@ data class LoginUiState(
 class LoginScreenViewModel @Inject constructor(
     private val accountService: AccountService,
     private val storageService: StorageService,
+    private val authRepository: AuthRepository,
+    val oneTapClient: SignInClient,
     logService: LogService
 ) : SmileViewModel(logService) {
 
@@ -37,6 +49,13 @@ class LoginScreenViewModel @Inject constructor(
 
     private val _loadingState = MutableStateFlow(false)
     val loadingState = _loadingState.asStateFlow()
+
+    val isUserAuthenticated get() = authRepository.isUserAuthenticatedInFirebase
+
+    var oneTapSignInResponse by mutableStateOf<OneTapSignInResponse>(Success(null))
+        private set
+    var signInWithGoogleResponse by mutableStateOf<SignInWithGoogleResponse>(Success(false))
+        private set
 
     fun onLoadingStateChange(loadingState: Boolean) {
         _loadingState.value = loadingState
@@ -90,7 +109,13 @@ class LoginScreenViewModel @Inject constructor(
         }
     }
 
-    fun onGoogleLoginClick() {
+    fun oneTapSignIn() = launchCatching {
+        oneTapSignInResponse = Loading
+        oneTapSignInResponse = authRepository.oneTapSignInWithGoogle()
+    }
 
+    fun signInWithGoogle(googleCredential: AuthCredential) = launchCatching {
+        oneTapSignInResponse = Loading
+        signInWithGoogleResponse = authRepository.firebaseSignInWithGoogle(googleCredential)
     }
 }

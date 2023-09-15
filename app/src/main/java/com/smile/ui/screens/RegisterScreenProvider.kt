@@ -1,5 +1,10 @@
 package com.smile.ui.screens
 
+import android.app.Activity
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +32,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.android.gms.auth.api.identity.BeginSignInResult
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.GoogleAuthProvider
 import com.smile.common.composables.DefaultButton
 import com.smile.common.composables.DefaultTextField
 import com.smile.common.composables.ExtFloActionButton
@@ -34,9 +42,14 @@ import com.smile.common.composables.FormWrapper
 import com.smile.common.composables.FunctionalityNotAvailablePopup
 import com.smile.common.composables.HyperlinkText
 import com.smile.common.composables.LoadingAnimationDialog
+import com.smile.common.composables.OneTapSignIn
+import com.smile.common.composables.OneTapSignUp
 import com.smile.common.composables.PasswordTextField
 import com.smile.common.composables.RegisterHeader
+import com.smile.common.composables.SignInWithGoogle
+import com.smile.common.composables.SignUpWithGoogle
 import com.smile.common.composables.VerificationDialog
+import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import com.smile.ui.view_models.RegisterScreenViewModel
 import com.smile.ui.view_models.RegisterUiState
@@ -79,8 +92,40 @@ fun RegisterScreenProvider(
             viewModel.onSignUpClick()
             keyboardController?.hide()
         },
-        onGoogleClick = { notFunctionalState = true },
+        onGoogleClick = { viewModel.oneTapSignUp() },
         onAlreadyHaveAccountClick = { openAndPopUp(LOGIN_SCREEN) }
+    )
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            try {
+                Log.d("TAG", "RegisterScreenProvider: ${result.data}")
+                val credentials = viewModel.oneTapClient.getSignInCredentialFromIntent(result.data)
+                val googleIdToken = credentials.googleIdToken
+                val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
+                viewModel.signUpWithGoogle(googleCredentials)
+            } catch (it: ApiException) {
+                print(it)
+            }
+        }
+    }
+
+    fun launch(signInResult: BeginSignInResult) {
+        val intent = IntentSenderRequest.Builder(signInResult.pendingIntent.intentSender).build()
+        launcher.launch(intent)
+    }
+
+    OneTapSignUp(
+        launch = {
+            launch(it)
+        }
+    )
+
+    SignUpWithGoogle(
+        navigateToHomeScreen = { signedIn ->
+            if (signedIn) {
+                openAndPopUp(HOME_SCREEN)
+            }
+        }
     )
 }
 

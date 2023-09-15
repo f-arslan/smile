@@ -1,11 +1,20 @@
 package com.smile.ui.view_models
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.firebase.auth.AuthCredential
 import com.smile.SmileViewModel
 import com.smile.common.ext.isValidEmail
 import com.smile.common.ext.isValidPassword
 import com.smile.common.ext.passwordMatches
 import com.smile.common.snackbar.SnackbarManager
 import com.smile.model.User
+import com.smile.model.google.domain.AuthRepository
+import com.smile.model.google.domain.OneTapSignInResponse
+import com.smile.model.google.domain.SignInWithGoogleResponse
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
@@ -17,6 +26,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import com.smile.R.string as AppText
+import com.smile.model.service.module.GoogleResponse.*
+import kotlinx.coroutines.launch
 
 data class RegisterUiState(
     val name: String = "",
@@ -31,10 +42,19 @@ data class RegisterUiState(
 class RegisterScreenViewModel @Inject constructor(
     private val accountService: AccountService,
     private val storageService: StorageService,
+    private val authRepository: AuthRepository,
+    val oneTapClient: SignInClient,
     logService: LogService
 ) : SmileViewModel(logService) {
     private val _uiState = MutableStateFlow(RegisterUiState())
     val uiState = _uiState.asStateFlow()
+
+    val isUserAuthenticated get() = authRepository.isUserAuthenticatedInFirebase
+
+    var oneTapSignInResponse by mutableStateOf<OneTapSignInResponse>(Success(null))
+        private set
+    var signInWithGoogleResponse by mutableStateOf<SignInWithGoogleResponse>(Success(false))
+        private set
 
     private val email
         get() = uiState.value.email
@@ -115,7 +135,13 @@ class RegisterScreenViewModel @Inject constructor(
         }
     }
 
-    fun onGoogleClick() {
+    fun oneTapSignUp() = launchCatching {
+        oneTapSignInResponse = Loading
+        oneTapSignInResponse = authRepository.oneTapSignUpWithGoogle()
+    }
 
+    fun signUpWithGoogle(googleCredential: AuthCredential) = launchCatching {
+        oneTapSignInResponse = Loading
+        signInWithGoogleResponse = authRepository.firebaseSignInWithGoogle(googleCredential)
     }
 }

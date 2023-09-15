@@ -4,15 +4,22 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.smile.SmileViewModel
 import com.smile.model.User
 import com.smile.model.datastore.DataStoreRepository
+import com.smile.model.google.domain.ProfileRepository
+import com.smile.model.google.domain.RevokeAccessResponse
+import com.smile.model.google.domain.SignOutResponse
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
+import com.smile.model.service.module.GoogleResponse.*
 import com.smile.model.service.module.Response
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,11 +29,13 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 
+
 @HiltViewModel
 class ProfileScreenViewModel @Inject constructor(
     private val storageService: StorageService,
     private val accountService: AccountService,
     private val dataStoreRepository: DataStoreRepository,
+    private val profileRepository: ProfileRepository,
     logService: LogService,
 ) : SmileViewModel(logService) {
 
@@ -35,6 +44,14 @@ class ProfileScreenViewModel @Inject constructor(
 
     private val _notificationState = MutableStateFlow("")
     val notificationState = _notificationState.asStateFlow()
+
+    val displayName get() = profileRepository.displayName
+    val photoUrl get() = profileRepository.photoUrl
+
+    var signOutResponse by mutableStateOf<SignOutResponse>(Success(false))
+        private set
+    var revokeAccessResponse by mutableStateOf<RevokeAccessResponse>(Success(false))
+        private set
 
     fun getUserAndNotificationState(context: Context) {
         launchCatching {

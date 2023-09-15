@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import com.smile.R.string as AppText
+
 @HiltViewModel
 class DeleteProfileScreenViewModel @Inject constructor(
     private val storageService: StorageService,
