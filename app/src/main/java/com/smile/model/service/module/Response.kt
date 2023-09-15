@@ -18,11 +18,3 @@ sealed class GoogleResponse<out T> {
         val e: Exception
     ): GoogleResponse<Nothing>()
 }
-
-fun <T, R> Response<T>.map(transform: (T) -> R): Response<R> {
-    return when (this) {
-        is Response.Success -> Response.Success(transform(data))
-        is Response.Failure -> Response.Failure(e)
-        is Response.Loading -> Response.Loading
-    }
-}

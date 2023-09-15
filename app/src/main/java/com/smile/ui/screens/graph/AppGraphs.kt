@@ -10,7 +10,6 @@ import com.smile.SmileAppState
 import com.smile.ui.screens.ChatScreenProvider
 import com.smile.ui.screens.ContactScreenProvider
 import com.smile.ui.screens.HomeScreenProvider
-import com.smile.ui.screens.LoginScreenProvider
 import com.smile.ui.screens.NewContactScreenProvider
 import com.smile.ui.screens.OnboardingScreenProvider
 import com.smile.ui.screens.RegisterScreenProvider
@@ -19,6 +18,7 @@ import com.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.CHAT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.DELETE_PROFILE_SCREEN
+import com.smile.ui.screens.graph.SmileRoutes.FORGOT_PASSWORD_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LEARN_MORE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
@@ -30,6 +30,8 @@ import com.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.SPLASH_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.VERIFY_PASSWORD_SCREEN
+import com.smile.ui.screens.login_screen.ForgotPasswordScreenProvider
+import com.smile.ui.screens.login_screen.LoginScreenProvider
 import com.smile.ui.screens.profile_screen.ChangePasswordScreenProvider
 import com.smile.ui.screens.profile_screen.DeleteProfileScreenProvider
 import com.smile.ui.screens.profile_screen.LearnMoreScreen
@@ -50,7 +52,11 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
         }
     }
     composable(LOGIN_SCREEN) {
-        LoginScreenProvider { destination -> appState.clearAndNavigate(destination) }
+        LoginScreenProvider(navigate = {
+            appState.navigate(FORGOT_PASSWORD_SCREEN)
+        }, openAndPopUp = { route ->
+            appState.clearAndNavigate(route)
+        })
     }
     composable(HOME_SCREEN) {
         HomeScreenProvider(
@@ -145,5 +151,9 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
         DeleteProfileScreenProvider(
             popUp = { appState.popUp() },
             clearAndNavigate = { route -> appState.clearAndNavigate(route) })
+    }
+
+    composable(FORGOT_PASSWORD_SCREEN) {
+        ForgotPasswordScreenProvider(clearAndNavigate = { route -> appState.clearAndNavigate(route) })
     }
 }

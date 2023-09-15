@@ -80,7 +80,6 @@ fun HomeScreenProvider(
                 onQueryChange = viewModel::onSearchQueryChange,
                 onSearch = viewModel::onSearchClick,
                 onActiveChange = viewModel::onSearchActiveChange,
-                onMenuClick = { notFunctionalState = true },
                 onAvatarClick = { navigate(PROFILE_SCREEN) },
                 onContactClick = navigateToChat
             )

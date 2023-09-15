@@ -1,4 +1,4 @@
-package com.smile.ui.screens
+package com.smile.ui.screens.login_screen
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -44,6 +44,8 @@ import com.smile.common.composables.LoginHeader
 import com.smile.common.composables.OneTapSignIn
 import com.smile.common.composables.PasswordTextField
 import com.smile.common.composables.SignInWithGoogle
+import com.smile.ui.screens.DayHeader
+import com.smile.ui.screens.graph.SmileRoutes.FORGOT_PASSWORD_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import com.smile.ui.view_models.LoginScreenViewModel
@@ -56,7 +58,8 @@ import com.smile.R.string as AppText
 @Composable
 fun LoginScreenProvider(
     viewModel: LoginScreenViewModel = hiltViewModel(),
-    openAndPopUp: (String) -> Unit
+    openAndPopUp: (String) -> Unit,
+    navigate: (String) -> Unit
 ) {
     LaunchedEffect(Unit) { viewModel.checkEmailVerification() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -79,7 +82,8 @@ fun LoginScreenProvider(
                 viewModel.onLoginClick(openAndPopUp)
             },
             onGoogleClick = { viewModel.oneTapSignIn() },
-            onNotMemberClick = { openAndPopUp(REGISTER_SCREEN) }
+            onNotMemberClick = { openAndPopUp(REGISTER_SCREEN) },
+            onForgotPasswordClick = { navigate(FORGOT_PASSWORD_SCREEN) }
         )
     }
     val launcher =
@@ -115,7 +119,8 @@ fun LoginScreen(
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
     onGoogleClick: () -> Unit,
-    onNotMemberClick: () -> Unit
+    onNotMemberClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -128,7 +133,17 @@ fun LoginScreen(
         FormWrapper {
             LoginHeader()
             DefaultTextField(uiState.email, AppText.email, onEmailChange)
-            PasswordTextField(uiState.password, AppText.password, onPasswordChange)
+            Column {
+                PasswordTextField(uiState.password, AppText.password, onPasswordChange)
+                TextButton(
+                    onClick = onForgotPasswordClick,
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text(
+                        stringResource(AppText.forgot_password)
+                    )
+                }
+            }
             DefaultButton(text = AppText.login, onClick = onLoginClick, Modifier.fillMaxWidth())
         }
         DayHeader(
@@ -164,5 +179,5 @@ fun LoginScreen(
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen(LoginUiState("Fatih"), {}, {}, {}, {}, {})
+    LoginScreen(LoginUiState("Fatih"), {}, {}, {}, {}, {}, {})
 }

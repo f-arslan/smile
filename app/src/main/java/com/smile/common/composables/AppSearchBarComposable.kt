@@ -52,7 +52,6 @@ fun AppSearchBar(
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
     onActiveChange: (Boolean) -> Unit,
-    onMenuClick: () -> Unit,
     onAvatarClick: () -> Unit,
     onContactClick: (String, String) -> Unit
 ) {
@@ -78,15 +77,7 @@ fun AppSearchBar(
                 keyboardController?.hide()
             },
             onActiveChange = onActiveChange,
-            placeholder = {
-                Row(horizontalArrangement = Arrangement.spacedBy(MEDIUM_PADDING)) {
-                    Icon(
-                        painter = painterResource(id = AppDrawable.baseline_search_24),
-                        contentDescription = stringResource(id = AppText.search)
-                    )
-                    Text(text = stringResource(id = AppText.search_messages))
-                }
-            },
+            placeholder = { Text(text = stringResource(id = AppText.search_messages)) },
             trailingIcon = {
                 if (!isActive)
                     IconButton(onClick = onAvatarClick) {
@@ -111,10 +102,9 @@ fun AppSearchBar(
                     }
             },
             leadingIcon = {
-                DefaultIconButton(
-                    AppDrawable.baseline_menu_24,
-                    AppText.menu,
-                    onMenuClick
+                Icon(
+                    painter = painterResource(id = AppDrawable.baseline_search_24),
+                    contentDescription = stringResource(id = AppText.search)
                 )
             },
             modifier = Modifier
@@ -195,5 +185,5 @@ fun AppSearchBarPreview() {
         searchHistoryContactsResponse = Response.Loading,
         onQueryChange = {},
         onSearch = {},
-        onActiveChange = {}, {}, {}, { r, v -> })
+        onActiveChange = {},  {}, { _, _ -> })
 }

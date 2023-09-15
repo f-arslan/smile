@@ -35,6 +35,7 @@
     <string name="continue_google">Continue with Google</string>
     <string name="alert_icon">Alert Icon</string>
     <string name="dismiss">Dismiss</string>
+    <string name="back_arrow">Back Arrow</string>
 
     <!-- Onboarding -->
     <string name="onboarding_slogan">Where Chatting is Always a Blast</string>
@@ -56,6 +57,13 @@
     <string name="not_a_member">Not a member?</string>
     <string name="register_now">Register now</string>
     <string name="empty_password_error">Password cannot be empty.</string>
+    <string name="forgot_password">Forgot Password?</string>
+
+
+    <!-- Forgot Password -->
+    <string name="forgot_password_instruction">No worries, we\'ll send you reset instructions.</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="back_login">Back to Login</string>
 
     <!-- Verify -->
     <string name="verify_email">Verify Your Email</string>

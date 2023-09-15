@@ -50,8 +50,6 @@ class ProfileScreenViewModel @Inject constructor(
 
     var signOutResponse by mutableStateOf<SignOutResponse>(Success(false))
         private set
-    var revokeAccessResponse by mutableStateOf<RevokeAccessResponse>(Success(false))
-        private set
 
     fun getUserAndNotificationState(context: Context) {
         launchCatching {

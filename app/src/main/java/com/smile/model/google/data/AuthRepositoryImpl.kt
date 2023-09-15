@@ -4,6 +4,7 @@ import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
+import com.smile.model.PROVIDER
 import com.smile.model.User
 import com.smile.model.google.domain.AuthRepository
 import com.smile.model.google.domain.OneTapSignInResponse
@@ -77,7 +78,8 @@ class AuthRepositoryImpl @Inject constructor(
                 userId = uid,
                 displayName = displayName,
                 email = email,
-                profilePictureUrl = photoUrl.toString()
+                profilePictureUrl = photoUrl.toString(),
+                provider = PROVIDER.GOOGLE
             )
             storageService.saveUser(user)
         }

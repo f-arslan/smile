@@ -16,4 +16,5 @@ object SmileRoutes {
     const val LEARN_MORE_SCREEN = "learn_more_screen"
     const val NAME_EDIT_SCREEN = "name_edit_screen"
     const val DELETE_PROFILE_SCREEN = "delete_profile_screen"
+    const val FORGOT_PASSWORD_SCREEN = "forgot_password_screen"
 }

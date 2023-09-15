@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 
 object Constants {
     val NO_PADDING = 0.dp
+    val NO_SMALL_PADDING = 1.dp
     val VERY_SMALL_PADDING = 2.dp
     val SMALL_PADDING = 4.dp
     val SMALL_MEDIUM_PADDING = 6.dp
