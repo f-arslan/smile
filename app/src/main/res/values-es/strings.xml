@@ -1,0 +1,140 @@
+<resources>
+    <string name="app_name">Smile</string>
+
+    <!-- Comunes -->
+    <string name="register">Registrarse</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="name">Nombre</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="re_password">Repetir Contraseña</string>
+    <string name="recovery_password">Recuperar contraseña</string>
+    <string name="or_continue_with">O continuar con</string>
+    <string name="google_icon">Icono de Google</string>
+    <string name="generic_error">Algo salió mal. Por favor, inténtalo de nuevo.</string>
+    <string name="please_verify_email">Por favor, verifica tu correo electrónico. También verifica tu carpeta de spam.</string>
+    <string name="email_or_password_error">Correo electrónico o contraseña incorrectos.</string>
+    <string name="close">CERRAR</string>
+    <string name="confirm_icon">Icono de Confirmar</string>
+    <string name="connection_error">Error de conexión. ¿Te gustaría intentarlo de nuevo?</string>
+    <string name="options">Opciones</string>
+    <string name="cancel">Cancelar</string>
+    <string name="search">Buscar</string>
+    <string name="menu">Menú</string>
+    <string name="history">Historial</string>
+    <string name="contact">Contacto</string>
+    <string name="ok">Aceptar</string>
+    <string name="working_on">Trabajando en… 🙈</string>
+    <string name="skip">Saltar</string>
+    <string name="enable_notifications">Activar Notificaciones</string>
+    <string name="update">Actualizar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="logo">Logotipo</string>
+    <string name="learn_more">Más información</string>
+    <string name="or">O</string>
+    <string name="continue_google">Continuar con Google</string>
+    <string name="alert_icon">Icono de Alerta</string>
+    <string name="dismiss">Descartar</string>
+    <string name="back_arrow">Flecha Atrás</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_slogan">Donde Chatear Siempre es Divertido</string>
+    <string name="onboarding_title">¡Es Hora de Chatear!</string>
+    <string name="onboarding_subtitle">Únete a la comunidad de usuarios y haz que tu voz se escuche.</string>
+
+    <!-- Registro -->
+    <string name="register_header">¡Únete Hoy!</string>
+    <string name="register_sub_header">Registrarse es fácil y abre un mundo de conversaciones divertidas.</string>
+    <string name="already_have_acc">¿Ya tienes una cuenta?</string>
+    <string name="password_error">Tu contraseña debe tener al menos seis dígitos e incluir un número, una letra minúscula y una letra mayúscula.</string>
+    <string name="password_match_error">Las contraseñas no coinciden.</string>
+    <string name="email_error">Por favor, ingresa un correo electrónico válido.</string>
+    <string name="email_confirmation_body">Por favor, verifica tu bandeja de entrada para el correo electrónico de confirmación y haz clic en el enlace de verificación para completar el registro. Contacta al soporte si no lo recibes.</string>
+
+    <!-- Iniciar Sesión -->
+    <string name="login_header">¡Hola de Nuevo!</string>
+    <string name="login_sub_header">Bienvenido de nuevo, te hemos extrañado.</string>
+    <string name="not_a_member">¿No eres miembro?</string>
+    <string name="register_now">Regístrate ahora</string>
+    <string name="empty_password_error">La contraseña no puede estar vacía.</string>
+    <string name="forgot_password">¿Olvidaste tu Contraseña?</string>
+
+    <!-- Olvidaste tu Contraseña -->
+    <string name="forgot_password_instruction">No te preocupes, te enviaremos instrucciones para restablecerla.</string>
+    <string name="reset_password">Restablecer Contraseña</string>
+    <string name="back_login">Volver a Iniciar Sesión</string>
+
+    <!-- Verificar -->
+    <string name="verify_email">Verificar Tu Correo Electrónico</string>
+    <string name="verify_description">Revisa tu correo electrónico para encontrar el enlace de verificación.</string>
+    <string name="no_worries">¿No lo recibiste? ¡No te preocupes!</string>
+    <string name="resend_verification">Reenviar Verificación</string>
+
+    <!-- Pantalla de Chat -->
+    <string name="smile_icon">Icono de Sonrisa</string>
+    <string name="attach_icon">Icono de Adjuntar</string>
+    <string name="camera_icon">Icono de Cámara</string>
+    <string name="send_icon">Icono de Enviar</string>
+    <string name="chat_text_field_placeholder">Listo cuando tú lo estés…</string>
+    <string name="chat_text_field_desc">Campo de Texto del Chat</string>
+
+    <!-- Pantalla de Inicio -->
+    <string name="message_icon">Icono de Mensaje</string>
+    <string name="search_messages">Buscar mensajes</string>
+
+    <!-- Pantalla de Contacto -->
+    <string name="new_conversation">Nueva conversación</string>
+    <string name="type_name_phone_number">Escribe un nombre o un número de teléfono</string>
+    <string name="to">Para</string>
+    <string name="dial_pad">Teclado numérico</string>
+    <string name="keyboard">Teclado</string>
+    <string name="new_contact">Nuevo contacto</string>
+    <string name="new_contact_icon">Icono de Nuevo contacto</string>
+
+    <!-- Pantalla de Nuevo Contacto -->
+    <string name="first_name">Nombre</string>
+    <string name="last_name">Apellido</string>
+    <string name="phone_number">Teléfono</string>
+    <string name="save">Guardar</string>
+    <string name="require_first_name">El nombre es obligatorio.</string>
+    <string name="require_last_name">El apellido es obligatorio.</string>
+    <string name="user_not_found">Usuario no encontrado.</string>
+    <string name="email_already_exists">El correo electrónico ya existe.</string>
+
+    <!-- Pantalla de Perfil -->
+    <string name="profile_screen">Pantalla de Perfil</string>
+    <string name="logout">Cerrar Sesión</string>
+    <string name="next">Siguiente</string>
+    <string name="edit_profile">Editar Perfil</string>
+    <string name="change_name">Cambiar Nombre</string>
+    <string name="change_password">Cambiar Contraseña</string>
+    <string name="app_info">Información de la Aplicación</string>
+    <string name="notification_active">Activar Notificaciones</string>
+    <string name="password_insurance">Por favor, vuelve a ingresar tu contraseña actual abajo. Requerimos que verifiques tu identidad antes de proceder con el cambio de contraseña para garantizar la seguridad de tu cuenta.</string>
+    <string name="confirm_password">Confirmar Contraseña</string>
+
+    <!-- Pantalla de Notificaciones -->
+    <string name="notification_permission">Permiso de Notificación</string>
+    <string name="notification_title">¡Mantente Conectado!</string>
+    <string name="notification_desc">Activa las notificaciones para recibir mensajes de amigos al instante. Mantente en el circuito y responde rápidamente.</string>
+
+    <!-- Pantalla de Más Información -->
+    <string name="app_description">Con Smile, conectar con amigos, familiares y colegas nunca ha sido tan fácil. Di adiós a las largas esperas por mensajes y disfruta de una comunicación instantánea, segura y rica en funciones al alcance de tus dedos.</string>
+
+    <!-- Pantalla de Eliminar Perfil -->
+    <string name="delete_profile">Eliminar Perfil</string>
+    <string name="delete_confirm">Confirmación de Eliminación de Perfil</string>
+    <string name="delete_confirm_sub">¿Estás seguro de que quieres eliminar tu perfil? Eliminar tu perfil significa que toda tu información de cuenta y tus datos se eliminarán permanentemente de nuestra plataforma. Esto es lo que necesitas saber:</string>
+    <string name="after_deleting_happening_list">• Tu perfil, incluyendo tu nombre de usuario y foto de perfil, se eliminarán.\n• Todo tu historial de chat, contactos y archivos multimedia se eliminarán de forma irreversible.\n• No podrás acceder a tu cuenta ni recuperar ningún dato después de la eliminación.</string>
+    <string name="important_cons">Consideraciones Importantes:</string>
+    <string name="important_cons_list">• Puedes crear una nueva cuenta con la misma dirección de correo electrónico, pero perderás todos los datos anteriores.\n• Si decides volver a nuestra plataforma en el futuro, comenzarás con una cuenta nueva y sin acceso a tus chats anteriores.</string>
+    <string name="delete_my_account">Eliminar Mi Cuenta</string>
+    <string name="delete_confirm_message_dialog">¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible y todos tus datos se eliminarán permanentemente.</string>
+
+    <!-- FCM -->
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="request_notification_permission">Solicitar permiso</string>
+    <string name="notification_permission_title">Permiso de notificación</string>
+    <string name="notification_permission_description">El permiso de notificación es importante para esta aplicación. Por favor, concede el permiso.</string>
+    <string name="notification_permission_settings">El permiso de notificación es importante para esta aplicación. Por favor, ve a la configuración de tu dispositivo y habilita las notificaciones para Smile.</string>
+</resources>

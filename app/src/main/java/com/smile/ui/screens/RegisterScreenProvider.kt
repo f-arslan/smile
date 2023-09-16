@@ -42,11 +42,9 @@ import com.smile.common.composables.FormWrapper
 import com.smile.common.composables.FunctionalityNotAvailablePopup
 import com.smile.common.composables.HyperlinkText
 import com.smile.common.composables.LoadingAnimationDialog
-import com.smile.common.composables.OneTapSignIn
 import com.smile.common.composables.OneTapSignUp
 import com.smile.common.composables.PasswordTextField
 import com.smile.common.composables.RegisterHeader
-import com.smile.common.composables.SignInWithGoogle
 import com.smile.common.composables.SignUpWithGoogle
 import com.smile.common.composables.VerificationDialog
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
@@ -72,6 +70,7 @@ fun RegisterScreenProvider(
         LoadingAnimationDialog { viewModel.onLoadingStateChange(false) }
     }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val signInWithGoogleResponse by viewModel.signInWithGoogleResponse.collectAsStateWithLifecycle()
     if (uiState.verificationState) {
         VerificationDialog {
             viewModel.onVerificationStateChange(false)
@@ -121,6 +120,7 @@ fun RegisterScreenProvider(
     )
 
     SignUpWithGoogle(
+        signInWithGoogleResponse = signInWithGoogleResponse,
         navigateToHomeScreen = { signedIn ->
             if (signedIn) {
                 openAndPopUp(HOME_SCREEN)

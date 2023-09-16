@@ -49,12 +49,12 @@ class RegisterScreenViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(RegisterUiState())
     val uiState = _uiState.asStateFlow()
 
-    val isUserAuthenticated get() = authRepository.isUserAuthenticatedInFirebase
-
     var oneTapSignInResponse by mutableStateOf<OneTapSignInResponse>(Success(null))
         private set
-    var signInWithGoogleResponse by mutableStateOf<SignInWithGoogleResponse>(Success(false))
-        private set
+
+    private val _signInWithGoogleResponse = MutableStateFlow<SignInWithGoogleResponse>(Success(false))
+    val signInWithGoogleResponse = _signInWithGoogleResponse.asStateFlow()
+
 
     private val email
         get() = uiState.value.email
@@ -142,6 +142,6 @@ class RegisterScreenViewModel @Inject constructor(
 
     fun signUpWithGoogle(googleCredential: AuthCredential) = launchCatching {
         oneTapSignInResponse = Loading
-        signInWithGoogleResponse = authRepository.firebaseSignInWithGoogle(googleCredential)
+        _signInWithGoogleResponse.value = authRepository.firebaseSignInWithGoogle(googleCredential)
     }
 }

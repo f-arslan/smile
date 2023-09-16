@@ -68,12 +68,26 @@ fun ProfileScreenProvider(
             userName = (user as Response.Success<User>).data.displayName,
             notificationState = notificationState,
             popUp = popUp,
-            onChangePasswordClick = { navigateWithArgument(VERIFY_PASSWORD_SCREEN, CHANGE_PASSWORD_SCREEN) },
+            onChangePasswordClick = {
+                navigateWithArgument(
+                    VERIFY_PASSWORD_SCREEN,
+                    CHANGE_PASSWORD_SCREEN
+                )
+            },
             onApplicationInformationClick = { navigate(LEARN_MORE_SCREEN) },
             signOutClick = { viewModel.signOut { clearAndNavigate(it) } },
             onNotificationActivateClick = { navigate(NOTIFICATION_SCREEN) },
             onEditClick = { navigate(NAME_EDIT_SCREEN) },
-            onDeleteProfileClick = { navigateWithArgument(VERIFY_PASSWORD_SCREEN, DELETE_PROFILE_SCREEN) }
+            onDeleteProfileClick = {
+                if ((user as Response.Success<User>).data.email.isEmpty()) {
+                    navigateWithArgument(
+                        VERIFY_PASSWORD_SCREEN,
+                        DELETE_PROFILE_SCREEN
+                    )
+                } else {
+                    navigate(DELETE_PROFILE_SCREEN)
+                }
+            }
         )
     }
 }
@@ -119,11 +133,16 @@ fun ProfileScreen(
                 AppText.app_info,
                 onApplicationInformationClick
             )
-            ProfileItem(AppDrawable.outline_delete_24, AppText.delete_profile, onDeleteProfileClick)
+            ProfileItem(
+                AppDrawable.outline_delete_24,
+                AppText.delete_profile,
+                onDeleteProfileClick
+            )
             ProfileItem(AppDrawable.round_logout_24, AppText.logout, signOutClick)
         }
     }
 }
+
 
 @Composable
 private fun UserName(userName: String, onEditClick: () -> Unit) {

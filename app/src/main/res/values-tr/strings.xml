@@ -1,0 +1,140 @@
+<resources>
+    <string name="app_name">Smile</string>
+
+    <!-- Ortak -->
+    <string name="register">Kaydol</string>
+    <string name="login">Giriş Yap</string>
+    <string name="name">Ad</string>
+    <string name="email">E-posta</string>
+    <string name="password">Şifre</string>
+    <string name="re_password">Şifreyi Tekrarla</string>
+    <string name="recovery_password">Kurtarma Şifresi</string>
+    <string name="or_continue_with">Ya da devam et</string>
+    <string name="google_icon">Google İkonu</string>
+    <string name="generic_error">Bir şeyler yanlış gitti. Lütfen tekrar deneyin.</string>
+    <string name="please_verify_email">Lütfen e-postanızı doğrulayın. Ayrıca spam klasörünü de kontrol edin.</string>
+    <string name="email_or_password_error">E-posta veya şifre yanlış.</string>
+    <string name="close">KAPAT</string>
+    <string name="confirm_icon">Onay İkonu</string>
+    <string name="connection_error">Bağlantı hatası. Tekrar denemek ister misiniz?</string>
+    <string name="options">Seçenekler</string>
+    <string name="cancel">İptal</string>
+    <string name="search">Ara</string>
+    <string name="menu">Menü</string>
+    <string name="history">Geçmiş</string>
+    <string name="contact">İletişim</string>
+    <string name="ok">TAMAM</string>
+    <string name="working_on">Üzerinde Çalışılıyor… 🙈</string>
+    <string name="skip">Atla</string>
+    <string name="enable_notifications">Bildirimleri Etkinleştir</string>
+    <string name="update">Güncelle</string>
+    <string name="confirm">Onayla</string>
+    <string name="logo">Logo</string>
+    <string name="learn_more">Daha Fazla Bilgi Edin</string>
+    <string name="or">Ya da</string>
+    <string name="continue_google">Google ile Devam Et</string>
+    <string name="alert_icon">Uyarı İkonu</string>
+    <string name="dismiss">Reddet</string>
+    <string name="back_arrow">Geri Ok</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_slogan">Sohbet Etmek Her Zaman Eğlenceli</string>
+    <string name="onboarding_title">Sohbet Zamanı Geldi!</string>
+    <string name="onboarding_subtitle">Kullanıcı topluluğuna katılın ve sesinizi duyurun!</string>
+
+    <!-- Kaydol -->
+    <string name="register_header">Bugün Bize Katılın!</string>
+    <string name="register_sub_header">Kaydolmak kolaydır ve eğlenceli sohbetlerin kapısını açar.</string>
+    <string name="already_have_acc">Zaten bir hesabınız mı var?</string>
+    <string name="password_error">Şifreniz en az altı rakam içermeli ve bir rakam, bir küçük harf ve bir büyük harf içermelidir.</string>
+    <string name="password_match_error">Şifreler uyuşmuyor.</string>
+    <string name="email_error">Lütfen geçerli bir e-posta adresi girin.</string>
+    <string name="email_confirmation_body">Lütfen kaydı tamamlamak için gelen onay e-postasını kontrol edin ve doğrulama bağlantısına tıklayın. Eğer almadıysanız destekle iletişime geçin.</string>
+
+    <!-- Giriş Yap -->
+    <string name="login_header">Merhaba Tekrar!</string>
+    <string name="login_sub_header">Tekrar hoş geldiniz, sizi özledik.</string>
+    <string name="not_a_member">Üye değil misiniz?</string>
+    <string name="register_now">Şimdi Kaydolun</string>
+    <string name="empty_password_error">Şifre boş olamaz.</string>
+    <string name="forgot_password">Şifremi Unuttum?</string>
+
+    <!-- Şifremi Unuttum -->
+    <string name="forgot_password_instruction">Endişelenmeyin, size şifre sıfırlama talimatları göndereceğiz.</string>
+    <string name="reset_password">Şifreyi Sıfırla</string>
+    <string name="back_login">Girişe Dön</string>
+
+    <!-- E-postayı Doğrula -->
+    <string name="verify_email">E-postanızı Doğrulayın</string>
+    <string name="verify_description">Doğrulama bağlantısı için e-postanızı kontrol edin</string>
+    <string name="no_worries">Almadınız mı? Endişelenmeyin!</string>
+    <string name="resend_verification">Doğrulamayı Tekrar Gönder</string>
+
+    <!-- Sohbet Ekranı -->
+    <string name="smile_icon">Gülümseme İkonu</string>
+    <string name="attach_icon">Ekle İkonu</string>
+    <string name="camera_icon">Kamera İkonu</string>
+    <string name="send_icon">Gönder İkonu</string>
+    <string name="chat_text_field_placeholder">Hazır olduğunuzda…</string>
+    <string name="chat_text_field_desc">Sohbet Metin Alanı</string>
+
+    <!-- Anasayfa Ekranı -->
+    <string name="message_icon">Mesaj İkonu</string>
+    <string name="search_messages">Mesajları Ara</string>
+
+    <!-- İletişim Ekranı -->
+    <string name="new_conversation">Yeni Konuşma</string>
+    <string name="type_name_phone_number">Bir isim veya telefon numarası yazın</string>
+    <string name="to">Kime</string>
+    <string name="dial_pad">Tuş Takımı</string>
+    <string name="keyboard">Klavye</string>
+    <string name="new_contact">Yeni Kişi</string>
+    <string name="new_contact_icon">Yeni Kişi İkonu</string>
+
+    <!-- Yeni Kişi Ekranı -->
+    <string name="first_name">Ad</string>
+    <string name="last_name">Soyad</string>
+    <string name="phone_number">Telefon</string>
+    <string name="save">Kaydet</string>
+    <string name="require_first_name">Ad alanı gereklidir.</string>
+    <string name="require_last_name">Soyad alanı gereklidir.</string>
+    <string name="user_not_found">Kullanıcı bulunamadı.</string>
+    <string name="email_already_exists">E-posta zaten mevcut.</string>
+
+    <!-- Profil Ekranı -->
+    <string name="profile_screen">Profil Ekranı</string>
+    <string name="logout">Çıkış Yap</string>
+    <string name="next">Sonraki</string>
+    <string name="edit_profile">Profili Düzenle</string>
+    <string name="change_name">Adı Değiştir</string>
+    <string name="change_password">Şifre Değiştir</string>
+    <string name="app_info">Uygulama Bilgisi</string>
+    <string name="notification_active">Bildirimleri Etkinleştir</string>
+    <string name="password_insurance">Lütfen şu anki şifrenizi aşağıya yeniden girin. Şifre değişikliği işlemine devam etmeden önce kimliğinizi doğrulamanız gerekiyor, bu şekilde hesabınızın güvenliğini sağlıyoruz.</string>
+    <string name="confirm_password">Şifreyi Onayla</string>
+
+    <!-- Bildirim Ekranı -->
+    <string name="notification_permission">Bildirim İzni</string>
+    <string name="notification_title">Bağlı Kalın!</string>
+    <string name="notification_desc">Anında arkadaşlardan mesaj almak için bildirimleri açın. Döngüde kalın ve hızlıca cevap verin.</string>
+
+    <!-- Daha Fazla Bilgi Ekranı -->
+    <string name="app_description">Smile ile arkadaşlarınız, aileniz ve meslektaşlarınızla bağlantı kurmak hiç bu kadar kolay olmamıştı. Mesajlar için uzun bekleme sürelerine veda edin ve anında, güvenli ve özellik dolu iletişimin tadını çıkarın.</string>
+
+    <!-- Profil Silme Ekranı -->
+    <string name="delete_profile">Profili Sil</string>
+    <string name="delete_confirm">Profil Silme Onayı</string>
+    <string name="delete_confirm_sub">Profilinizi silmek istediğinizden emin misiniz? Profilinizi silmek, hesap bilgilerinizin ve verilerinizin platformumuzdan kalıcı olarak silineceği anlamına gelir. İşte bilmeniz gerekenler:</string>
+    <string name="after_deleting_happening_list">• Profiliniz, kullanıcı adınız ve profil resminiz dahil olmak üzere silinecektir.\n• Tüm sohbet geçmişiniz, kişileriniz ve medya dosyalarınız geri dönüşü olmadan kaldırılacaktır.\n• Profil silindikten sonra hesabınıza erişim sağlayamayacak ve silinme sonrası verilerinizi kurtaramayacaksınız.</string>
+    <string name="important_cons">Önemli Düşünceler:</string>
+    <string name="important_cons_list">• Aynı e-posta adresi ile yeni bir hesap oluşturabilirsiniz, ancak önceki verilerinizin tümünü kaybedersiniz.\n• Gelecekte platformumuza geri dönmeye karar verirseniz, taze bir hesapla başlayacak ve önceki sohbetlerinize erişiminiz olmayacaktır.</string>
+    <string name="delete_my_account">Hesabımı Sil</string>
+    <string name="delete_confirm_message_dialog">Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve tüm verileriniz kalıcı olarak silinecektir.</string>
+
+    <!-- FCM -->
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="request_notification_permission">İzin İste</string>
+    <string name="notification_permission_title">Bildirim izni</string>
+    <string name="notification_permission_description">Bildirim izni bu uygulama için önemlidir. Lütfen izni verin.</string>
+    <string name="notification_permission_settings">Bildirim izni bu uygulama için önemlidir. Lütfen cihaz ayarlarına gidin ve Smile için bildirimleri etkinleştirin.</string>
+</resources>

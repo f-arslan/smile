@@ -9,6 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.auth.api.identity.BeginSignInResult
+import com.smile.common.snackbar.SnackbarManager
+import com.smile.model.google.domain.SignInWithGoogleResponse
 import com.smile.model.service.module.GoogleResponse.Failure
 import com.smile.model.service.module.GoogleResponse.Loading
 import com.smile.model.service.module.GoogleResponse.Success
@@ -75,19 +77,18 @@ fun SignInWithGoogle(
                 navigateToHomeScreen(signedIn)
             }
         }
-
         is Failure -> LaunchedEffect(Unit) {
-            print(signInWithGoogleResponse.e)
+            SnackbarManager.showMessage(signInWithGoogleResponse.e.message.toString())
         }
     }
 }
 
 @Composable
 fun SignUpWithGoogle(
-    viewModel: RegisterScreenViewModel = hiltViewModel(),
+    signInWithGoogleResponse: SignInWithGoogleResponse,
     navigateToHomeScreen: (signedIn: Boolean) -> Unit
 ) {
-    when (val signInWithGoogleResponse = viewModel.signInWithGoogleResponse) {
+    when (signInWithGoogleResponse) {
         is Loading -> ProgressBar()
         is Success -> signInWithGoogleResponse.data?.let { signedIn ->
             LaunchedEffect(signedIn) {

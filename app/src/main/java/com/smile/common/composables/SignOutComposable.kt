@@ -5,7 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.smile.ui.view_models.ProfileScreenViewModel
 import com.smile.model.service.module.GoogleResponse.*
-
 @Composable
 fun SignOut(
     viewModel: ProfileScreenViewModel = hiltViewModel(),

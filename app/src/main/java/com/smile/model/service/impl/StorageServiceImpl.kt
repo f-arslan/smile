@@ -298,7 +298,7 @@ class StorageServiceImpl @Inject constructor(
         }
         roomColRef.whereIn(ROOM_ID, roomIds).addSnapshotListener { querySnapshot, error ->
             if (error != null) {
-                Log.e("StorageServiceImpl", "Error while listening to room collection", error)
+                Log.e(TAG, "Error while listening to room collection", error)
                 return@addSnapshotListener
             }
             val rooms = querySnapshot?.toObjects<Room>() ?: emptyList()
