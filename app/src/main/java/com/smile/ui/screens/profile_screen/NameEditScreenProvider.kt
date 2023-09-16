@@ -14,7 +14,7 @@ import com.smile.common.composables.BottomButtonWithIcon
 import com.smile.common.composables.DefaultTextField
 import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.NavigationTopAppBar
-import com.smile.ui.view_models.NameEditScreenViewModel
+import com.smile.ui.view_models.profile_screen_vm.NameEditScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText

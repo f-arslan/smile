@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -22,8 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -110,10 +107,10 @@ fun PasswordTextField(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ContactTextField(textFieldValue: TextFieldValue, onValueChange: (TextFieldValue) -> Unit) {
-    var keyboardType by remember { mutableStateOf(KeyboardType.Text) }
-
+    val keyboard = LocalSoftwareKeyboardController.current
     OutlinedTextField(
         value = textFieldValue,
         onValueChange = { onValueChange(it) },
@@ -126,7 +123,7 @@ fun ContactTextField(textFieldValue: TextFieldValue, onValueChange: (TextFieldVa
             unfocusedContainerColor = MaterialTheme.colorScheme.surface
         ),
         placeholder = {
-            Text(text = stringResource(AppText.type_name_phone_number))
+            Text(text = stringResource(AppText.type_name))
         },
         leadingIcon = {
             Text(
@@ -135,30 +132,15 @@ fun ContactTextField(textFieldValue: TextFieldValue, onValueChange: (TextFieldVa
             )
         },
         trailingIcon = {
-            when (keyboardType) {
-                KeyboardType.Text -> {
-                    IconButton(onClick = { keyboardType = KeyboardType.Number }) {
-                        Icon(
-                            painter = painterResource(AppDrawable.outline_keyboard_alt_24),
-                            contentDescription = stringResource(id = AppText.keyboard),
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
-
-                KeyboardType.Number -> {
-                    IconButton(onClick = { keyboardType = KeyboardType.Text }) {
-                        Icon(
-                            painter = painterResource(AppDrawable.outline_dialpad_24),
-                            contentDescription = stringResource(id = AppText.dial_pad),
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
+            IconButton(onClick = { keyboard?.show() }) {
+                Icon(
+                    painter = painterResource(AppDrawable.outline_keyboard_alt_24),
+                    contentDescription = stringResource(id = AppText.keyboard),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
             }
         },
         maxLines = 1,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
     )
 }
 
@@ -167,6 +149,6 @@ fun ContactTextField(textFieldValue: TextFieldValue, onValueChange: (TextFieldVa
 @Composable
 fun TextFieldPreview() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-
+        ContactTextField(textFieldValue = TextFieldValue(), onValueChange = {})
     }
 }

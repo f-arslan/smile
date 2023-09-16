@@ -86,7 +86,7 @@
 
     <!-- Contact Screen -->
     <string name="new_conversation">New conversation</string>
-    <string name="type_name_phone_number">Type a name or phone number</string>
+    <string name="type_name">Type a name</string>
     <string name="to">To</string>
     <string name="dial_pad">Dial Pad</string>
     <string name="keyboard">Keyboard</string>

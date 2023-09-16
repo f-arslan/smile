@@ -28,7 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.NavigationTopAppBar
 import com.smile.common.composables.PasswordTextField
-import com.smile.ui.view_models.VerifyPasswordScreenViewModel
+import com.smile.ui.view_models.profile_screen_vm.VerifyPasswordScreenViewModel
 import com.smile.util.Constants.GENERAL_ICON_SIZE
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.SMALL_PADDING

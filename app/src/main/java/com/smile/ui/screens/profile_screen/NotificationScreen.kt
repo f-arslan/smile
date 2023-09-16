@@ -30,7 +30,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.smile.common.composables.PermissionPopUp
 import com.smile.model.datastore.DataStoreRepository.Companion.DISABLED
 import com.smile.model.datastore.DataStoreRepository.Companion.ENABLED
-import com.smile.ui.view_models.NotificationScreenViewModel
+import com.smile.ui.view_models.profile_screen_vm.NotificationScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.VERY_HIGH_PADDING
 import com.smile.util.icons.NotificationIcon

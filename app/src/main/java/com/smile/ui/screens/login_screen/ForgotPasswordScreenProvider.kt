@@ -32,7 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.DefaultTextField
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
-import com.smile.ui.view_models.ForgotPasswordScreenViewModel
+import com.smile.ui.view_models.login_screen_vm.ForgotPasswordScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING

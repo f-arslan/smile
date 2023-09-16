@@ -43,7 +43,7 @@ import com.smile.ui.screens.graph.SmileRoutes.LEARN_MORE_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.NAME_EDIT_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.NOTIFICATION_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.VERIFY_PASSWORD_SCREEN
-import com.smile.ui.view_models.ProfileScreenViewModel
+import com.smile.ui.view_models.profile_screen_vm.ProfileScreenViewModel
 import com.smile.util.Constants.AVATAR_SIZE
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING

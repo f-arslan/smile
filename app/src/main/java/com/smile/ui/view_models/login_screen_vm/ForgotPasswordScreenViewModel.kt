@@ -1,7 +1,6 @@
-package com.smile.ui.view_models
+package com.smile.ui.view_models.login_screen_vm
 
 import android.content.res.Resources
-import android.util.Log
 import com.smile.SmileViewModel
 import com.smile.common.ext.isValidEmail
 import com.smile.common.snackbar.SnackbarManager

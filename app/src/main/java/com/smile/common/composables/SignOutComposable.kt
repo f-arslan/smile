@@ -3,7 +3,7 @@ package com.smile.common.composables
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.smile.ui.view_models.ProfileScreenViewModel
+import com.smile.ui.view_models.profile_screen_vm.ProfileScreenViewModel
 import com.smile.model.service.module.GoogleResponse.*
 @Composable
 fun SignOut(

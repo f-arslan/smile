@@ -1,4 +1,4 @@
-package com.smile.ui.view_models
+package com.smile.ui.view_models.profile_screen_vm
 
 import androidx.annotation.StringRes
 import com.smile.SmileViewModel

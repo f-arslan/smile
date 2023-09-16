@@ -1,4 +1,4 @@
-package com.smile.ui.view_models
+package com.smile.ui.view_models.profile_screen_vm
 
 import com.smile.R
 import com.smile.SmileViewModel

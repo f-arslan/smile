@@ -1,4 +1,4 @@
-package com.smile.ui.view_models
+package com.smile.ui.view_models.profile_screen_vm
 
 import android.util.Log
 import com.smile.SmileViewModel

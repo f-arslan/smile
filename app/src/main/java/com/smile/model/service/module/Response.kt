@@ -8,13 +8,18 @@ sealed class Response<out T> {
 }
 
 sealed class GoogleResponse<out T> {
-    object Loading: GoogleResponse<Nothing>()
+    object Loading : GoogleResponse<Nothing>()
 
     data class Success<out T>(
         val data: T?
-    ): GoogleResponse<T>()
+    ) : GoogleResponse<T>()
 
     data class Failure(
         val e: Exception
-    ): GoogleResponse<Nothing>()
+    ) : GoogleResponse<Nothing>()
+}
+
+sealed interface LoadingState {
+    object Idle : LoadingState
+    object Loading : LoadingState
 }

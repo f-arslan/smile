@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.common.composables.AppAlertDialog
 import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.NavigationTopAppBar
-import com.smile.ui.view_models.DeleteProfileScreenViewModel
+import com.smile.ui.view_models.profile_screen_vm.DeleteProfileScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.MEDIUM_PADDING
 import com.smile.R.drawable as AppDrawable

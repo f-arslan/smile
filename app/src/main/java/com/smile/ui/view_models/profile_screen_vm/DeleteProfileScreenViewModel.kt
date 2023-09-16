@@ -1,4 +1,4 @@
-package com.smile.ui.view_models
+package com.smile.ui.view_models.profile_screen_vm
 
 import android.content.res.Resources
 import com.smile.SmileViewModel

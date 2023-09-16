@@ -1,4 +1,4 @@
-package com.smile.ui.view_models
+package com.smile.ui.view_models.profile_screen_vm
 
 import android.Manifest
 import android.content.Context
@@ -14,7 +14,6 @@ import com.smile.SmileViewModel
 import com.smile.model.User
 import com.smile.model.datastore.DataStoreRepository
 import com.smile.model.google.domain.ProfileRepository
-import com.smile.model.google.domain.RevokeAccessResponse
 import com.smile.model.google.domain.SignOutResponse
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService

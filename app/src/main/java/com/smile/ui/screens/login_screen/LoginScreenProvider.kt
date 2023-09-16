@@ -37,15 +37,16 @@ import com.smile.common.composables.ExtFloActionButton
 import com.smile.common.composables.FormWrapper
 import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.LoginHeader
-import com.smile.common.composables.OneTapSignUp
+import com.smile.common.composables.OneTapSignInUp
 import com.smile.common.composables.PasswordTextField
 import com.smile.common.composables.SignInUpWithGoogle
+import com.smile.model.service.module.LoadingState
 import com.smile.ui.screens.DayHeader
 import com.smile.ui.screens.graph.SmileRoutes.FORGOT_PASSWORD_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
-import com.smile.ui.view_models.LoginScreenViewModel
-import com.smile.ui.view_models.LoginUiState
+import com.smile.ui.view_models.login_screen_vm.LoginScreenViewModel
+import com.smile.ui.view_models.login_screen_vm.LoginUiState
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.util.Constants.VERY_HIGH_PADDING
 import com.smile.R.string as AppText
@@ -60,8 +61,8 @@ fun LoginScreenProvider(
     LaunchedEffect(Unit) { viewModel.checkEmailVerification() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val keyboardController = LocalSoftwareKeyboardController.current
-    if (uiState.loadingState) {
-        LoadingAnimationDialog { viewModel.onLoadingStateChange(false) }
+    if (uiState.loadingState is LoadingState.Loading) {
+        LoadingAnimationDialog { viewModel.onLoadingStateChange(LoadingState.Idle) }
     }
     Surface {
         LoginScreen(
@@ -97,10 +98,12 @@ fun LoginScreenProvider(
         launcher.launch(intent)
     }
 
-    OneTapSignUp(uiState.oneTapSignInResponse, launch = { launch(it) })
+    OneTapSignInUp(uiState.oneTapSignInResponse, launch = { launch(it) })
 
-    SignInUpWithGoogle(uiState.signInWithGoogleResponse, navigateToHomeScreen = {
-        openAndPopUp(HOME_SCREEN)
+    SignInUpWithGoogle(uiState.signInWithGoogleResponse, navigateToHomeScreen = { signedIn ->
+        if (signedIn) {
+            openAndPopUp(HOME_SCREEN)
+        }
     })
 }
 

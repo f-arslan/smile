@@ -1,4 +1,4 @@
-package com.smile.ui.view_models
+package com.smile.ui.view_models.login_screen_vm
 
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -14,12 +14,12 @@ import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
 import com.smile.model.service.module.GoogleResponse.Loading
 import com.smile.model.service.module.GoogleResponse.Success
+import com.smile.model.service.module.LoadingState
 import com.smile.model.service.module.Response
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ import com.smile.R.string as AppText
 data class LoginUiState(
     val email: String = "",
     val password: String = "",
-    val loadingState: Boolean = false,
+    val loadingState: LoadingState = LoadingState.Idle,
     val oneTapSignInResponse: OneTapSignInUpResponse = Success(null),
     val signInWithGoogleResponse: SignInUpWithGoogleResponse = Success(false)
 )
@@ -42,25 +42,23 @@ class LoginScreenViewModel @Inject constructor(
     val oneTapClient: SignInClient,
     logService: LogService
 ) : SmileViewModel(logService) {
-
-
-    private val _uiState = MutableStateFlow(LoginUiState("", ""))
+    private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
 
-
-    fun onLoadingStateChange(loadingState: Boolean) {
-        _uiState.value = _uiState.value.copy(loadingState = loadingState)
+    fun onEmailChange(newValue: String) {
+        updateUiState { copy(email = newValue) }
     }
 
-    fun onEmailChange(newValue: String) {
-        _uiState.value = _uiState.value.copy(email = newValue)
+    fun onLoadingStateChange(loadingState: LoadingState) {
+        updateUiState { copy(loadingState = loadingState) }
     }
 
     fun onPasswordChange(newValue: String) {
-        _uiState.value = _uiState.value.copy(password = newValue)
+        updateUiState { copy(password = newValue) }
     }
 
     fun onLoginClick(openAndPopUp: (String) -> Unit) {
+        onLoadingStateChange(LoadingState.Loading)
         if (!uiState.value.email.isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return
@@ -69,7 +67,6 @@ class LoginScreenViewModel @Inject constructor(
             SnackbarManager.showMessage(AppText.empty_password_error)
             return
         }
-        onLoadingStateChange(true)
         launchCatching {
             val signInResponse =
                 accountService.firebaseSignInWithEmailAndPassword(
@@ -77,11 +74,9 @@ class LoginScreenViewModel @Inject constructor(
                     uiState.value.password
                 )
             if (signInResponse is Response.Success) {
-                async { accountService.reloadFirebaseUser() }.await()
-                if (accountService.isEmailVerified) {
-                    onLoadingStateChange(false)
+                val reloadResponse = accountService.reloadFirebaseUser()
+                if (reloadResponse is Response.Success && accountService.isEmailVerified) {
                     storageService.updateUserEmailVerification()
-                    delay(100L)
                     openAndPopUp(HOME_SCREEN)
                 } else {
                     SnackbarManager.showMessage(AppText.please_verify_email)
@@ -89,7 +84,7 @@ class LoginScreenViewModel @Inject constructor(
             } else {
                 SnackbarManager.showMessage(AppText.email_or_password_error)
             }
-            onLoadingStateChange(false)
+            onLoadingStateChange(LoadingState.Idle)
         }
     }
 
@@ -101,12 +96,22 @@ class LoginScreenViewModel @Inject constructor(
     }
 
     fun oneTapSignIn() = launchCatching {
-        _uiState.value = _uiState.value.copy(oneTapSignInResponse = Loading)
-        _uiState.value = _uiState.value.copy(oneTapSignInResponse = authRepository.oneTapSignInWithGoogle())
+        updateUiState { copy(oneTapSignInResponse = Loading) }
+        updateUiState { copy(oneTapSignInResponse = authRepository.oneTapSignInWithGoogle()) }
     }
 
     fun signInWithGoogle(googleCredential: AuthCredential) = launchCatching {
-        _uiState.value = _uiState.value.copy(signInWithGoogleResponse = Loading)
-        _uiState.value = _uiState.value.copy(signInWithGoogleResponse = authRepository.firebaseSignInWithGoogle(googleCredential))
+        updateUiState { copy(signInWithGoogleResponse = Loading) }
+        updateUiState {
+            copy(
+                signInWithGoogleResponse = authRepository.firebaseSignInWithGoogle(
+                    googleCredential
+                )
+            )
+        }
+    }
+
+    private inline fun updateUiState(block: LoginUiState.() -> LoginUiState) {
+        _uiState.value = _uiState.value.block()
     }
 }

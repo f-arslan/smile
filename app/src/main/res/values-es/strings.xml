@@ -84,7 +84,7 @@
 
     <!-- Pantalla de Contacto -->
     <string name="new_conversation">Nueva conversación</string>
-    <string name="type_name_phone_number">Escribe un nombre o un número de teléfono</string>
+    <string name="type_name">Escribe un nombre</string>
     <string name="to">Para</string>
     <string name="dial_pad">Teclado numérico</string>
     <string name="keyboard">Teclado</string>

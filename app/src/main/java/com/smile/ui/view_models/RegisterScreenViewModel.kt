@@ -1,5 +1,6 @@
 package com.smile.ui.view_models
 
+import androidx.compose.animation.core.updateTransition
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
 import com.smile.SmileViewModel
@@ -16,6 +17,7 @@ import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
 import com.smile.model.service.module.GoogleResponse.Loading
 import com.smile.model.service.module.GoogleResponse.Success
+import com.smile.model.service.module.LoadingState
 import com.smile.model.service.module.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -31,7 +33,7 @@ data class RegisterUiState(
     val password: String = "",
     val rePassword: String = "",
     val verificationState: Boolean = false,
-    val loadingState: Boolean = false,
+    val loadingState: LoadingState = LoadingState.Idle,
     val oneTapSignUpResponse: OneTapSignInUpResponse = Success(null),
     val signUpWithGoogleResponse: SignInUpWithGoogleResponse = Success(false)
 )
@@ -53,28 +55,28 @@ class RegisterScreenViewModel @Inject constructor(
     private val password
         get() = uiState.value.password
 
-    fun onLoadingStateChange(loadingState: Boolean) {
-        _uiState.value = _uiState.value.copy(loadingState = loadingState)
+    fun onLoadingStateChange(loadingState: LoadingState) {
+        updateUiState { copy(loadingState = loadingState) }
     }
 
     fun onVerificationStateChange(verificationState: Boolean) {
-        _uiState.value = _uiState.value.copy(verificationState = verificationState)
+        updateUiState { copy(verificationState = verificationState) }
     }
 
     fun onNameChange(newValue: String) {
-        _uiState.value = _uiState.value.copy(name = newValue)
+        updateUiState { copy(name = newValue) }
     }
 
     fun onEmailChange(newValue: String) {
-        _uiState.value = _uiState.value.copy(email = newValue)
+        updateUiState { copy(email = newValue) }
     }
 
     fun onPasswordChange(newValue: String) {
-        _uiState.value = _uiState.value.copy(password = newValue)
+        updateUiState { copy(password = newValue) }
     }
 
     fun onRePasswordChange(newValue: String) {
-        _uiState.value = _uiState.value.copy(rePassword = newValue)
+        updateUiState { copy(rePassword = newValue) }
     }
 
     fun onSignUpClick() {
@@ -94,8 +96,8 @@ class RegisterScreenViewModel @Inject constructor(
             SnackbarManager.showMessage(AppText.require_first_name)
             return
         }
+        onLoadingStateChange(LoadingState.Loading)
         launchCatching {
-            onLoadingStateChange(true)
             val signUpResponse = accountService.firebaseSignUpWithEmailAndPassword(
                 email = email,
                 password = password
@@ -103,13 +105,11 @@ class RegisterScreenViewModel @Inject constructor(
             if (signUpResponse is Response.Success) {
                 async { accountService.sendEmailVerification() }.await()
                 saveToDatabase()
-                onLoadingStateChange(false)
-                delay(100)
                 onVerificationStateChange(true)
             } else if (signUpResponse is Response.Failure) {
-                onLoadingStateChange(false)
                 signUpResponse.e.message?.let { SnackbarManager.showMessage(it) }
             }
+            onLoadingStateChange(LoadingState.Idle)
         }
     }
 
@@ -127,18 +127,16 @@ class RegisterScreenViewModel @Inject constructor(
     }
 
     fun oneTapSignUp() = launchCatching {
-        _uiState.value = _uiState.value.copy(oneTapSignUpResponse = Loading)
-        _uiState.value =
-            _uiState.value.copy(oneTapSignUpResponse = authRepository.oneTapSignUpWithGoogle())
+        updateUiState { copy(oneTapSignUpResponse = Loading) }
+        updateUiState { copy(oneTapSignUpResponse = authRepository.oneTapSignUpWithGoogle()) }
     }
 
     fun signUpWithGoogle(googleCredential: AuthCredential) = launchCatching {
-        _uiState.value = _uiState.value.copy(signUpWithGoogleResponse = Loading)
-        _uiState.value =
-            _uiState.value.copy(
-                signUpWithGoogleResponse = authRepository.firebaseSignInWithGoogle(
-                    googleCredential
-                )
-            )
+        updateUiState { copy(signUpWithGoogleResponse = Loading) }
+        updateUiState { copy(signUpWithGoogleResponse = authRepository.firebaseSignInWithGoogle(googleCredential)) }
+    }
+
+    private inline fun updateUiState(updateBlock: RegisterUiState.() -> RegisterUiState) {
+        _uiState.value = _uiState.value.updateBlock()
     }
 }

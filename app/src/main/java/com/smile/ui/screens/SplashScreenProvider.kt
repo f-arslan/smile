@@ -1,5 +1,6 @@
 package com.smile.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -32,6 +33,7 @@ fun SplashScreenProvider(
     LaunchedEffect(Unit) { viewModel.getOnboardingScreenState() }
     val onboardingScreenState by viewModel.onboardingScreenState.collectAsStateWithLifecycle()
     val isEmailVerified = viewModel.isEmailVerified
+    Log.d("Splash Screen", isEmailVerified.toString())
     val logoTheme = if (isSystemInDarkTheme()) R.raw.logo_black_theme else R.raw.logo_white_theme
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(logoTheme))
     SplashScreen(clearAndNavigate, isEmailVerified, onboardingScreenState, composition)
@@ -57,8 +59,13 @@ fun SplashScreen(
             progress = { logoAnimationState.progress },
         )
         if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
-            if (!onboardingScreenState) clearAndNavigate(ONBOARDING_SCREEN)
-            else clearAndNavigate(if (isEmailVerified) HOME_SCREEN else LOGIN_SCREEN)
+            if (!isEmailVerified) {
+                Log.d("SplashScreen", "HELLO")
+                clearAndNavigate(LOGIN_SCREEN)
+            } else {
+                if (!onboardingScreenState) ONBOARDING_SCREEN
+                else HOME_SCREEN
+            }
         }
     }
 }

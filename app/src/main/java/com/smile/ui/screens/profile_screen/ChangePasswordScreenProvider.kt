@@ -18,8 +18,8 @@ import com.smile.common.composables.BottomButtonWithIcon
 import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.NavigationTopAppBar
 import com.smile.common.composables.PasswordTextField
-import com.smile.ui.view_models.ChangePasswordScreenUiState
-import com.smile.ui.view_models.ChangePasswordScreenViewModel
+import com.smile.ui.view_models.profile_screen_vm.ChangePasswordScreenUiState
+import com.smile.ui.view_models.profile_screen_vm.ChangePasswordScreenViewModel
 import com.smile.util.Constants.HIGH_PADDING
 import com.smile.R.drawable as AppDrawable
 import com.smile.R.string as AppText

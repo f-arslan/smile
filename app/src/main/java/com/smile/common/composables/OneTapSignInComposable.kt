@@ -17,7 +17,7 @@ import com.smile.model.service.module.GoogleResponse.Success
 
 
 @Composable
-fun OneTapSignUp(
+fun OneTapSignInUp(
     oneTapSignUpResponse: OneTapSignInUpResponse,
     launch: (result: BeginSignInResult) -> Unit
 ) {

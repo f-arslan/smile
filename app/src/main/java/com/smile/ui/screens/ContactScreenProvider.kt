@@ -135,5 +135,5 @@ private fun ContactPreview() {
         onValueChange = {},
         popUp = {},
         navigateNewContact = {},
-        navigateChatScreen = { s: String, s1: String -> })
+        navigateChatScreen = { _: String, _: String -> })
 }

@@ -37,11 +37,12 @@ import com.smile.common.composables.ExtFloActionButton
 import com.smile.common.composables.FormWrapper
 import com.smile.common.composables.HyperlinkText
 import com.smile.common.composables.LoadingAnimationDialog
-import com.smile.common.composables.OneTapSignUp
+import com.smile.common.composables.OneTapSignInUp
 import com.smile.common.composables.PasswordTextField
 import com.smile.common.composables.RegisterHeader
 import com.smile.common.composables.SignInUpWithGoogle
 import com.smile.common.composables.VerificationDialog
+import com.smile.model.service.module.LoadingState
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import com.smile.ui.view_models.RegisterScreenViewModel
@@ -59,10 +60,9 @@ fun RegisterScreenProvider(
     viewModel: RegisterScreenViewModel = hiltViewModel(),
     openAndPopUp: (String) -> Unit
 ) {
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    if (uiState.loadingState) {
-        LoadingAnimationDialog { viewModel.onLoadingStateChange(false) }
+    if (uiState.loadingState is LoadingState.Loading) {
+        LoadingAnimationDialog { viewModel.onLoadingStateChange(LoadingState.Idle) }
     }
     val keyboardController = LocalSoftwareKeyboardController.current
     if (uiState.verificationState) {
@@ -104,7 +104,7 @@ fun RegisterScreenProvider(
         launcher.launch(intent)
     }
 
-    OneTapSignUp(
+    OneTapSignInUp(
         oneTapSignUpResponse = uiState.oneTapSignUpResponse,
         launch = {
             launch(it)

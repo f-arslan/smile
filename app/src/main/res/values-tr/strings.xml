@@ -84,7 +84,7 @@
 
     <!-- İletişim Ekranı -->
     <string name="new_conversation">Yeni Konuşma</string>
-    <string name="type_name_phone_number">Bir isim veya telefon numarası yazın</string>
+    <string name="type_name">Bir isim yazın</string>
     <string name="to">Kime</string>
     <string name="dial_pad">Tuş Takımı</string>
     <string name="keyboard">Klavye</string>
