@@ -19,9 +19,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -38,12 +35,11 @@ import com.smile.common.composables.DefaultButton
 import com.smile.common.composables.DefaultTextField
 import com.smile.common.composables.ExtFloActionButton
 import com.smile.common.composables.FormWrapper
-import com.smile.common.composables.FunctionalityNotAvailablePopup
 import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.LoginHeader
-import com.smile.common.composables.OneTapSignIn
+import com.smile.common.composables.OneTapSignUp
 import com.smile.common.composables.PasswordTextField
-import com.smile.common.composables.SignInWithGoogle
+import com.smile.common.composables.SignInUpWithGoogle
 import com.smile.ui.screens.DayHeader
 import com.smile.ui.screens.graph.SmileRoutes.FORGOT_PASSWORD_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
@@ -64,13 +60,8 @@ fun LoginScreenProvider(
     LaunchedEffect(Unit) { viewModel.checkEmailVerification() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val keyboardController = LocalSoftwareKeyboardController.current
-    val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
-    if (loadingState) {
+    if (uiState.loadingState) {
         LoadingAnimationDialog { viewModel.onLoadingStateChange(false) }
-    }
-    var notFunctionalState by remember { mutableStateOf(false) }
-    if (notFunctionalState) {
-        FunctionalityNotAvailablePopup { notFunctionalState = false }
     }
     Surface {
         LoginScreen(
@@ -106,9 +97,11 @@ fun LoginScreenProvider(
         launcher.launch(intent)
     }
 
-    OneTapSignIn(launch = { launch(it) })
+    OneTapSignUp(uiState.oneTapSignInResponse, launch = { launch(it) })
 
-    SignInWithGoogle(navigateToHomeScreen = { signedIn -> if (signedIn) openAndPopUp(HOME_SCREEN) })
+    SignInUpWithGoogle(uiState.signInWithGoogleResponse, navigateToHomeScreen = {
+        openAndPopUp(HOME_SCREEN)
+    })
 }
 
 

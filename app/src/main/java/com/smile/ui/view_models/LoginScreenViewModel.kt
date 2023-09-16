@@ -1,8 +1,5 @@
 package com.smile.ui.view_models
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
@@ -10,8 +7,8 @@ import com.smile.SmileViewModel
 import com.smile.common.ext.isValidEmail
 import com.smile.common.snackbar.SnackbarManager
 import com.smile.model.google.domain.AuthRepository
-import com.smile.model.google.domain.OneTapSignInResponse
-import com.smile.model.google.domain.SignInWithGoogleResponse
+import com.smile.model.google.domain.OneTapSignInUpResponse
+import com.smile.model.google.domain.SignInUpWithGoogleResponse
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
@@ -31,7 +28,10 @@ import com.smile.R.string as AppText
 
 data class LoginUiState(
     val email: String = "",
-    val password: String = ""
+    val password: String = "",
+    val loadingState: Boolean = false,
+    val oneTapSignInResponse: OneTapSignInUpResponse = Success(null),
+    val signInWithGoogleResponse: SignInUpWithGoogleResponse = Success(false)
 )
 
 @HiltViewModel
@@ -47,18 +47,9 @@ class LoginScreenViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LoginUiState("", ""))
     val uiState = _uiState.asStateFlow()
 
-    private val _loadingState = MutableStateFlow(false)
-    val loadingState = _loadingState.asStateFlow()
-
-    val isUserAuthenticated get() = authRepository.isUserAuthenticatedInFirebase
-
-    var oneTapSignInResponse by mutableStateOf<OneTapSignInResponse>(Success(null))
-        private set
-    var signInWithGoogleResponse by mutableStateOf<SignInWithGoogleResponse>(Success(false))
-        private set
 
     fun onLoadingStateChange(loadingState: Boolean) {
-        _loadingState.value = loadingState
+        _uiState.value = _uiState.value.copy(loadingState = loadingState)
     }
 
     fun onEmailChange(newValue: String) {
@@ -110,12 +101,12 @@ class LoginScreenViewModel @Inject constructor(
     }
 
     fun oneTapSignIn() = launchCatching {
-        oneTapSignInResponse = Loading
-        oneTapSignInResponse = authRepository.oneTapSignInWithGoogle()
+        _uiState.value = _uiState.value.copy(oneTapSignInResponse = Loading)
+        _uiState.value = _uiState.value.copy(oneTapSignInResponse = authRepository.oneTapSignInWithGoogle())
     }
 
     fun signInWithGoogle(googleCredential: AuthCredential) = launchCatching {
-        oneTapSignInResponse = Loading
-        signInWithGoogleResponse = authRepository.firebaseSignInWithGoogle(googleCredential)
+        _uiState.value = _uiState.value.copy(signInWithGoogleResponse = Loading)
+        _uiState.value = _uiState.value.copy(signInWithGoogleResponse = authRepository.firebaseSignInWithGoogle(googleCredential))
     }
 }

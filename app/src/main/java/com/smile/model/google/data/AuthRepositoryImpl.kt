@@ -7,8 +7,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.smile.model.PROVIDER
 import com.smile.model.User
 import com.smile.model.google.domain.AuthRepository
-import com.smile.model.google.domain.OneTapSignInResponse
-import com.smile.model.google.domain.SignInWithGoogleResponse
+import com.smile.model.google.domain.OneTapSignInUpResponse
+import com.smile.model.google.domain.SignInUpWithGoogleResponse
 import com.smile.model.service.StorageService
 import com.smile.model.service.module.GoogleResponse.Failure
 import com.smile.model.service.module.GoogleResponse.Success
@@ -31,7 +31,7 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
     override val isUserAuthenticatedInFirebase = auth.currentUser != null
 
-    override suspend fun oneTapSignInWithGoogle(): OneTapSignInResponse {
+    override suspend fun oneTapSignInWithGoogle(): OneTapSignInUpResponse {
         return try {
             val signInResult = oneTapClient.beginSignIn(signInRequest).await()
             Success(signInResult)
@@ -45,7 +45,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun oneTapSignUpWithGoogle(): OneTapSignInResponse {
+    override suspend fun oneTapSignUpWithGoogle(): OneTapSignInUpResponse {
         return try {
             val signUpResult = oneTapClient.beginSignIn(signUpRequest).await()
             Success(signUpResult)
@@ -56,7 +56,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun firebaseSignInWithGoogle(
         googleCredential: AuthCredential
-    ): SignInWithGoogleResponse {
+    ): SignInUpWithGoogleResponse {
         return try {
             val authResult = auth.signInWithCredential(googleCredential).await()
             val isNewUser = authResult.additionalUserInfo?.isNewUser ?: false
@@ -78,6 +78,7 @@ class AuthRepositoryImpl @Inject constructor(
                 userId = uid,
                 displayName = displayName,
                 email = email,
+                isEmailVerified = true,
                 profilePictureUrl = photoUrl.toString(),
                 provider = PROVIDER.GOOGLE
             )

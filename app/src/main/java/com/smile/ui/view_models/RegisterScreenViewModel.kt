@@ -1,9 +1,5 @@
 package com.smile.ui.view_models
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
 import com.smile.SmileViewModel
@@ -13,11 +9,13 @@ import com.smile.common.ext.passwordMatches
 import com.smile.common.snackbar.SnackbarManager
 import com.smile.model.User
 import com.smile.model.google.domain.AuthRepository
-import com.smile.model.google.domain.OneTapSignInResponse
-import com.smile.model.google.domain.SignInWithGoogleResponse
+import com.smile.model.google.domain.OneTapSignInUpResponse
+import com.smile.model.google.domain.SignInUpWithGoogleResponse
 import com.smile.model.service.AccountService
 import com.smile.model.service.LogService
 import com.smile.model.service.StorageService
+import com.smile.model.service.module.GoogleResponse.Loading
+import com.smile.model.service.module.GoogleResponse.Success
 import com.smile.model.service.module.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -26,8 +24,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import com.smile.R.string as AppText
-import com.smile.model.service.module.GoogleResponse.*
-import kotlinx.coroutines.launch
 
 data class RegisterUiState(
     val name: String = "",
@@ -35,7 +31,9 @@ data class RegisterUiState(
     val password: String = "",
     val rePassword: String = "",
     val verificationState: Boolean = false,
-    val loadingState: Boolean = false
+    val loadingState: Boolean = false,
+    val oneTapSignUpResponse: OneTapSignInUpResponse = Success(null),
+    val signUpWithGoogleResponse: SignInUpWithGoogleResponse = Success(false)
 )
 
 @HiltViewModel
@@ -48,13 +46,6 @@ class RegisterScreenViewModel @Inject constructor(
 ) : SmileViewModel(logService) {
     private val _uiState = MutableStateFlow(RegisterUiState())
     val uiState = _uiState.asStateFlow()
-
-    var oneTapSignInResponse by mutableStateOf<OneTapSignInResponse>(Success(null))
-        private set
-
-    private val _signInWithGoogleResponse = MutableStateFlow<SignInWithGoogleResponse>(Success(false))
-    val signInWithGoogleResponse = _signInWithGoogleResponse.asStateFlow()
-
 
     private val email
         get() = uiState.value.email
@@ -136,12 +127,18 @@ class RegisterScreenViewModel @Inject constructor(
     }
 
     fun oneTapSignUp() = launchCatching {
-        oneTapSignInResponse = Loading
-        oneTapSignInResponse = authRepository.oneTapSignUpWithGoogle()
+        _uiState.value = _uiState.value.copy(oneTapSignUpResponse = Loading)
+        _uiState.value =
+            _uiState.value.copy(oneTapSignUpResponse = authRepository.oneTapSignUpWithGoogle())
     }
 
     fun signUpWithGoogle(googleCredential: AuthCredential) = launchCatching {
-        oneTapSignInResponse = Loading
-        _signInWithGoogleResponse.value = authRepository.firebaseSignInWithGoogle(googleCredential)
+        _uiState.value = _uiState.value.copy(signUpWithGoogleResponse = Loading)
+        _uiState.value =
+            _uiState.value.copy(
+                signUpWithGoogleResponse = authRepository.firebaseSignInWithGoogle(
+                    googleCredential
+                )
+            )
     }
 }

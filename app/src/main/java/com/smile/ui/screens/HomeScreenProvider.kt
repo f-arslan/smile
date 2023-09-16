@@ -1,5 +1,6 @@
 package com.smile.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -59,6 +60,7 @@ fun HomeScreenProvider(
     LaunchedEffect(Unit) { viewModel.getData() }
     val contacts by viewModel.contacts.collectAsStateWithLifecycle()
     val user by viewModel.user.collectAsStateWithLifecycle()
+    Log.d("HomeScreenProvider", "contacts: $contacts")
     val searchHistoryQueries by viewModel.searchHistoryQueries.collectAsStateWithLifecycle()
     val searchHistoryContacts by viewModel.searchHistoryContacts.collectAsStateWithLifecycle()
 

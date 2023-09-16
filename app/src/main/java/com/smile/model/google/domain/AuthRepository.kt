@@ -4,15 +4,15 @@ import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.firebase.auth.AuthCredential
 import com.smile.model.service.module.GoogleResponse
 
-typealias OneTapSignInResponse = GoogleResponse<BeginSignInResult>
-typealias SignInWithGoogleResponse = GoogleResponse<Boolean>
+typealias OneTapSignInUpResponse = GoogleResponse<BeginSignInResult>
+typealias SignInUpWithGoogleResponse = GoogleResponse<Boolean>
 
 interface AuthRepository {
     val isUserAuthenticatedInFirebase: Boolean
 
-    suspend fun oneTapSignInWithGoogle(): OneTapSignInResponse
+    suspend fun oneTapSignInWithGoogle(): OneTapSignInUpResponse
 
-    suspend fun oneTapSignUpWithGoogle(): OneTapSignInResponse
+    suspend fun oneTapSignUpWithGoogle(): OneTapSignInUpResponse
 
-    suspend fun firebaseSignInWithGoogle(googleCredential: AuthCredential): SignInWithGoogleResponse
+    suspend fun firebaseSignInWithGoogle(googleCredential: AuthCredential): SignInUpWithGoogleResponse
 }

@@ -1,7 +1,6 @@
 package com.smile.ui.screens
 
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,9 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -39,13 +35,12 @@ import com.smile.common.composables.DefaultButton
 import com.smile.common.composables.DefaultTextField
 import com.smile.common.composables.ExtFloActionButton
 import com.smile.common.composables.FormWrapper
-import com.smile.common.composables.FunctionalityNotAvailablePopup
 import com.smile.common.composables.HyperlinkText
 import com.smile.common.composables.LoadingAnimationDialog
 import com.smile.common.composables.OneTapSignUp
 import com.smile.common.composables.PasswordTextField
 import com.smile.common.composables.RegisterHeader
-import com.smile.common.composables.SignUpWithGoogle
+import com.smile.common.composables.SignInUpWithGoogle
 import com.smile.common.composables.VerificationDialog
 import com.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import com.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
@@ -70,16 +65,11 @@ fun RegisterScreenProvider(
         LoadingAnimationDialog { viewModel.onLoadingStateChange(false) }
     }
     val keyboardController = LocalSoftwareKeyboardController.current
-    val signInWithGoogleResponse by viewModel.signInWithGoogleResponse.collectAsStateWithLifecycle()
     if (uiState.verificationState) {
         VerificationDialog {
             viewModel.onVerificationStateChange(false)
             openAndPopUp(LOGIN_SCREEN)
         }
-    }
-    var notFunctionalState by remember { mutableStateOf(false) }
-    if (notFunctionalState) {
-        FunctionalityNotAvailablePopup { notFunctionalState = false }
     }
     RegisterScreen(
         uiState = uiState,
@@ -94,19 +84,20 @@ fun RegisterScreenProvider(
         onGoogleClick = { viewModel.oneTapSignUp() },
         onAlreadyHaveAccountClick = { openAndPopUp(LOGIN_SCREEN) }
     )
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            try {
-                Log.d("TAG", "RegisterScreenProvider: ${result.data}")
-                val credentials = viewModel.oneTapClient.getSignInCredentialFromIntent(result.data)
-                val googleIdToken = credentials.googleIdToken
-                val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
-                viewModel.signUpWithGoogle(googleCredentials)
-            } catch (it: ApiException) {
-                print(it)
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                try {
+                    val credentials =
+                        viewModel.oneTapClient.getSignInCredentialFromIntent(result.data)
+                    val googleIdToken = credentials.googleIdToken
+                    val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
+                    viewModel.signUpWithGoogle(googleCredentials)
+                } catch (it: ApiException) {
+                    print(it)
+                }
             }
         }
-    }
 
     fun launch(signInResult: BeginSignInResult) {
         val intent = IntentSenderRequest.Builder(signInResult.pendingIntent.intentSender).build()
@@ -114,13 +105,14 @@ fun RegisterScreenProvider(
     }
 
     OneTapSignUp(
+        oneTapSignUpResponse = uiState.oneTapSignUpResponse,
         launch = {
             launch(it)
         }
     )
 
-    SignUpWithGoogle(
-        signInWithGoogleResponse = signInWithGoogleResponse,
+    SignInUpWithGoogle(
+        signUpWithGoogleResponse = uiState.signUpWithGoogleResponse,
         navigateToHomeScreen = { signedIn ->
             if (signedIn) {
                 openAndPopUp(HOME_SCREEN)
