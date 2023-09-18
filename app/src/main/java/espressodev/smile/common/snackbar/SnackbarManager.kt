@@ -22,7 +22,6 @@ object SnackbarManager {
         messages.value = message
     }
 
-    // Clean after showing the message
     fun clean() {
         messages.value = null
     }

@@ -10,7 +10,6 @@ typealias SignInResponse = Response<Boolean>
 typealias ReloadUserResponse = Response<Boolean>
 typealias SendPasswordResetEmailResponse = Response<Boolean>
 typealias RevokeAccessResponse = Response<Boolean>
-typealias AuthStateResponse = StateFlow<Boolean>
 typealias UpdatePasswordResponse = Response<Boolean>
 
 interface AccountService {
@@ -32,6 +31,4 @@ interface AccountService {
     fun signOut()
 
     suspend fun revokeAccess(): RevokeAccessResponse
-
-    fun getAuthState(viewModelScope: CoroutineScope): AuthStateResponse
 }

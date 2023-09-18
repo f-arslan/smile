@@ -2,7 +2,6 @@ package espressodev.smile.model.service.impl
 
 import com.google.firebase.auth.FirebaseAuth
 import espressodev.smile.model.service.AccountService
-import espressodev.smile.model.service.AuthStateResponse
 import espressodev.smile.model.service.ReloadUserResponse
 import espressodev.smile.model.service.RevokeAccessResponse
 import espressodev.smile.model.service.SendEmailVerificationResponse
@@ -11,12 +10,6 @@ import espressodev.smile.model.service.SignInResponse
 import espressodev.smile.model.service.SignUpResponse
 import espressodev.smile.model.service.UpdatePasswordResponse
 import espressodev.smile.model.service.module.Response
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -102,13 +95,4 @@ class AccountServiceImpl @Inject constructor(
             Response.Failure(e)
         }
     }
-
-    override fun getAuthState(viewModelScope: CoroutineScope): AuthStateResponse = callbackFlow {
-        val listener = FirebaseAuth.AuthStateListener { auth ->
-            this.trySend(auth.currentUser != null)
-        }
-        auth.addAuthStateListener(listener)
-        awaitClose { auth.removeAuthStateListener(listener) }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
-
 }

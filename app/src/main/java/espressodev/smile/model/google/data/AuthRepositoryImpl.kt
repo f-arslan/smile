@@ -29,8 +29,6 @@ class AuthRepositoryImpl @Inject constructor(
     private var signUpRequest: BeginSignInRequest,
     private val storageService: StorageService,
 ) : AuthRepository {
-    override val isUserAuthenticatedInFirebase = auth.currentUser != null
-
     override suspend fun oneTapSignInWithGoogle(): OneTapSignInUpResponse {
         return try {
             val signInResult = oneTapClient.beginSignIn(signInRequest).await()

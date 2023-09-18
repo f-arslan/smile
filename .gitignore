@@ -20,7 +20,7 @@
 *.rar
 local.properties
 app/google-services.json
-app/src/main/java/com/smile/util/Secrets.kt
+app/src/main/java/espressodev/smile/util/Secrets.kt
 .gradle/
 app/release
 

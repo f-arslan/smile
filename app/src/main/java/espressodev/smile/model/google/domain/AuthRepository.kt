@@ -8,7 +8,6 @@ typealias OneTapSignInUpResponse = GoogleResponse<BeginSignInResult>
 typealias SignInUpWithGoogleResponse = GoogleResponse<Boolean>
 
 interface AuthRepository {
-    val isUserAuthenticatedInFirebase: Boolean
 
     suspend fun oneTapSignInWithGoogle(): OneTapSignInUpResponse
 
