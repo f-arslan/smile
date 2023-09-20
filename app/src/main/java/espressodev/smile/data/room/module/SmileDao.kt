@@ -16,9 +16,6 @@ interface SmileDao {
     @Query("SELECT * FROM contacts WHERE contactId = :contactId")
     fun getContact(contactId: String): Flow<ContactEntity>
 
-    @Query("Update contacts SET lastMessage = :lastMessage, lastMessageTimeStamp = :lastMessageTimeStamp WHERE contactId = :contactId")
-    suspend fun updateContactLastMessage(contactId: String, lastMessage: String, lastMessageTimeStamp: Long)
-
     @Insert
     suspend fun insertSearchHistoryQuery(searchHistory: SearchHistoryQueryEntity)
 

@@ -8,19 +8,19 @@ import com.google.firebase.firestore.ktx.dataObjects
 import com.google.firebase.firestore.ktx.snapshots
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
-import espressodev.smile.data.Contact
-import espressodev.smile.data.Message
-import espressodev.smile.data.Room
-import espressodev.smile.data.User
-import espressodev.smile.data.notification.models.NotificationData
-import espressodev.smile.data.notification.models.PushNotification
-import espressodev.smile.data.notification.models.RetrofitObject
+import espressodev.smile.data.service.model.Contact
+import espressodev.smile.data.service.model.Message
+import espressodev.smile.data.service.model.Room
+import espressodev.smile.data.service.model.User
+import espressodev.smile.data.notification.model.NotificationData
+import espressodev.smile.data.notification.model.PushNotification
+import espressodev.smile.data.notification.module.RetrofitObject
 import espressodev.smile.data.room.ContactEntity
 import espressodev.smile.data.room.RoomStorageService
 import espressodev.smile.data.service.AccountService
 import espressodev.smile.data.service.StorageService
-import espressodev.smile.data.service.module.Response
-import espressodev.smile.util.getCurrentTimestamp
+import espressodev.smile.data.service.model.Response
+import espressodev.smile.domain.util.getCurrentTimestamp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -59,7 +59,7 @@ class StorageServiceImpl @Inject constructor(
         scope: CoroutineScope,
         firstContact: Contact,
         secondContact: Contact
-    )  {
+    ) {
         val firstContactId = firstContact.userId + "_" + firstContact.friendId
         val secondContactId = secondContact.userId + "_" + secondContact.friendId
         scope.launch(Dispatchers.IO) {
@@ -67,8 +67,10 @@ class StorageServiceImpl @Inject constructor(
             val user2Task = async { getUserDocRef(secondContact.userId) }
             val user1Doc = user1Task.await()
             val user2Doc = user2Task.await()
-            val user1 = user1Doc.get().await().toObject<User>() ?: throw Exception("User not found".withTag())
-            val user2 = user2Doc.get().await().toObject<User>() ?: throw Exception("User not found".withTag())
+            val user1 = user1Doc.get().await().toObject<User>()
+                ?: throw Exception("User not found".withTag())
+            val user2 = user2Doc.get().await().toObject<User>()
+                ?: throw Exception("User not found".withTag())
             val batch = firestore.batch()
             var roomId = ""
             if (!user1.contactIds.contains(firstContactId) && !user2.contactIds.contains(
@@ -164,7 +166,6 @@ class StorageServiceImpl @Inject constructor(
             .mapNotNull { it }
 
     override suspend fun sendMessage(
-        scope: CoroutineScope,
         message: Message,
         roomId: String,
         contactId: String
@@ -173,13 +174,6 @@ class StorageServiceImpl @Inject constructor(
         val messageRef = roomColRef.document(roomId).collection(MESSAGE_COLLECTION).document()
         batch.set(messageRef, message)
         batch.update(roomColRef.document(roomId), CONTACT_LAST_MESSAGE, message)
-        scope.launch(Dispatchers.IO) {
-            roomStorageService.updateContactLastMessage(
-                contactId,
-                message.content,
-                message.timestamp
-            )
-        }
         batch.commit().await()
         sendPushNotification(message, contactId, roomId)
     }
@@ -214,26 +208,9 @@ class StorageServiceImpl @Inject constructor(
     }
 
     override suspend fun getMessages(
-        scope: CoroutineScope,
         roomId: String,
         contactId: String
     ): Flow<List<Message>> {
-        roomColRef.document(roomId).addSnapshotListener { value, error ->
-            if (error != null) {
-                Log.e("StorageServiceImpl", "Error while listening to room collection", error)
-                return@addSnapshotListener
-            }
-            value ?: throw Exception("Room not found")
-            val room = value.toObject<Room>() ?: throw Exception("Room not found")
-            scope.launch(Dispatchers.IO) {
-                roomStorageService.updateContactLastMessage(
-                    contactId,
-                    room.lastMessage.content,
-                    room.lastMessage.timestamp
-                )
-            }
-        }
-
         return roomColRef.document(roomId).collection(
             MESSAGE_COLLECTION
         ).orderBy(MESSAGE_TIMESTAMP, Query.Direction.DESCENDING).snapshots().map {

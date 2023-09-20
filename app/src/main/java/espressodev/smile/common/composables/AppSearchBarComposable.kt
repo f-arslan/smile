@@ -30,13 +30,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import espressodev.smile.data.User
+import espressodev.smile.data.service.model.User
 import espressodev.smile.data.room.ContactEntity
 import espressodev.smile.data.room.SearchHistoryQueryEntity
-import espressodev.smile.data.service.module.Response
-import espressodev.smile.util.Constants.HIGH_PADDING
-import espressodev.smile.util.Constants.MEDIUM_PADDING
-import espressodev.smile.util.Constants.NO_PADDING
+import espressodev.smile.data.service.model.Response
+import espressodev.smile.domain.util.Constants.HIGH_PADDING
+import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
+import espressodev.smile.domain.util.Constants.NO_PADDING
 import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 

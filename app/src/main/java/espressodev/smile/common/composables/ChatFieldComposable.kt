@@ -38,10 +38,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import espressodev.smile.util.Constants.MEDIUM_PADDING
-import espressodev.smile.util.Constants.NO_PADDING
-import espressodev.smile.util.Constants.SMALL_PADDING
-import espressodev.smile.util.Constants.VERY_HIGH_PADDING
+import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
+import espressodev.smile.domain.util.Constants.NO_PADDING
+import espressodev.smile.domain.util.Constants.SMALL_PADDING
+import espressodev.smile.domain.util.Constants.VERY_HIGH_PADDING
 import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 

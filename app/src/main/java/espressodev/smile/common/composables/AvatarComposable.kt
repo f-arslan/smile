@@ -30,11 +30,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import espressodev.smile.util.Constants.AVATAR_SIZE
-import espressodev.smile.util.Constants.COUNT_BUBBLE_SIZE
-import espressodev.smile.util.Constants.ICON_SIZE
-import espressodev.smile.util.Constants.SMALL_MEDIUM_PADDING
-import espressodev.smile.util.Constants.VERY_SMALL_PADDING
+import espressodev.smile.domain.util.Constants.AVATAR_SIZE
+import espressodev.smile.domain.util.Constants.COUNT_BUBBLE_SIZE
+import espressodev.smile.domain.util.Constants.ICON_SIZE
+import espressodev.smile.domain.util.Constants.SMALL_MEDIUM_PADDING
+import espressodev.smile.domain.util.Constants.VERY_SMALL_PADDING
 import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 

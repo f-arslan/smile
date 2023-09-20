@@ -1,6 +1,6 @@
 package espressodev.smile.data.google
 
-import espressodev.smile.data.service.module.GoogleResponse
+import espressodev.smile.data.service.model.GoogleResponse
 
 typealias SignOutResponse = GoogleResponse<Boolean>
 typealias RevokeAccessResponse = GoogleResponse<Boolean>

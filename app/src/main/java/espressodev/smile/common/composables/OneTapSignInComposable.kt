@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import espressodev.smile.data.google.OneTapSignInUpResponse
 import espressodev.smile.data.google.SignInUpWithGoogleResponse
-import espressodev.smile.data.service.module.GoogleResponse.Failure
-import espressodev.smile.data.service.module.GoogleResponse.Loading
-import espressodev.smile.data.service.module.GoogleResponse.Success
+import espressodev.smile.data.service.model.GoogleResponse.Failure
+import espressodev.smile.data.service.model.GoogleResponse.Loading
+import espressodev.smile.data.service.model.GoogleResponse.Success
 
 
 @Composable

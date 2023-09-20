@@ -2,7 +2,7 @@ package espressodev.smile.data.google
 
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.firebase.auth.AuthCredential
-import espressodev.smile.data.service.module.GoogleResponse
+import espressodev.smile.data.service.model.GoogleResponse
 
 typealias OneTapSignInUpResponse = GoogleResponse<BeginSignInResult>
 typealias SignInUpWithGoogleResponse = GoogleResponse<Boolean>

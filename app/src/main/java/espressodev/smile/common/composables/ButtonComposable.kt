@@ -29,10 +29,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import espressodev.smile.util.Constants
-import espressodev.smile.util.Constants.BUTTON_SIZE
-import espressodev.smile.util.Constants.HIGH_PADDING
-import espressodev.smile.util.Constants.MEDIUM_PADDING
+import espressodev.smile.domain.util.Constants
+import espressodev.smile.domain.util.Constants.BUTTON_SIZE
+import espressodev.smile.domain.util.Constants.HIGH_PADDING
+import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 

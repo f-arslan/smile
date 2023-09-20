@@ -7,13 +7,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import espressodev.smile.SmileAppState
-import espressodev.smile.ui.screens.ChatScreenProvider
-import espressodev.smile.ui.screens.ContactScreenProvider
-import espressodev.smile.ui.screens.HomeScreenProvider
-import espressodev.smile.ui.screens.NewContactScreenProvider
-import espressodev.smile.ui.screens.OnboardingScreenProvider
-import espressodev.smile.ui.screens.RegisterScreenProvider
-import espressodev.smile.ui.screens.SplashScreenProvider
+import espressodev.smile.ui.screens.chat_screen.ChatScreenProvider
+import espressodev.smile.ui.screens.contact_screen.ContactScreenProvider
+import espressodev.smile.ui.screens.home_screen.HomeScreenProvider
+import espressodev.smile.ui.screens.new_contact_screen.NewContactScreenProvider
+import espressodev.smile.ui.screens.onboarding_screen.OnboardingScreenProvider
+import espressodev.smile.ui.screens.register_screen.RegisterScreenProvider
+import espressodev.smile.ui.screens.splash_screen.SplashScreenProvider
 import espressodev.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.CHAT_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
@@ -30,15 +30,15 @@ import espressodev.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.SPLASH_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.VERIFY_PASSWORD_SCREEN
-import espressodev.smile.ui.screens.login_screen.ForgotPasswordScreenProvider
+import espressodev.smile.ui.screens.login_screen.forgot_password_screen.ForgotPasswordScreenProvider
 import espressodev.smile.ui.screens.login_screen.LoginScreenProvider
-import espressodev.smile.ui.screens.profile_screen.ChangePasswordScreenProvider
-import espressodev.smile.ui.screens.profile_screen.DeleteProfileScreenProvider
+import espressodev.smile.ui.screens.profile_screen.change_password_screen.ChangePasswordScreenProvider
+import espressodev.smile.ui.screens.profile_screen.delete_profile_screen.DeleteProfileScreenProvider
 import espressodev.smile.ui.screens.profile_screen.LearnMoreScreen
-import espressodev.smile.ui.screens.profile_screen.NameEditScreenProvider
-import espressodev.smile.ui.screens.profile_screen.NotificationScreenProvider
+import espressodev.smile.ui.screens.profile_screen.name_edit_screen.NameEditScreenProvider
+import espressodev.smile.ui.screens.profile_screen.notification_screen.NotificationScreenProvider
 import espressodev.smile.ui.screens.profile_screen.ProfileScreenProvider
-import espressodev.smile.ui.screens.profile_screen.VerifyPasswordScreenProvider
+import espressodev.smile.ui.screens.profile_screen.verify_password_screen.VerifyPasswordScreenProvider
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun NavGraphBuilder.appGraph(appState: SmileAppState) {

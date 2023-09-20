@@ -2,7 +2,7 @@ package espressodev.smile.data.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import espressodev.smile.util.Constants.DB_TABLE_CONTACT
+import espressodev.smile.domain.util.Constants.DB_TABLE_CONTACT
 
 
 @Entity(tableName = DB_TABLE_CONTACT)

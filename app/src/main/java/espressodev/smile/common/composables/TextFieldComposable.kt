@@ -30,7 +30,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import espressodev.smile.util.Constants.MEDIUM_PADDING
+import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 

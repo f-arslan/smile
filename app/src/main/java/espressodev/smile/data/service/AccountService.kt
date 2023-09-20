@@ -1,6 +1,6 @@
 package espressodev.smile.data.service
 
-import espressodev.smile.data.service.module.Response
+import espressodev.smile.data.service.model.Response
 
 typealias SignUpResponse = Response<Boolean>
 typealias SendEmailVerificationResponse = Response<Boolean>

@@ -1,11 +1,11 @@
 package espressodev.smile.data.service
 
-import espressodev.smile.data.Contact
-import espressodev.smile.data.Message
-import espressodev.smile.data.Room
-import espressodev.smile.data.User
+import espressodev.smile.data.service.model.Contact
+import espressodev.smile.data.service.model.Message
+import espressodev.smile.data.service.model.Room
+import espressodev.smile.data.service.model.User
 import espressodev.smile.data.room.ContactEntity
-import espressodev.smile.data.service.module.Response
+import espressodev.smile.data.service.model.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
@@ -27,14 +27,12 @@ interface StorageService {
     suspend fun getContact(contactId: String): Flow<Contact>
 
     suspend fun sendMessage(
-        scope: CoroutineScope,
         message: Message,
         roomId: String,
         contactId: String
     )
 
     suspend fun getMessages(
-        scope: CoroutineScope,
         roomId: String,
         contactId: String
     ): Flow<List<Message>>

@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.ui.Modifier
-import espressodev.smile.util.Constants.HIGH_PADDING
-import espressodev.smile.util.Constants.MEDIUM_PADDING
-import espressodev.smile.util.Constants.NO_PADDING
+import espressodev.smile.domain.util.Constants.HIGH_PADDING
+import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
+import espressodev.smile.domain.util.Constants.NO_PADDING
 
 fun Modifier.textButton(): Modifier {
     return this.fillMaxWidth().padding(HIGH_PADDING, MEDIUM_PADDING, HIGH_PADDING, NO_PADDING)

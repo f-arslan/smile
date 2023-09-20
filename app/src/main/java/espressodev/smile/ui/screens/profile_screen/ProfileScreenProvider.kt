@@ -34,19 +34,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import espressodev.smile.common.composables.IconCircle
 import espressodev.smile.common.composables.LetterInCircle
 import espressodev.smile.common.composables.NavigationTopAppBar
-import espressodev.smile.data.User
-import espressodev.smile.data.datastore.DataStoreRepository.Companion.ENABLED
-import espressodev.smile.data.service.module.Response
+import espressodev.smile.data.service.model.User
+import espressodev.smile.data.datastore.DataStoreService.Companion.ENABLED
+import espressodev.smile.data.service.model.Response
 import espressodev.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.DELETE_PROFILE_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.LEARN_MORE_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.NAME_EDIT_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.NOTIFICATION_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.VERIFY_PASSWORD_SCREEN
-import espressodev.smile.ui.view_models.profile_screen_vm.ProfileScreenViewModel
-import espressodev.smile.util.Constants.AVATAR_SIZE
-import espressodev.smile.util.Constants.HIGH_PADDING
-import espressodev.smile.util.Constants.MEDIUM_PADDING
+import espressodev.smile.domain.util.Constants.AVATAR_SIZE
+import espressodev.smile.domain.util.Constants.HIGH_PADDING
+import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 

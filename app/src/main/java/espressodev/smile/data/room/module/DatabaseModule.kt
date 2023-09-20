@@ -2,7 +2,7 @@ package espressodev.smile.data.room.module
 
 import android.content.Context
 import androidx.room.Room
-import espressodev.smile.util.Constants.DB_NAME
+import espressodev.smile.domain.util.Constants.DB_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

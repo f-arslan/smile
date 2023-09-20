@@ -9,11 +9,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
-import espressodev.smile.data.google.impl.AuthRepositoryImpl
-import espressodev.smile.data.google.impl.ProfileRepositoryImpl
+import espressodev.smile.data.google.impl.GoogleAuthServiceImpl
+import espressodev.smile.data.google.impl.GoogleProfileServiceImpl
 import espressodev.smile.data.service.StorageService
-import espressodev.smile.util.Constants.SIGN_IN_REQUEST
-import espressodev.smile.util.Constants.SIGN_UP_REQUEST
+import espressodev.smile.domain.util.Constants.SIGN_IN_REQUEST
+import espressodev.smile.domain.util.Constants.SIGN_UP_REQUEST
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -77,7 +77,7 @@ class GoogleModule {
         @Named(SIGN_UP_REQUEST)
         signUpRequest: BeginSignInRequest,
         storageService: StorageService,
-    ): GoogleAuthService = AuthRepositoryImpl(
+    ): GoogleAuthService = GoogleAuthServiceImpl(
         auth = auth,
         oneTapClient = oneTapClient,
         signInRequest = signInRequest,
@@ -91,7 +91,7 @@ class GoogleModule {
         oneTapClient: SignInClient,
         signInClient: GoogleSignInClient,
         storageService: StorageService
-    ): GoogleProfileService = ProfileRepositoryImpl(
+    ): GoogleProfileService = GoogleProfileServiceImpl(
         auth = auth,
         oneTapClient = oneTapClient,
         signInClient = signInClient,

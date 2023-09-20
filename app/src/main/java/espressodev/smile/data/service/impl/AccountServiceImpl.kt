@@ -9,7 +9,7 @@ import espressodev.smile.data.service.SendPasswordResetEmailResponse
 import espressodev.smile.data.service.SignInResponse
 import espressodev.smile.data.service.SignUpResponse
 import espressodev.smile.data.service.UpdatePasswordResponse
-import espressodev.smile.data.service.module.Response
+import espressodev.smile.data.service.model.Response
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 

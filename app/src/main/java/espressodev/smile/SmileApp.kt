@@ -25,7 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import espressodev.smile.common.snackbar.SnackbarManager
 import espressodev.smile.ui.screens.graph.SmileRoutes.SPLASH_SCREEN
 import espressodev.smile.ui.screens.graph.appGraph
-import espressodev.smile.util.Constants.MEDIUM_PADDING
+import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import kotlinx.coroutines.CoroutineScope
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)

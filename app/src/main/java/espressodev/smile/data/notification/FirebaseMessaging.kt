@@ -14,8 +14,8 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import espressodev.smile.MainActivity
 import espressodev.smile.data.service.StorageService
-import espressodev.smile.util.Constants.CHANNEL_ID
-import espressodev.smile.util.Constants.CHANNEL_NAME
+import espressodev.smile.domain.util.Constants.CHANNEL_ID
+import espressodev.smile.domain.util.Constants.CHANNEL_NAME
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

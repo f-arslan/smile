@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.Popup
 import espressodev.smile.common.animations.ThreeDotAnimation
-import espressodev.smile.util.Constants.MEDIUM_PADDING
+import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import kotlinx.coroutines.delay
 import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText

@@ -13,8 +13,6 @@ class RoomStorageService @Inject constructor(
 
     fun getContact(contactId: String) = smileDao.getContact(contactId)
 
-    suspend fun updateContactLastMessage(contactId: String, lastMessage: String, lastMessageTimeStamp: Long) =
-        smileDao.updateContactLastMessage(contactId, lastMessage, lastMessageTimeStamp)
 
     suspend fun insertSearchHistoryQuery(searchHistoryQuery: SearchHistoryQueryEntity) =
         smileDao.insertSearchHistoryQuery(searchHistoryQuery)

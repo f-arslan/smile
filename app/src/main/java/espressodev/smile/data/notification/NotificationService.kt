@@ -1,7 +1,7 @@
 package espressodev.smile.data.notification
 
-import espressodev.smile.data.notification.models.PushNotification
-import espressodev.smile.util.Constants.CONTENT_TYPE
+import espressodev.smile.data.notification.model.PushNotification
+import espressodev.smile.domain.util.Constants.CONTENT_TYPE
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
