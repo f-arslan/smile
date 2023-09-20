@@ -101,14 +101,13 @@ fun ContactTopAppBar(contactName: String, popUp: () -> Unit, onMoreClick: () -> 
 
 @Composable
 fun ContactTopAppBar(
-    textFieldValue: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
+    query: String,
+    onValueChange: (String) -> Unit,
     popUp: () -> Unit,
-    onKeyboardClick: () -> Unit
 ) {
     Column {
         NavigationTopAppBar(title = AppText.new_conversation, popUp)
-        ContactTextField(textFieldValue, onValueChange, onKeyboardClick = onKeyboardClick)
+        ContactTextField(query, onValueChange)
         Divider()
     }
 }

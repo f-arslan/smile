@@ -1,17 +1,14 @@
 package espressodev.smile.ui.screens.contact_screen
 
-import android.util.Log
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
-import espressodev.smile.data.room.ContactEntity
+import espressodev.smile.common.ext.groupByLetter
 import espressodev.smile.data.service.LogService
 import espressodev.smile.data.service.StorageService
-import espressodev.smile.domain.util.turnListToGroupByLetter
+import espressodev.smile.data.service.model.Contact
+import espressodev.smile.data.service.model.Response
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -20,22 +17,45 @@ class ContactScreenViewModel @Inject constructor(
     private val storageService: StorageService,
     logService: LogService
 ) : SmileViewModel(logService) {
-    private val _textFieldValue = MutableStateFlow(TextFieldValue(""))
-    val textFieldValue = _textFieldValue.asStateFlow()
+    private val _query = MutableStateFlow("")
+    val query = _query.asStateFlow()
 
-    private val _contacts = MutableStateFlow<List<List<ContactEntity>>>(emptyList())
-    val contacts = _contacts.asStateFlow()
+    private val _contacts = MutableStateFlow<Response<List<Contact>>>(Response.Loading)
 
-    fun getContacts() {
-        viewModelScope.launch {
-            storageService.getContacts(viewModelScope) {
-                Log.d("ContactScreenViewModel", "getContacts: $it")
-                _contacts.value = turnListToGroupByLetter(it).reversed()
-            }
+    private val _allContacts =
+        MutableStateFlow<Response<List<Pair<String, List<Contact>>>>>(Response.Loading)
+    val allContacts = _allContacts.asStateFlow()
+
+    fun onQueryChange(query: String) {
+        if (query != _query.value) {
+            _query.value = query
+            filterContacts()
         }
     }
 
-    fun onTextFieldValueChange(textFieldValue: TextFieldValue) {
-        _textFieldValue.value = textFieldValue
+    fun getContacts() = launchCatching {
+        storageService.getContacts().collect {
+            val groupedContacts = it.groupByLetter()
+            _contacts.value = Response.Success(it)
+            _allContacts.value = Response.Success(groupedContacts)
+        }
+    }
+
+    private fun filterContacts() {
+        if (_contacts.value is Response.Success) {
+            val allContactsData = (_contacts.value as Response.Success<List<Contact>>).data
+            val filteredContacts = if (query.value.isNotEmpty()) {
+                allContactsData.filter {
+                    it.firstName.contains(query.value, true) || it.lastName.contains(
+                        query.value,
+                        true
+                    )
+                }
+            } else {
+                allContactsData
+            }
+            val groupedContacts = filteredContacts.groupByLetter()
+            _allContacts.value = Response.Success(groupedContacts)
+        }
     }
 }

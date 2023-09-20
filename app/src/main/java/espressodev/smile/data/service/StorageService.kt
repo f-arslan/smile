@@ -19,10 +19,7 @@ interface StorageService {
 
     suspend fun findIdByEmail(email: String): Response<String>
 
-    suspend fun getContacts(
-        scope: CoroutineScope,
-        onDataChange: (List<ContactEntity>) -> Unit
-    )
+    suspend fun getContacts(): Flow<List<Contact>>
 
     suspend fun getContact(contactId: String): Flow<Contact>
 

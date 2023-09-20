@@ -1,5 +1,6 @@
 package espressodev.smile.ui.screens.contact_screen
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,18 +21,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import espressodev.smile.common.composables.ContactTopAppBar
 import espressodev.smile.common.composables.LetterInCircle
 import espressodev.smile.common.composables.NewContactButton
-import espressodev.smile.data.room.ContactEntity
+import espressodev.smile.data.service.model.Contact
+import espressodev.smile.data.service.model.Response
 import espressodev.smile.domain.util.Constants.AVATAR_SIZE
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
 import espressodev.smile.domain.util.Constants.HIGH_PLUS_PADDING
@@ -48,60 +47,56 @@ fun ContactScreenProvider(
     LaunchedEffect(Unit) {
         viewModel.getContacts()
     }
-    val textFieldValue by viewModel.textFieldValue.collectAsStateWithLifecycle()
-    val groupedContacts by viewModel.contacts.collectAsStateWithLifecycle()
+    val query by viewModel.query.collectAsStateWithLifecycle()
+    val groupedContacts by viewModel.allContacts.collectAsStateWithLifecycle()
+    Log.d("ContactScreenProvider", "groupedContacts: $groupedContacts")
     ContactScreen(
-        textFieldValue,
+        query,
         groupedContacts,
-        viewModel::onTextFieldValueChange,
+        viewModel::onQueryChange,
         popUp,
         navigateNewContact,
         navigateChatScreen = navigateChatScreen
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ContactScreen(
-    textFieldValue: TextFieldValue,
-    groupContacts: List<List<ContactEntity>>,
-    onValueChange: (TextFieldValue) -> Unit,
+    query: String,
+    groupContacts: Response<List<Pair<String, List<Contact>>>>,
+    onValueChange: (String) -> Unit,
     popUp: () -> Unit,
     navigateNewContact: () -> Unit,
     navigateChatScreen: (String, String) -> Unit
 ) {
-    val keyboard = LocalSoftwareKeyboardController.current
     Scaffold(
-        topBar = {
-            ContactTopAppBar(
-                textFieldValue,
-                onValueChange,
-                popUp,
-                onKeyboardClick = { keyboard?.show() })
-        },
+        topBar = { ContactTopAppBar(query, onValueChange, popUp) },
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             NewContactButton(navigateNewContact)
-            LazyColumn {
-                groupContacts.forEach {
-                    item { Letter(it[0].firstName.first()) }
-                    contactListWithLetter(
-                        it,
-                        navigateChatScreen
-                    )
-                    item { Spacer(Modifier.height(MEDIUM_PADDING)) }
+            when (groupContacts) {
+                is Response.Success -> {
+                    LazyColumn {
+                        groupContacts.data.forEach {
+                            item { Letter(it.first.first()) }
+                            contactListWithLetter(it.second, navigateChatScreen)
+                            item { Spacer(Modifier.height(MEDIUM_PADDING)) }
+                        }
+                    }
                 }
+
+                else -> {}
             }
         }
     }
 }
 
 private fun LazyListScope.contactListWithLetter(
-    contacts: List<ContactEntity>,
+    contacts: List<Contact>,
     onContactClick: (String, String) -> Unit
 ) {
-    items(contacts, key = { it.contactId }) {
-        ContactItem(name = "${it.firstName} ${it.lastName}") {
+    items(contacts) {
+        ContactItem(name = it.toFullName()) {
             onContactClick(it.contactId, it.roomId)
         }
     }
@@ -137,8 +132,8 @@ private fun ContactItem(name: String, onContactClick: () -> Unit) {
 @Preview(showBackground = true)
 private fun ContactPreview() {
     ContactScreen(
-        textFieldValue = TextFieldValue("Hello"),
-        groupContacts = listOf(),
+        query = "dapibus",
+        groupContacts = Response.Success(listOf()),
         onValueChange = {},
         popUp = {},
         navigateNewContact = {},

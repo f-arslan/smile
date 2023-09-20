@@ -1,25 +1,23 @@
 package espressodev.smile.data.service.impl
 
 import android.util.Log
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.dataObjects
 import com.google.firebase.firestore.ktx.snapshots
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
-import espressodev.smile.data.service.model.Contact
-import espressodev.smile.data.service.model.Message
-import espressodev.smile.data.service.model.Room
-import espressodev.smile.data.service.model.User
 import espressodev.smile.data.notification.model.NotificationData
 import espressodev.smile.data.notification.model.PushNotification
 import espressodev.smile.data.notification.module.RetrofitObject
-import espressodev.smile.data.room.ContactEntity
 import espressodev.smile.data.room.RoomStorageService
 import espressodev.smile.data.service.AccountService
 import espressodev.smile.data.service.StorageService
+import espressodev.smile.data.service.model.Contact
+import espressodev.smile.data.service.model.Message
 import espressodev.smile.data.service.model.Response
+import espressodev.smile.data.service.model.Room
+import espressodev.smile.data.service.model.User
 import espressodev.smile.domain.util.getCurrentTimestamp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -134,31 +132,11 @@ class StorageServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getContacts(
-        scope: CoroutineScope,
-        onDataChange: (List<ContactEntity>) -> Unit
-    ) {
-        getUserDocRef(accountService.currentUserId).collection(CONTACT_COLLECTION).snapshots()
-            .map { querySnapshot ->
-                querySnapshot.documentChanges.mapNotNull { documentChange ->
-                    when (documentChange.type) {
-                        DocumentChange.Type.ADDED -> {
-                            documentChange.document.toObject<ContactEntity>()
-                        }
+    override suspend fun getContacts() =
+        getUserDocRef(accountService.currentUserId).collection(CONTACT_COLLECTION).snapshots().map {
+            it.toObjects<Contact>()
+        }
 
-                        DocumentChange.Type.MODIFIED -> {
-                            documentChange.document.toObject<ContactEntity>()
-                        }
-
-                        DocumentChange.Type.REMOVED -> {
-                            documentChange.document.toObject<ContactEntity>()
-                        }
-                    }
-                }
-            }.collect {
-                onDataChange(it)
-            }
-    }
 
     override suspend fun getContact(contactId: String) =
         getContactColUnderUser(accountService.currentUserId).document(contactId)

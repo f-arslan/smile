@@ -14,6 +14,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -41,9 +41,7 @@ fun DefaultTextField(
     onValueChange: (String) -> Unit,
     enabled: Boolean = true,
 ) {
-
-    val shouldShowClearIcon = remember { mutableStateOf(false) }
-
+    val showClearIcon by remember(value) { derivedStateOf { value.isNotEmpty() } }
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = value,
@@ -51,10 +49,9 @@ fun DefaultTextField(
         label = { Text(text = stringResource(id = label)) },
         shape = RoundedCornerShape(MEDIUM_PADDING),
         trailingIcon = {
-            if (shouldShowClearIcon.value) {
+            if (showClearIcon) {
                 IconButton(onClick = {
                     onValueChange("")
-                    shouldShowClearIcon.value = false
                 }) {
                     Icon(
                         painter = painterResource(AppDrawable.outline_cancel_24),
@@ -63,10 +60,7 @@ fun DefaultTextField(
                 }
             }
         },
-        onValueChange = {
-            onValueChange(it)
-            shouldShowClearIcon.value = it.isNotEmpty()
-        }
+        onValueChange = onValueChange
     )
 }
 
@@ -90,7 +84,7 @@ fun PasswordTextField(
         shape = RoundedCornerShape(MEDIUM_PADDING),
         trailingIcon = {
             IconButton(onClick = { isVisible = !isVisible }) {
-                Icon(painter = painterResource(icon), contentDescription = null)
+                Icon(painter = painterResource(icon), contentDescription = stringResource(label))
             }
         },
         keyboardOptions = KeyboardOptions.Default.copy(
@@ -106,35 +100,23 @@ fun PasswordTextField(
 }
 
 @Composable
-fun ContactTextField(textFieldValue: TextFieldValue, onValueChange: (TextFieldValue) -> Unit, onKeyboardClick: () -> Unit) {
+fun ContactTextField(
+    query: String,
+    onValueChange: (String) -> Unit,
+) {
     OutlinedTextField(
-        value = textFieldValue,
-        onValueChange = { onValueChange(it) },
-        modifier = Modifier
-            .fillMaxWidth(),
+        value = query,
+        onValueChange = onValueChange,
+        modifier = Modifier.fillMaxWidth(),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             focusedContainerColor = MaterialTheme.colorScheme.surface,
             unfocusedContainerColor = MaterialTheme.colorScheme.surface
         ),
-        placeholder = {
-            Text(text = stringResource(AppText.type_name))
-        },
+        placeholder = { Text(text = stringResource(AppText.type_name)) },
         leadingIcon = {
-            Text(
-                text = stringResource(AppText.to),
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
-            )
-        },
-        trailingIcon = {
-            IconButton(onClick = onKeyboardClick) {
-                Icon(
-                    painter = painterResource(AppDrawable.outline_keyboard_alt_24),
-                    contentDescription = stringResource(id = AppText.keyboard),
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
+            Icon(painterResource(AppDrawable.person_search_24), stringResource(AppText.search))
         },
         maxLines = 1,
     )
@@ -145,6 +127,6 @@ fun ContactTextField(textFieldValue: TextFieldValue, onValueChange: (TextFieldVa
 @Composable
 fun TextFieldPreview() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        ContactTextField(textFieldValue = TextFieldValue(), onValueChange = {}, {})
+        ContactTextField(query = "HELLO AGAIN", onValueChange = {})
     }
 }

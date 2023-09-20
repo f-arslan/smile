@@ -17,4 +17,6 @@ data class ContactEntity(
     val roomId: String = "",
     val lastMessage: String = "",
     val lastMessageTimeStamp: Long = 0L,
-)
+) {
+    fun getFullName() = "$firstName $lastName"
+}
