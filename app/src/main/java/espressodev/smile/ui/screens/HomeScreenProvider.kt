@@ -35,8 +35,8 @@ import espressodev.smile.common.composables.AppFloActionButton
 import espressodev.smile.common.composables.AppSearchBar
 import espressodev.smile.common.composables.FunctionalityNotAvailablePopup
 import espressodev.smile.common.composables.LetterInCircle
-import espressodev.smile.model.room.ContactEntity
-import espressodev.smile.model.service.module.Response
+import espressodev.smile.data.room.ContactEntity
+import espressodev.smile.data.service.module.Response
 import espressodev.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import espressodev.smile.ui.view_models.HomeScreenViewModel

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import espressodev.smile.common.snackbar.SnackbarManager
 import espressodev.smile.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
-import espressodev.smile.model.service.LogService
+import espressodev.smile.data.service.LogService
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

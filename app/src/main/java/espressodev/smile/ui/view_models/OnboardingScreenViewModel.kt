@@ -2,8 +2,8 @@ package espressodev.smile.ui.view_models
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
-import espressodev.smile.model.datastore.DataStoreRepository
-import espressodev.smile.model.service.LogService
+import espressodev.smile.data.datastore.DataStoreRepository
+import espressodev.smile.data.service.LogService
 import javax.inject.Inject
 
 @HiltViewModel

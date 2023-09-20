@@ -53,10 +53,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import espressodev.smile.common.composables.ChatField
 import espressodev.smile.common.composables.ContactTopAppBar
 import espressodev.smile.common.composables.FunctionalityNotAvailablePopup
-import espressodev.smile.model.Contact
-import espressodev.smile.model.Message
-import espressodev.smile.model.MessageStatus
-import espressodev.smile.model.service.module.Response
+import espressodev.smile.data.Contact
+import espressodev.smile.data.Message
+import espressodev.smile.data.MessageStatus
+import espressodev.smile.data.service.module.Response
 import espressodev.smile.ui.view_models.ChatScreenViewModel
 import espressodev.smile.util.Constants.HIGH_PADDING
 import espressodev.smile.util.Constants.HIGH_PLUS_PADDING

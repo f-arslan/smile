@@ -3,7 +3,7 @@ package espressodev.smile.common.ext
 import android.util.Patterns
 import java.util.regex.Pattern
 
-private const val MIN_PASS_LENGTH = 6
+private const val MIN_PASS_LENGTH = 8
 private const val PASS_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{4,}$"
 private const val NAME_PASS_PATTERN = "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*\$"
 fun String.isValidEmail(): Boolean {
@@ -11,7 +11,7 @@ fun String.isValidEmail(): Boolean {
 }
 
 fun String.isValidName(): Boolean {
-    return this.trim().isNotBlank() && Pattern.compile(NAME_PASS_PATTERN).matcher(this).matches()
+    return this.isNotBlank() && Pattern.compile(NAME_PASS_PATTERN).matcher(this).matches()
 }
 
 fun String.isValidPassword(): Boolean {

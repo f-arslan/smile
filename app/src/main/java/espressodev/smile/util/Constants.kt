@@ -44,4 +44,10 @@ object Constants {
     // Google Sign-in Names
     const val SIGN_IN_REQUEST = "signInRequest"
     const val SIGN_UP_REQUEST = "signUpRequest"
+
+    // NOTIFICATIONS
+    const val CHANNEL_ID = "Firebase ID"
+    const val CHANNEL_NAME = "Firebase Channel"
+    const val BASE_URL = "https://fcm.googleapis.com"
+    const val CONTENT_TYPE  ="application/json"
 }

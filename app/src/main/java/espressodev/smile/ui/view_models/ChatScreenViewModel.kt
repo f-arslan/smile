@@ -1,16 +1,16 @@
 package espressodev.smile.ui.view_models
 
 import androidx.lifecycle.viewModelScope
-import espressodev.smile.model.MessageStatus
+import espressodev.smile.data.MessageStatus
 import espressodev.smile.util.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
-import espressodev.smile.model.Contact
-import espressodev.smile.model.Message
-import espressodev.smile.model.service.AccountService
-import espressodev.smile.model.service.LogService
-import espressodev.smile.model.service.StorageService
-import espressodev.smile.model.service.module.Response
+import espressodev.smile.data.Contact
+import espressodev.smile.data.Message
+import espressodev.smile.data.service.AccountService
+import espressodev.smile.data.service.LogService
+import espressodev.smile.data.service.StorageService
+import espressodev.smile.data.service.module.Response
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

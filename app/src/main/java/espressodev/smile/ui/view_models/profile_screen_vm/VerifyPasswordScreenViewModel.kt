@@ -5,9 +5,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
 import espressodev.smile.common.ext.isValidPassword
 import espressodev.smile.common.snackbar.SnackbarManager
-import espressodev.smile.model.service.AccountService
-import espressodev.smile.model.service.LogService
-import espressodev.smile.model.service.module.Response
+import espressodev.smile.data.service.AccountService
+import espressodev.smile.data.service.LogService
+import espressodev.smile.data.service.module.Response
 import espressodev.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -31,7 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import espressodev.smile.common.composables.ContactTopAppBar
 import espressodev.smile.common.composables.LetterInCircle
 import espressodev.smile.common.composables.NewContactButton
-import espressodev.smile.model.room.ContactEntity
+import espressodev.smile.data.room.ContactEntity
 import espressodev.smile.ui.view_models.ContactScreenViewModel
 import espressodev.smile.util.Constants.AVATAR_SIZE
 import espressodev.smile.util.Constants.HIGH_PADDING

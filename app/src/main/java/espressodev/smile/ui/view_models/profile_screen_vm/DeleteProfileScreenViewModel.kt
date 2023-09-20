@@ -3,10 +3,10 @@ package espressodev.smile.ui.view_models.profile_screen_vm
 import android.content.res.Resources
 import espressodev.smile.SmileViewModel
 import espressodev.smile.common.snackbar.SnackbarManager
-import espressodev.smile.model.datastore.DataStoreRepository
-import espressodev.smile.model.service.AccountService
-import espressodev.smile.model.service.LogService
-import espressodev.smile.model.service.StorageService
+import espressodev.smile.data.datastore.DataStoreRepository
+import espressodev.smile.data.service.AccountService
+import espressodev.smile.data.service.LogService
+import espressodev.smile.data.service.StorageService
 import espressodev.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay

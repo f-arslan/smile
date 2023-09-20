@@ -9,11 +9,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.google.android.gms.auth.api.identity.BeginSignInResult
-import espressodev.smile.model.google.domain.SignInUpWithGoogleResponse
-import espressodev.smile.model.service.module.GoogleResponse.Failure
-import espressodev.smile.model.service.module.GoogleResponse.Loading
-import espressodev.smile.model.service.module.GoogleResponse.Success
-import espressodev.smile.model.google.domain.OneTapSignInUpResponse
+import espressodev.smile.data.google.OneTapSignInUpResponse
+import espressodev.smile.data.google.SignInUpWithGoogleResponse
+import espressodev.smile.data.service.module.GoogleResponse.Failure
+import espressodev.smile.data.service.module.GoogleResponse.Loading
+import espressodev.smile.data.service.module.GoogleResponse.Success
 
 
 @Composable

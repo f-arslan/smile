@@ -34,9 +34,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import espressodev.smile.common.composables.IconCircle
 import espressodev.smile.common.composables.LetterInCircle
 import espressodev.smile.common.composables.NavigationTopAppBar
-import espressodev.smile.model.User
-import espressodev.smile.model.datastore.DataStoreRepository.Companion.ENABLED
-import espressodev.smile.model.service.module.Response
+import espressodev.smile.data.User
+import espressodev.smile.data.datastore.DataStoreRepository.Companion.ENABLED
+import espressodev.smile.data.service.module.Response
 import espressodev.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.DELETE_PROFILE_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.LEARN_MORE_SCREEN

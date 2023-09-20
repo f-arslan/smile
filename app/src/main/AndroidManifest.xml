@@ -35,8 +35,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="web_client_id"
+            android:value="${WEB_CLIENT_ID}" />
+        <meta-data
+            android:name="fcm_server_key"
+            android:value="${FCM_SERVER_KEY}" />
         <service
-            android:name=".model.notification.FirebaseMessaging"
+            android:name=".data.notification.FirebaseMessaging"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

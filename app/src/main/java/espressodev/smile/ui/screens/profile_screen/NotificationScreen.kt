@@ -28,8 +28,8 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import espressodev.smile.common.composables.PermissionPopUp
-import espressodev.smile.model.datastore.DataStoreRepository.Companion.DISABLED
-import espressodev.smile.model.datastore.DataStoreRepository.Companion.ENABLED
+import espressodev.smile.data.datastore.DataStoreRepository.Companion.DISABLED
+import espressodev.smile.data.datastore.DataStoreRepository.Companion.ENABLED
 import espressodev.smile.ui.view_models.profile_screen_vm.NotificationScreenViewModel
 import espressodev.smile.util.Constants.HIGH_PADDING
 import espressodev.smile.util.Constants.VERY_HIGH_PADDING

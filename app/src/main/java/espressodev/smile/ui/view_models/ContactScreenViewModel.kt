@@ -5,9 +5,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
-import espressodev.smile.model.room.ContactEntity
-import espressodev.smile.model.service.LogService
-import espressodev.smile.model.service.StorageService
+import espressodev.smile.data.room.ContactEntity
+import espressodev.smile.data.service.LogService
+import espressodev.smile.data.service.StorageService
 import espressodev.smile.util.turnListToGroupByLetter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

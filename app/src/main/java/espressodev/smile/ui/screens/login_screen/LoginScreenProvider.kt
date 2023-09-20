@@ -40,7 +40,7 @@ import espressodev.smile.common.composables.LoginHeader
 import espressodev.smile.common.composables.OneTapSignInUp
 import espressodev.smile.common.composables.PasswordTextField
 import espressodev.smile.common.composables.SignInUpWithGoogle
-import espressodev.smile.model.service.module.LoadingState
+import espressodev.smile.data.service.module.LoadingState
 import espressodev.smile.ui.screens.DayHeader
 import espressodev.smile.ui.screens.graph.SmileRoutes.FORGOT_PASSWORD_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN

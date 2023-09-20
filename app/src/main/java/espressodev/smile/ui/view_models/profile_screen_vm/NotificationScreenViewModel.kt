@@ -2,10 +2,10 @@ package espressodev.smile.ui.view_models.profile_screen_vm
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
-import espressodev.smile.model.datastore.DataStoreRepository
-import espressodev.smile.model.datastore.DataStoreRepository.Companion.DISABLED
-import espressodev.smile.model.datastore.DataStoreRepository.Companion.ENABLED
-import espressodev.smile.model.service.LogService
+import espressodev.smile.data.datastore.DataStoreRepository
+import espressodev.smile.data.datastore.DataStoreRepository.Companion.DISABLED
+import espressodev.smile.data.datastore.DataStoreRepository.Companion.ENABLED
+import espressodev.smile.data.service.LogService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

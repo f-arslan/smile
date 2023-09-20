@@ -3,9 +3,9 @@ package espressodev.smile.ui.view_models.profile_screen_vm
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
 import espressodev.smile.common.snackbar.SnackbarManager
-import espressodev.smile.model.service.LogService
-import espressodev.smile.model.service.StorageService
-import espressodev.smile.model.service.module.Response
+import espressodev.smile.data.service.LogService
+import espressodev.smile.data.service.StorageService
+import espressodev.smile.data.service.module.Response
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

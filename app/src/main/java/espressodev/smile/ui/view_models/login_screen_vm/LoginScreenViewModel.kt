@@ -3,21 +3,21 @@ package espressodev.smile.ui.view_models.login_screen_vm
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
+import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
 import espressodev.smile.common.ext.isValidEmail
 import espressodev.smile.common.snackbar.SnackbarManager
-import espressodev.smile.model.google.domain.AuthRepository
-import espressodev.smile.model.google.domain.OneTapSignInUpResponse
-import espressodev.smile.model.google.domain.SignInUpWithGoogleResponse
-import espressodev.smile.model.service.AccountService
-import espressodev.smile.model.service.LogService
-import espressodev.smile.model.service.StorageService
-import espressodev.smile.model.service.module.GoogleResponse.Loading
-import espressodev.smile.model.service.module.GoogleResponse.Success
-import espressodev.smile.model.service.module.LoadingState
-import espressodev.smile.model.service.module.Response
+import espressodev.smile.data.google.GoogleAuthService
+import espressodev.smile.data.google.OneTapSignInUpResponse
+import espressodev.smile.data.google.SignInUpWithGoogleResponse
+import espressodev.smile.data.service.AccountService
+import espressodev.smile.data.service.LogService
+import espressodev.smile.data.service.StorageService
+import espressodev.smile.data.service.module.GoogleResponse.Loading
+import espressodev.smile.data.service.module.GoogleResponse.Success
+import espressodev.smile.data.service.module.LoadingState
+import espressodev.smile.data.service.module.Response
 import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +38,7 @@ data class LoginUiState(
 class LoginScreenViewModel @Inject constructor(
     private val accountService: AccountService,
     private val storageService: StorageService,
-    private val authRepository: AuthRepository,
+    private val authRepository: GoogleAuthService,
     val oneTapClient: SignInClient,
     logService: LogService
 ) : SmileViewModel(logService) {
