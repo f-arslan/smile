@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile.verify_password_screen
+package espressodev.smile.ui.screens.profile.verify_password
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -36,11 +36,11 @@ import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 
 @Composable
-fun VerifyPasswordScreenProvider(
+fun VerifyPasswordRoute(
+    prevScreen: String,
     popUp: () -> Unit,
     navigate: (String) -> Unit,
-    viewModel: VerifyPasswordScreenViewModel = hiltViewModel(),
-    prevScreen: String
+    viewModel: VerifyPasswordViewModel = hiltViewModel(),
 ) {
     val password by viewModel.password.collectAsStateWithLifecycle()
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()

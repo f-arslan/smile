@@ -5,12 +5,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
 import espressodev.smile.common.ext.isValidEmail
 import espressodev.smile.common.snackbar.SnackbarManager
-import espressodev.smile.data.service.model.Contact
 import espressodev.smile.data.service.AccountService
 import espressodev.smile.data.service.LogService
 import espressodev.smile.data.service.StorageService
+import espressodev.smile.data.service.model.Contact
 import espressodev.smile.data.service.model.Response
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -93,7 +92,7 @@ class NewContactScreenViewModel @Inject constructor(
                         firstName = it.displayName,
                         email = it.email
                     )
-                    async { storageService.saveContact(viewModelScope, firstContact, secondContact) }.await()
+                    storageService.saveContact(viewModelScope, firstContact, secondContact)
                     onLoadingStateChange(false)
                     delay(100L)
                     popUp()

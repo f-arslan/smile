@@ -46,6 +46,11 @@ import espressodev.smile.ui.screens.graph.SmileRoutes.VERIFY_PASSWORD_SCREEN
 import espressodev.smile.domain.util.Constants.AVATAR_SIZE
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
 import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
+import espressodev.smile.ui.screens.profile.change_password.changePasswordRoute
+import espressodev.smile.ui.screens.profile.delete_profile.deleteProfileRoute
+import espressodev.smile.ui.screens.profile.learn_more.learnMoreRoute
+import espressodev.smile.ui.screens.profile.notification.notificationRoute
+import espressodev.smile.ui.screens.profile.verify_password.verifyPasswordRoute
 import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 
@@ -69,22 +74,22 @@ fun ProfileRoute(
             popUp = popUp,
             onChangePasswordClick = {
                 navigateWithArgument(
-                    VERIFY_PASSWORD_SCREEN,
-                    CHANGE_PASSWORD_SCREEN
+                    verifyPasswordRoute,
+                    changePasswordRoute
                 )
             },
-            onApplicationInformationClick = { navigate(LEARN_MORE_SCREEN) },
+            onApplicationInformationClick = { navigate(learnMoreRoute) },
             signOutClick = { viewModel.signOut { clearAndNavigate(it) } },
-            onNotificationActivateClick = { navigate(NOTIFICATION_SCREEN) },
+            onNotificationActivateClick = { navigate(notificationRoute) },
             onEditClick = { navigate(NAME_EDIT_SCREEN) },
             onDeleteProfileClick = {
                 if ((user as Response.Success<User>).data.email.isEmpty()) {
                     navigateWithArgument(
-                        VERIFY_PASSWORD_SCREEN,
-                        DELETE_PROFILE_SCREEN
+                        verifyPasswordRoute,
+                        deleteProfileRoute
                     )
                 } else {
-                    navigate(DELETE_PROFILE_SCREEN)
+                    navigate(deleteProfileRoute)
                 }
             }
         )

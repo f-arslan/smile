@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile.verify_password_screen
+package espressodev.smile.ui.screens.profile.verify_password
 
 import espressodev.smile.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,6 +9,7 @@ import espressodev.smile.data.service.AccountService
 import espressodev.smile.data.service.LogService
 import espressodev.smile.data.service.model.Response
 import espressodev.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
+import espressodev.smile.ui.screens.profile.change_password.changePasswordRoute
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class VerifyPasswordScreenViewModel @Inject constructor(
+class VerifyPasswordViewModel @Inject constructor(
     private val accountService: AccountService,
     logService: LogService
 ) : SmileViewModel(logService) {
@@ -48,7 +49,7 @@ class VerifyPasswordScreenViewModel @Inject constructor(
             if (signInResponse is Response.Success) {
                 onLoadingStateChange(false)
                 delay(100L)
-                clearAndNavigate(CHANGE_PASSWORD_SCREEN)
+                clearAndNavigate(changePasswordRoute)
             } else if (signInResponse is Response.Failure) {
                 onLoadingStateChange(false)
                 delay(100L)

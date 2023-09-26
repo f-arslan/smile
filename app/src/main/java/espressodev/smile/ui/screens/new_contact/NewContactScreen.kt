@@ -52,7 +52,6 @@ fun NewContactScreen(
     onEmailChange: (String) -> Unit,
     onSaveClick: () -> Unit,
 ) {
-    val scrollState = rememberScrollState()
     Scaffold(
         topBar = {
             NavigationTopAppBar(AppText.new_contact, popUp)

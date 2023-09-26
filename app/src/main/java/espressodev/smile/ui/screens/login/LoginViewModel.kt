@@ -1,6 +1,5 @@
 package espressodev.smile.ui.screens.login
 
-import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,12 +16,9 @@ import espressodev.smile.data.service.model.GoogleResponse.Loading
 import espressodev.smile.data.service.model.GoogleResponse.Success
 import espressodev.smile.data.service.model.LoadingState
 import espressodev.smile.data.service.model.Response
-import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import espressodev.smile.ui.screens.home.homeRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import espressodev.smile.R.string as AppText
 
@@ -77,7 +73,7 @@ class LoginScreenViewModel @Inject constructor(
                 val reloadResponse = accountService.reloadFirebaseUser()
                 if (reloadResponse is Response.Success && accountService.isEmailVerified) {
                     storageService.updateUserEmailVerification()
-                    openAndPopUp(HOME_SCREEN)
+                    openAndPopUp(homeRoute)
                 } else {
                     SnackbarManager.showMessage(AppText.please_verify_email)
                 }
@@ -88,12 +84,6 @@ class LoginScreenViewModel @Inject constructor(
         }
     }
 
-
-    fun checkEmailVerification() {
-        viewModelScope.launch(Dispatchers.IO) {
-            async { accountService.reloadFirebaseUser() }.await()
-        }
-    }
 
     fun oneTapSignIn() = launchCatching {
         updateUiState { copy(oneTapSignInResponse = Loading) }

@@ -36,8 +36,6 @@ import espressodev.smile.common.composables.FunctionalityNotAvailablePopup
 import espressodev.smile.common.composables.LetterInCircle
 import espressodev.smile.data.room.ContactEntity
 import espressodev.smile.data.service.model.Response
-import espressodev.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
-import espressodev.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import espressodev.smile.domain.util.Constants.AVATAR_SIZE
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
 import espressodev.smile.domain.util.Constants.MAX_PADDING
@@ -45,16 +43,21 @@ import espressodev.smile.domain.util.Constants.MEDIUM_HIGH_PADDING
 import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import espressodev.smile.domain.util.Constants.SMALL_PADDING
 import espressodev.smile.domain.util.isTodayOrDate
+import espressodev.smile.ui.screens.contact.contactRoute
+import espressodev.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
+import espressodev.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
+import espressodev.smile.ui.screens.profile.PROFILE_GRAPH_ROUTE_PATTERN
+import espressodev.smile.ui.screens.profile.profileRoute
 
 
 @Composable
 fun HomeRoute(
     navigate: (String) -> Unit,
     navigateToChat: (String, String) -> Unit,
-    navigateToNotification: () -> Unit,
+    navigateToNotification: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit) {viewModel.navigateToNotificationScreen { navigateToNotification() }}
+    LaunchedEffect(Unit) { viewModel.navigateToNotificationScreen(navigateToNotification) }
     LaunchedEffect(Unit) { viewModel.getData() }
     val contacts by viewModel.contacts.collectAsStateWithLifecycle()
     val user by viewModel.user.collectAsStateWithLifecycle()
@@ -68,7 +71,7 @@ fun HomeRoute(
         FunctionalityNotAvailablePopup { notFunctionalState = false }
     }
     Scaffold(
-        floatingActionButton = { AppFloActionButton(onClick = { navigate(CONTACT_SCREEN) }) },
+        floatingActionButton = { AppFloActionButton(onClick = { navigate(contactRoute) }) },
         topBar = {
             AppSearchBar(
                 userResponse = user,
@@ -79,7 +82,7 @@ fun HomeRoute(
                 onQueryChange = viewModel::onSearchQueryChange,
                 onSearch = viewModel::onSearchClick,
                 onActiveChange = viewModel::onSearchActiveChange,
-                onAvatarClick = { navigate(PROFILE_SCREEN) },
+                onAvatarClick = { navigate(PROFILE_GRAPH_ROUTE_PATTERN) },
                 onContactClick = navigateToChat
             )
         },
@@ -90,6 +93,7 @@ fun HomeRoute(
                 is Response.Success -> {
                     LastContactList(data = res.data, navigateToChat)
                 }
+
                 else -> {}
             }
         }

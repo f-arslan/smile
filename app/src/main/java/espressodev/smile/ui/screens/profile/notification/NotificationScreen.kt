@@ -33,14 +33,16 @@ import espressodev.smile.data.datastore.DataStoreService.Companion.ENABLED
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
 import espressodev.smile.domain.util.Constants.VERY_HIGH_PADDING
 import espressodev.smile.domain.util.icons.NotificationIcon
+import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
+import espressodev.smile.ui.screens.home.homeRoute
 import espressodev.smile.R.string as AppText
 
 
 @OptIn(ExperimentalPermissionsApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun NotificationScreenProvider(
-    clearAndNavigate: () -> Unit,
+fun NotificationRoute(
+    clearAndNavigate: (String) -> Unit,
     viewModel: NotificationViewModel = hiltViewModel()
 ) {
     val notificationPanelState by viewModel.notificationPanelState.collectAsStateWithLifecycle()
@@ -49,7 +51,7 @@ fun NotificationScreenProvider(
     when (permissionState.status.isGranted) {
         true -> {
             viewModel.setNotificationsEnabled(ENABLED) {
-                clearAndNavigate()
+                clearAndNavigate(homeRoute)
             }
         }
 
@@ -66,7 +68,7 @@ fun NotificationScreenProvider(
     NotificationScreen(
         onSkipClick = {
             viewModel.setNotificationsEnabled(DISABLED) {
-                clearAndNavigate()
+                clearAndNavigate(homeRoute)
             }
         },
         onEnableClick = {

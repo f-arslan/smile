@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.register_screen
+package espressodev.smile.ui.screens.register
 
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
@@ -101,7 +101,7 @@ class RegisterScreenViewModel @Inject constructor(
                 password = password
             )
             if (signUpResponse is Response.Success) {
-                async { accountService.sendEmailVerification() }.await()
+                accountService.sendEmailVerification()
                 saveToDatabase()
                 onVerificationStateChange(true)
             } else if (signUpResponse is Response.Failure) {

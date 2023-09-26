@@ -47,6 +47,9 @@ import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
 import espressodev.smile.domain.util.Constants.VERY_HIGH_PADDING
+import espressodev.smile.ui.screens.home.homeRoute
+import espressodev.smile.ui.screens.login.forgot_password.forgotPasswordRoute
+import espressodev.smile.ui.screens.register.registerRoute
 import espressodev.smile.R.string as AppText
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -56,7 +59,6 @@ fun LoginRoute(
     navigate: (String) -> Unit,
     viewModel: LoginScreenViewModel = hiltViewModel(),
 ) {
-    LaunchedEffect(Unit) { viewModel.checkEmailVerification() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val keyboardController = LocalSoftwareKeyboardController.current
     if (uiState.loadingState is LoadingState.Loading) {
@@ -72,8 +74,8 @@ fun LoginRoute(
                 viewModel.onLoginClick(clearAndNavigate)
             },
             onGoogleClick = { viewModel.oneTapSignIn() },
-            onNotMemberClick = { clearAndNavigate(REGISTER_SCREEN) },
-            onForgotPasswordClick = { navigate(FORGOT_PASSWORD_SCREEN) }
+            onNotMemberClick = { clearAndNavigate(registerRoute) },
+            onForgotPasswordClick = { navigate(forgotPasswordRoute) }
         )
     }
     val launcher =
@@ -100,7 +102,7 @@ fun LoginRoute(
 
     SignInUpWithGoogle(uiState.signInWithGoogleResponse, navigateToHomeScreen = { signedIn ->
         if (signedIn) {
-            clearAndNavigate(HOME_SCREEN)
+            clearAndNavigate(homeRoute)
         }
     })
 }

@@ -12,8 +12,8 @@ import espressodev.smile.ui.screens.contact.ContactRoute
 import espressodev.smile.ui.screens.home.HomeRoute
 import espressodev.smile.ui.screens.new_contact.NewContactRoute
 import espressodev.smile.ui.screens.onboarding.OnboardingRoute
-import espressodev.smile.ui.screens.register_screen.RegisterScreenProvider
-import espressodev.smile.ui.screens.splash_screen.SplashScreenProvider
+import espressodev.smile.ui.screens.register.RegisterRoute
+import espressodev.smile.ui.screens.splash.SplashRoute
 import espressodev.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.CHAT_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
@@ -36,9 +36,9 @@ import espressodev.smile.ui.screens.profile.change_password.ChangePasswordRoute
 import espressodev.smile.ui.screens.profile.delete_profile.DeleteProfileRoute
 import espressodev.smile.ui.screens.profile.learn_more.LearnMoreRoute
 import espressodev.smile.ui.screens.profile.edit_name.EditNameRoute
-import espressodev.smile.ui.screens.profile.notification.NotificationScreenProvider
+import espressodev.smile.ui.screens.profile.notification.NotificationRoute
 import espressodev.smile.ui.screens.profile.ProfileRoute
-import espressodev.smile.ui.screens.profile.verify_password_screen.VerifyPasswordScreenProvider
+import espressodev.smile.ui.screens.profile.verify_password.VerifyPasswordRoute
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun NavGraphBuilder.appGraph(appState: SmileAppState) {
@@ -47,9 +47,9 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
         OnboardingRoute(clearAndNavigate = { route -> appState.clearAndNavigate(route) })
     }
     composable(REGISTER_SCREEN) {
-        RegisterScreenProvider { destination ->
+        RegisterRoute(openAndPopUp = { destination ->
             appState.clearAndNavigate(destination)
-        }
+        })
     }
     composable(LOGIN_SCREEN) {
         LoginRoute(navigate = {
@@ -101,7 +101,7 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
         "$VERIFY_PASSWORD_SCREEN/{argument}",
         arguments = listOf(navArgument("argument") { type = NavType.StringType })
     ) {
-        VerifyPasswordScreenProvider(
+        VerifyPasswordRoute(
             prevScreen = it.arguments?.getString("argument") ?: "",
             popUp = { appState.popUp() },
             navigate = { route -> appState.navigate(route) })
@@ -126,11 +126,11 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
     }
 
     composable(SPLASH_SCREEN) {
-        SplashScreenProvider(clearAndNavigate = { appState.navigateAndPopUp(it, SPLASH_SCREEN) })
+        SplashRoute(clearAndNavigate = { appState.navigateAndPopUp(it, SPLASH_SCREEN) })
     }
 
     composable(NOTIFICATION_SCREEN) {
-        NotificationScreenProvider(clearAndNavigate = { appState.clearAndNavigate(HOME_SCREEN) })
+        NotificationRoute(clearAndNavigate = { appState.clearAndNavigate(it) })
     }
 
     composable(CHANGE_PASSWORD_SCREEN) {

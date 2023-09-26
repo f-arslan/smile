@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.register_screen
+package espressodev.smile.ui.screens.register
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -50,14 +50,16 @@ import espressodev.smile.domain.util.Constants
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
 import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import espressodev.smile.domain.util.Constants.VERY_HIGH_PADDING
+import espressodev.smile.ui.screens.home.homeRoute
+import espressodev.smile.ui.screens.login.LOGIN_GRAPH_ROUTE_PATTERN
 import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun RegisterScreenProvider(
+fun RegisterRoute(
+    openAndPopUp: (String) -> Unit,
     viewModel: RegisterScreenViewModel = hiltViewModel(),
-    openAndPopUp: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     if (uiState.loadingState is LoadingState.Loading) {
@@ -67,7 +69,7 @@ fun RegisterScreenProvider(
     if (uiState.verificationState) {
         VerificationDialog {
             viewModel.onVerificationStateChange(false)
-            openAndPopUp(LOGIN_SCREEN)
+            openAndPopUp(LOGIN_GRAPH_ROUTE_PATTERN)
         }
     }
     RegisterScreen(
@@ -81,7 +83,7 @@ fun RegisterScreenProvider(
             keyboardController?.hide()
         },
         onGoogleClick = { viewModel.oneTapSignUp() },
-        onAlreadyHaveAccountClick = { openAndPopUp(LOGIN_SCREEN) }
+        onAlreadyHaveAccountClick = { openAndPopUp(LOGIN_GRAPH_ROUTE_PATTERN) }
     )
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
@@ -114,7 +116,7 @@ fun RegisterScreenProvider(
         signUpWithGoogleResponse = uiState.signUpWithGoogleResponse,
         navigateToHomeScreen = { signedIn ->
             if (signedIn) {
-                openAndPopUp(HOME_SCREEN)
+                openAndPopUp(homeRoute)
             }
         }
     )

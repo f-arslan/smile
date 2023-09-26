@@ -13,10 +13,10 @@ fun NavController.navigateToContact(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.contactScreen(
     popUp: () -> Unit,
-    navigateNewContact: () -> Unit,
+    navigateToNewContact: () -> Unit,
     navigateChat: (String, String) -> Unit
 ) {
     composable(route = contactRoute) {
-        ContactRoute(popUp, navigateNewContact, navigateChat)
+        ContactRoute(popUp, navigateToNewContact, navigateChat)
     }
 }

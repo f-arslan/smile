@@ -16,6 +16,7 @@ import espressodev.smile.data.service.AccountService
 import espressodev.smile.data.service.LogService
 import espressodev.smile.data.service.StorageService
 import espressodev.smile.data.service.model.Response
+import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.tasks.await
@@ -54,12 +55,11 @@ class HomeViewModel @Inject constructor(
     val user = _user.asStateFlow()
 
 
-    fun navigateToNotificationScreen(clearAndNavigate: () -> Unit) {
+    fun navigateToNotificationScreen(clearAndNavigate: (String) -> Unit) {
         launchCatching {
             val currentNotificationState = dataStoreRepository.getNotificationsEnabled()
-            Log.d("NotificationState", currentNotificationState)
             if (currentNotificationState == IDLE) {
-                clearAndNavigate()
+                clearAndNavigate(homeRoute)
             }
         }
     }

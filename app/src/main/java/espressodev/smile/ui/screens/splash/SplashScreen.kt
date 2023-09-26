@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.splash_screen
+package espressodev.smile.ui.screens.splash
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -21,12 +21,15 @@ import espressodev.smile.R
 import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.ONBOARDING_SCREEN
+import espressodev.smile.ui.screens.home.homeRoute
+import espressodev.smile.ui.screens.login.LOGIN_GRAPH_ROUTE_PATTERN
+import espressodev.smile.ui.screens.onboarding.onboardingRoute
 
 
 @Composable
-fun SplashScreenProvider(
+fun SplashRoute(
     clearAndNavigate: (String) -> Unit,
-    viewModel: SplashScreenViewModel = hiltViewModel()
+    viewModel: SplashViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) { viewModel.getOnboardingScreenState() }
     val onboardingScreenState by viewModel.onboardingScreenState.collectAsStateWithLifecycle()
@@ -57,10 +60,10 @@ fun SplashScreen(
         )
         if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
             if (!isEmailVerified) {
-                if (!onboardingScreenState) clearAndNavigate(ONBOARDING_SCREEN)
-                else clearAndNavigate(LOGIN_SCREEN)
+                if (!onboardingScreenState) clearAndNavigate(onboardingRoute)
+                else clearAndNavigate(LOGIN_GRAPH_ROUTE_PATTERN)
             } else {
-                clearAndNavigate(HOME_SCREEN)
+                clearAndNavigate(homeRoute)
             }
         }
     }

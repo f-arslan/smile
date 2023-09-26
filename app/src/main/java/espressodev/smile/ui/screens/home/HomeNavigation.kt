@@ -14,7 +14,7 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.homeScreen(
     navigate: (String) -> Unit,
     navigateToChat: (String, String) -> Unit,
-    navigateToNotification: () -> Unit
+    navigateToNotification: (String) -> Unit
 ) {
     composable(route = homeRoute) {
         HomeRoute(navigate, navigateToChat, navigateToNotification)
