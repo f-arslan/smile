@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.login_screen.forgot_password_screen
+package espressodev.smile.ui.screens.login.forgot_password
 
 import android.content.res.Resources
 import dagger.hilt.android.lifecycle.HiltViewModel

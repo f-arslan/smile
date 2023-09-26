@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.chat_screen
+package espressodev.smile.ui.screens.chat
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class ChatScreenViewModel @Inject constructor(
+class ChatViewModel @Inject constructor(
     accountService: AccountService,
     private val storageService: StorageService,
     private val getContactAndMessagesUseCase: GetContactAndMessagesUseCase,

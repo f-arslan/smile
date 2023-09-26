@@ -7,9 +7,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import espressodev.smile.SmileAppState
-import espressodev.smile.ui.screens.chat_screen.ChatScreenProvider
-import espressodev.smile.ui.screens.contact_screen.ContactScreenProvider
-import espressodev.smile.ui.screens.home_screen.HomeScreenProvider
+import espressodev.smile.ui.screens.chat.ChatRoute
+import espressodev.smile.ui.screens.contact.ContactRoute
+import espressodev.smile.ui.screens.home.HomeRoute
 import espressodev.smile.ui.screens.new_contact_screen.NewContactScreenProvider
 import espressodev.smile.ui.screens.onboarding_screen.OnboardingScreenProvider
 import espressodev.smile.ui.screens.register_screen.RegisterScreenProvider
@@ -30,8 +30,8 @@ import espressodev.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.SPLASH_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.VERIFY_PASSWORD_SCREEN
-import espressodev.smile.ui.screens.login_screen.forgot_password_screen.ForgotPasswordScreenProvider
-import espressodev.smile.ui.screens.login_screen.LoginScreenProvider
+import espressodev.smile.ui.screens.login.forgot_password.ForgotPasswordScreenProvider
+import espressodev.smile.ui.screens.login.LoginScreenProvider
 import espressodev.smile.ui.screens.profile_screen.change_password_screen.ChangePasswordScreenProvider
 import espressodev.smile.ui.screens.profile_screen.delete_profile_screen.DeleteProfileScreenProvider
 import espressodev.smile.ui.screens.profile_screen.LearnMoreScreen
@@ -59,17 +59,17 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
         })
     }
     composable(HOME_SCREEN) {
-        HomeScreenProvider(
+        HomeRoute(
             navigate = { appState.navigate(it) },
             navigateToChat = { contactId, roomId ->
                 appState.navigate("$CHAT_SCREEN/$contactId/$roomId")
             },
-            clearAndNavigate = { appState.clearAndNavigate(NOTIFICATION_SCREEN) }
+            navigateToNotification = { appState.clearAndNavigate(NOTIFICATION_SCREEN) }
         )
     }
 
     composable(CONTACT_SCREEN) {
-        ContactScreenProvider(
+        ContactRoute(
             popUp = { appState.popUp() },
             navigateNewContact = {
                 appState.navigate(NEW_CONTACT_SCREEN)
@@ -91,7 +91,7 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
             }
         ),
     ) {
-        ChatScreenProvider(
+        ChatRoute(
             contactId = it.arguments?.getString("contactId") ?: "",
             roomId = it.arguments?.getString("roomId") ?: "",
             popUp = { appState.popUp() })

@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.chat_screen
+package espressodev.smile.ui.screens.chat
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -55,7 +55,6 @@ import espressodev.smile.common.composables.ContactTopAppBar
 import espressodev.smile.common.composables.FunctionalityNotAvailablePopup
 import espressodev.smile.data.service.model.Contact
 import espressodev.smile.data.service.model.Message
-import espressodev.smile.data.service.model.MessageStatus
 import espressodev.smile.data.service.model.Response
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
 import espressodev.smile.domain.util.Constants.HIGH_PLUS_PADDING
@@ -68,11 +67,11 @@ import espressodev.smile.domain.util.isTodayOrDate
 import espressodev.smile.domain.util.timestampToDate
 
 @Composable
-fun ChatScreenProvider(
+fun ChatRoute(
     contactId: String,
     roomId: String,
     popUp: () -> Unit,
-    viewModel: ChatScreenViewModel = hiltViewModel()
+    viewModel: ChatViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) { viewModel.getContactAndMessage(contactId, roomId) }
     val contactState by viewModel.contactState.collectAsStateWithLifecycle()
@@ -189,7 +188,9 @@ fun ChatItemBubble(message: Message, isUserMe: Boolean) {
     val isTimestampVisible = remember { mutableStateOf(false) }
     Row(
         horizontalArrangement = if (isUserMe) Arrangement.End else Arrangement.Start,
-        modifier = Modifier.fillMaxWidth().then(paddingModifier)
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(paddingModifier)
     ) {
         Column(horizontalAlignment = Alignment.End) {
             Surface(
@@ -258,15 +259,5 @@ fun Messages(
 @Preview(showBackground = true)
 @Composable
 fun ChatScreenPreview() {
-    ChatItemBubble(
-        message = Message(
-            messageId = "efficiantur",
-            senderId = "ubique",
-            content = "faucibus",
-            timestamp = 4199,
-            readBy = listOf(),
-            status = MessageStatus.SENT
-        ), isUserMe = false
-
-    )
+   Messages(messages = listOf(), currentUserId = "massa", scrollState = rememberLazyListState(), modifier = Modifier)
 }

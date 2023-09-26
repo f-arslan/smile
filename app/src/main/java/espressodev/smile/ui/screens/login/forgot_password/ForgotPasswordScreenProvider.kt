@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.login_screen.forgot_password_screen
+package espressodev.smile.ui.screens.login.forgot_password
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement

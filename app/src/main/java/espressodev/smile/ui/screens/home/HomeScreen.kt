@@ -1,6 +1,5 @@
-package espressodev.smile.ui.screens.home_screen
+package espressodev.smile.ui.screens.home
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -49,17 +48,16 @@ import espressodev.smile.domain.util.isTodayOrDate
 
 
 @Composable
-fun HomeScreenProvider(
+fun HomeRoute(
     navigate: (String) -> Unit,
     navigateToChat: (String, String) -> Unit,
-    clearAndNavigate: () -> Unit,
-    viewModel: HomeScreenViewModel = hiltViewModel()
+    navigateToNotification: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit) {viewModel.navigateToNotificationScreen { clearAndNavigate() }}
+    LaunchedEffect(Unit) {viewModel.navigateToNotificationScreen { navigateToNotification() }}
     LaunchedEffect(Unit) { viewModel.getData() }
     val contacts by viewModel.contacts.collectAsStateWithLifecycle()
     val user by viewModel.user.collectAsStateWithLifecycle()
-    Log.d("HomeScreenProvider", "contacts: $contacts")
     val searchHistoryQueries by viewModel.searchHistoryQueries.collectAsStateWithLifecycle()
     val searchHistoryContacts by viewModel.searchHistoryContacts.collectAsStateWithLifecycle()
 

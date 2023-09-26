@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.login_screen
+package espressodev.smile.ui.screens.login
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -41,7 +41,7 @@ import espressodev.smile.common.composables.OneTapSignInUp
 import espressodev.smile.common.composables.PasswordTextField
 import espressodev.smile.common.composables.SignInUpWithGoogle
 import espressodev.smile.data.service.model.LoadingState
-import espressodev.smile.ui.screens.chat_screen.DayHeader
+import espressodev.smile.ui.screens.chat.DayHeader
 import espressodev.smile.ui.screens.graph.SmileRoutes.FORGOT_PASSWORD_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN

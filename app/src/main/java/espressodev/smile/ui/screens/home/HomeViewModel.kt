@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.home_screen
+package espressodev.smile.ui.screens.home
 
 import android.util.Log
 import com.google.firebase.ktx.Firebase
@@ -22,7 +22,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val roomStorageService: RoomStorageService,
     private val storageService: StorageService,
     private val accountService: AccountService,

@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.contact_screen
+package espressodev.smile.ui.screens.contact
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class ContactScreenViewModel @Inject constructor(
+class ContactViewModel @Inject constructor(
     private val storageService: StorageService,
     logService: LogService
 ) : SmileViewModel(logService) {
@@ -23,7 +23,7 @@ class ContactScreenViewModel @Inject constructor(
     private val _contacts = MutableStateFlow<Response<List<Contact>>>(Response.Loading)
 
     private val _allContacts =
-        MutableStateFlow<Response<List<Pair<String, List<Contact>>>>>(Response.Loading)
+        MutableStateFlow<Response<Map<Char, List<Contact>>>>(Response.Loading)
     val allContacts = _allContacts.asStateFlow()
 
     fun onQueryChange(query: String) {

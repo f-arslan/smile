@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.login_screen
+package espressodev.smile.ui.screens.login
 
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.identity.SignInClient

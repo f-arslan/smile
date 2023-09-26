@@ -1,6 +1,6 @@
-package espressodev.smile.ui.screens.contact_screen
+package espressodev.smile.ui.screens.contact
 
-import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,18 +38,17 @@ import espressodev.smile.domain.util.Constants.MEDIUM_HIGH_PADDING
 import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 
 @Composable
-fun ContactScreenProvider(
+fun ContactRoute(
     popUp: () -> Unit,
     navigateNewContact: () -> Unit,
     navigateChatScreen: (String, String) -> Unit,
-    viewModel: ContactScreenViewModel = hiltViewModel()
+    viewModel: ContactViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
         viewModel.getContacts()
     }
     val query by viewModel.query.collectAsStateWithLifecycle()
     val groupedContacts by viewModel.allContacts.collectAsStateWithLifecycle()
-    Log.d("ContactScreenProvider", "groupedContacts: $groupedContacts")
     ContactScreen(
         query,
         groupedContacts,
@@ -60,10 +59,11 @@ fun ContactScreenProvider(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ContactScreen(
     query: String,
-    groupContacts: Response<List<Pair<String, List<Contact>>>>,
+    groupContacts: Response<Map<Char, List<Contact>>>,
     onValueChange: (String) -> Unit,
     popUp: () -> Unit,
     navigateNewContact: () -> Unit,
@@ -77,10 +77,11 @@ private fun ContactScreen(
             when (groupContacts) {
                 is Response.Success -> {
                     LazyColumn {
-                        groupContacts.data.forEach {
-                            item { Letter(it.first.first()) }
-                            contactListWithLetter(it.second, navigateChatScreen)
+                        groupContacts.data.forEach { (initial, contacts) ->
+                            stickyHeader { Letter(initial) }
+                            contactListWithLetter(contacts, navigateChatScreen)
                             item { Spacer(Modifier.height(MEDIUM_PADDING)) }
+
                         }
                     }
                 }
@@ -133,7 +134,7 @@ private fun ContactItem(name: String, onContactClick: () -> Unit) {
 private fun ContactPreview() {
     ContactScreen(
         query = "dapibus",
-        groupContacts = Response.Success(listOf()),
+        groupContacts = Response.Success(mapOf()),
         onValueChange = {},
         popUp = {},
         navigateNewContact = {},

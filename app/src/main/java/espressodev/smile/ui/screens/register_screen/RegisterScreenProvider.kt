@@ -43,7 +43,7 @@ import espressodev.smile.common.composables.RegisterHeader
 import espressodev.smile.common.composables.SignInUpWithGoogle
 import espressodev.smile.common.composables.VerificationDialog
 import espressodev.smile.data.service.model.LoadingState
-import espressodev.smile.ui.screens.chat_screen.DayHeader
+import espressodev.smile.ui.screens.chat.DayHeader
 import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import espressodev.smile.domain.util.Constants
