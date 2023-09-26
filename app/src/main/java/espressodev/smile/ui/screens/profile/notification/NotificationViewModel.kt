@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile_screen.notification_screen
+package espressodev.smile.ui.screens.profile.notification
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class NotificationScreenViewModel @Inject constructor(
+class NotificationViewModel @Inject constructor(
     logService: LogService,
     private val dataStoreRepository: DataStoreService
 ) : SmileViewModel(logService) {

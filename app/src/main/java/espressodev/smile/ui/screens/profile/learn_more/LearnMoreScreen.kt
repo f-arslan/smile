@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile_screen
+package espressodev.smile.ui.screens.profile.learn_more
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -38,7 +38,7 @@ import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 
 @Composable
-fun LearnMoreScreen(popUp: () -> Unit) {
+fun LearnMoreRoute(popUp: () -> Unit) {
     Scaffold(topBar = { NavigationTopAppBar(AppText.learn_more, popUp) }) {
         Column(
             modifier = Modifier
@@ -100,5 +100,5 @@ fun LearnMoreScreen(popUp: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun LearnMorePreview() {
-    LearnMoreScreen(popUp = {})
+    LearnMoreRoute(popUp = {})
 }

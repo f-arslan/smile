@@ -43,9 +43,9 @@ import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 
 @Composable
-fun ForgotPasswordScreenProvider(
+fun ForgotPasswordRoute(
     clearAndNavigate: (String) -> Unit,
-    viewModel: ForgotPasswordScreenViewModel = hiltViewModel()
+    viewModel: ForgotPasswordViewModel = hiltViewModel()
 ) {
     val email by viewModel.email.collectAsStateWithLifecycle()
     ForgotPasswordScreen(

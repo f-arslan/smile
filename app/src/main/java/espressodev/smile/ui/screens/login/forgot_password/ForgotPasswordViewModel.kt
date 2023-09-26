@@ -15,7 +15,7 @@ import javax.inject.Inject
 import espressodev.smile.R.string as AppText
 
 @HiltViewModel
-class ForgotPasswordScreenViewModel @Inject constructor(
+class ForgotPasswordViewModel @Inject constructor(
     private val accountService: AccountService,
     private val resources: Resources,
     logService: LogService

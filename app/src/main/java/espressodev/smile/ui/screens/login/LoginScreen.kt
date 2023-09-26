@@ -51,10 +51,10 @@ import espressodev.smile.R.string as AppText
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun LoginScreenProvider(
+fun LoginRoute(
+    clearAndNavigate: (String) -> Unit,
+    navigate: (String) -> Unit,
     viewModel: LoginScreenViewModel = hiltViewModel(),
-    openAndPopUp: (String) -> Unit,
-    navigate: (String) -> Unit
 ) {
     LaunchedEffect(Unit) { viewModel.checkEmailVerification() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -69,10 +69,10 @@ fun LoginScreenProvider(
             onPasswordChange = viewModel::onPasswordChange,
             onLoginClick = {
                 keyboardController?.hide()
-                viewModel.onLoginClick(openAndPopUp)
+                viewModel.onLoginClick(clearAndNavigate)
             },
             onGoogleClick = { viewModel.oneTapSignIn() },
-            onNotMemberClick = { openAndPopUp(REGISTER_SCREEN) },
+            onNotMemberClick = { clearAndNavigate(REGISTER_SCREEN) },
             onForgotPasswordClick = { navigate(FORGOT_PASSWORD_SCREEN) }
         )
     }
@@ -100,7 +100,7 @@ fun LoginScreenProvider(
 
     SignInUpWithGoogle(uiState.signInWithGoogleResponse, navigateToHomeScreen = { signedIn ->
         if (signedIn) {
-            openAndPopUp(HOME_SCREEN)
+            clearAndNavigate(HOME_SCREEN)
         }
     })
 }

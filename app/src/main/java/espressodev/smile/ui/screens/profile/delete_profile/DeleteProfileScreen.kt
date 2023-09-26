@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile_screen.delete_profile_screen
+package espressodev.smile.ui.screens.profile.delete_profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -31,10 +31,10 @@ import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 
 @Composable
-fun DeleteProfileScreenProvider(
+fun DeleteProfileRoute(
     popUp: () -> Unit,
     clearAndNavigate: (String) -> Unit,
-    viewModel: DeleteProfileScreenViewModel = hiltViewModel()
+    viewModel: DeleteProfileViewModel = hiltViewModel()
 ) {
     val alertDialogState by viewModel.alertDialogState.collectAsStateWithLifecycle()
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()

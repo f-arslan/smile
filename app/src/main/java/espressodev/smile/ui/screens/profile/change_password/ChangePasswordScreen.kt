@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile_screen.change_password_screen
+package espressodev.smile.ui.screens.profile.change_password
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,7 +24,7 @@ import espressodev.smile.R.string as AppText
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ChangePasswordScreenProvider(
+fun ChangePasswordRoute(
     popUp: () -> Unit,
     clearAndNavigate: (String) -> Unit,
     viewModel: ChangePasswordScreenViewModel = hiltViewModel()

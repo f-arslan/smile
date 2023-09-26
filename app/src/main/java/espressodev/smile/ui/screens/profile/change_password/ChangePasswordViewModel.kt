@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile_screen.change_password_screen
+package espressodev.smile.ui.screens.profile.change_password
 
 import androidx.annotation.StringRes
 import dagger.hilt.android.lifecycle.HiltViewModel

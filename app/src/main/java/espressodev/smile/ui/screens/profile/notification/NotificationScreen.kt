@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile_screen.notification_screen
+package espressodev.smile.ui.screens.profile.notification
 
 import android.Manifest
 import android.os.Build
@@ -41,7 +41,7 @@ import espressodev.smile.R.string as AppText
 @Composable
 fun NotificationScreenProvider(
     clearAndNavigate: () -> Unit,
-    viewModel: NotificationScreenViewModel = hiltViewModel()
+    viewModel: NotificationViewModel = hiltViewModel()
 ) {
     val notificationPanelState by viewModel.notificationPanelState.collectAsStateWithLifecycle()
     val permissionState =

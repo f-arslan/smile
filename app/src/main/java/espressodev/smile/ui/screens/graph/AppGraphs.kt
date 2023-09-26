@@ -10,8 +10,8 @@ import espressodev.smile.SmileAppState
 import espressodev.smile.ui.screens.chat.ChatRoute
 import espressodev.smile.ui.screens.contact.ContactRoute
 import espressodev.smile.ui.screens.home.HomeRoute
-import espressodev.smile.ui.screens.new_contact_screen.NewContactScreenProvider
-import espressodev.smile.ui.screens.onboarding_screen.OnboardingScreenProvider
+import espressodev.smile.ui.screens.new_contact.NewContactRoute
+import espressodev.smile.ui.screens.onboarding.OnboardingRoute
 import espressodev.smile.ui.screens.register_screen.RegisterScreenProvider
 import espressodev.smile.ui.screens.splash_screen.SplashScreenProvider
 import espressodev.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
@@ -30,21 +30,21 @@ import espressodev.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.SPLASH_SCREEN
 import espressodev.smile.ui.screens.graph.SmileRoutes.VERIFY_PASSWORD_SCREEN
-import espressodev.smile.ui.screens.login.forgot_password.ForgotPasswordScreenProvider
-import espressodev.smile.ui.screens.login.LoginScreenProvider
-import espressodev.smile.ui.screens.profile_screen.change_password_screen.ChangePasswordScreenProvider
-import espressodev.smile.ui.screens.profile_screen.delete_profile_screen.DeleteProfileScreenProvider
-import espressodev.smile.ui.screens.profile_screen.LearnMoreScreen
-import espressodev.smile.ui.screens.profile_screen.name_edit_screen.NameEditScreenProvider
-import espressodev.smile.ui.screens.profile_screen.notification_screen.NotificationScreenProvider
-import espressodev.smile.ui.screens.profile_screen.ProfileScreenProvider
-import espressodev.smile.ui.screens.profile_screen.verify_password_screen.VerifyPasswordScreenProvider
+import espressodev.smile.ui.screens.login.forgot_password.ForgotPasswordRoute
+import espressodev.smile.ui.screens.login.LoginRoute
+import espressodev.smile.ui.screens.profile.change_password.ChangePasswordRoute
+import espressodev.smile.ui.screens.profile.delete_profile.DeleteProfileRoute
+import espressodev.smile.ui.screens.profile.learn_more.LearnMoreRoute
+import espressodev.smile.ui.screens.profile.edit_name.EditNameRoute
+import espressodev.smile.ui.screens.profile.notification.NotificationScreenProvider
+import espressodev.smile.ui.screens.profile.ProfileRoute
+import espressodev.smile.ui.screens.profile.verify_password_screen.VerifyPasswordScreenProvider
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun NavGraphBuilder.appGraph(appState: SmileAppState) {
 
     composable(ONBOARDING_SCREEN) {
-        OnboardingScreenProvider(clearAndNavigate = { route -> appState.clearAndNavigate(route) })
+        OnboardingRoute(clearAndNavigate = { route -> appState.clearAndNavigate(route) })
     }
     composable(REGISTER_SCREEN) {
         RegisterScreenProvider { destination ->
@@ -52,9 +52,9 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
         }
     }
     composable(LOGIN_SCREEN) {
-        LoginScreenProvider(navigate = {
+        LoginRoute(navigate = {
             appState.navigate(FORGOT_PASSWORD_SCREEN)
-        }, openAndPopUp = { route ->
+        }, clearAndNavigate = { route ->
             appState.clearAndNavigate(route)
         })
     }
@@ -108,11 +108,11 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
     }
 
     composable(NEW_CONTACT_SCREEN) {
-        NewContactScreenProvider(popUp = { appState.popUp() })
+        NewContactRoute(popUp = { appState.popUp() })
     }
 
     composable(PROFILE_SCREEN) {
-        ProfileScreenProvider(
+        ProfileRoute(
             popUp = { appState.popUp() },
             clearAndNavigate = { appState.clearAndNavigate(LOGIN_SCREEN) },
             navigate = { appState.navigate(it) },
@@ -134,26 +134,26 @@ fun NavGraphBuilder.appGraph(appState: SmileAppState) {
     }
 
     composable(CHANGE_PASSWORD_SCREEN) {
-        ChangePasswordScreenProvider(popUp = { appState.popUp() },
+        ChangePasswordRoute(popUp = { appState.popUp() },
             clearAndNavigate = { route -> appState.clearAndNavigate(route) })
     }
 
 
     composable(LEARN_MORE_SCREEN) {
-        LearnMoreScreen { appState.popUp() }
+        LearnMoreRoute { appState.popUp() }
     }
 
     composable(NAME_EDIT_SCREEN) {
-        NameEditScreenProvider(popUp = { appState.popUp() })
+        EditNameRoute(popUp = { appState.popUp() })
     }
 
     composable(DELETE_PROFILE_SCREEN) {
-        DeleteProfileScreenProvider(
+        DeleteProfileRoute(
             popUp = { appState.popUp() },
             clearAndNavigate = { route -> appState.clearAndNavigate(route) })
     }
 
     composable(FORGOT_PASSWORD_SCREEN) {
-        ForgotPasswordScreenProvider(clearAndNavigate = { route -> appState.clearAndNavigate(route) })
+        ForgotPasswordRoute(clearAndNavigate = { route -> appState.clearAndNavigate(route) })
     }
 }

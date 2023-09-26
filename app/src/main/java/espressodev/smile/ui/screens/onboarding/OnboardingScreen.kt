@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.onboarding_screen
+package espressodev.smile.ui.screens.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -34,9 +34,9 @@ import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 
 @Composable
-fun OnboardingScreenProvider(
+fun OnboardingRoute(
     clearAndNavigate: (String) -> Unit,
-    viewModel: OnboardingScreenViewModel = hiltViewModel()
+    viewModel: OnboardingViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) { viewModel.setOnboardingScreenState() }
     OnBoardingScreen(clearAndNavigate)

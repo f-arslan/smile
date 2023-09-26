@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile_screen.verify_password_screen
+package espressodev.smile.ui.screens.profile.verify_password_screen
 
 import espressodev.smile.R
 import dagger.hilt.android.lifecycle.HiltViewModel

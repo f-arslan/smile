@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile_screen.delete_profile_screen
+package espressodev.smile.ui.screens.profile.delete_profile
 
 import android.content.res.Resources
 import espressodev.smile.SmileViewModel
@@ -16,7 +16,7 @@ import javax.inject.Inject
 import espressodev.smile.R.string as AppText
 
 @HiltViewModel
-class DeleteProfileScreenViewModel @Inject constructor(
+class DeleteProfileViewModel @Inject constructor(
     private val storageService: StorageService,
     private val accountService: AccountService,
     private val dataStoreRepository: DataStoreService,

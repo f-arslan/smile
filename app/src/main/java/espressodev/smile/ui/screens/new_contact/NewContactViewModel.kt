@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.new_contact_screen
+package espressodev.smile.ui.screens.new_contact
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile_screen.name_edit_screen
+package espressodev.smile.ui.screens.profile.edit_name
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
@@ -13,7 +13,7 @@ import javax.inject.Inject
 import espressodev.smile.R.string as AppText
 
 @HiltViewModel
-class NameEditScreenViewModel @Inject constructor(
+class EditNameViewModel @Inject constructor(
     private val storageService: StorageService,
     logService: LogService
 ) : SmileViewModel(logService) {

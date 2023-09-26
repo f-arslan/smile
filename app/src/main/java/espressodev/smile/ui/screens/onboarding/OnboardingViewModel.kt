@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.onboarding_screen
+package espressodev.smile.ui.screens.onboarding
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
@@ -7,7 +7,7 @@ import espressodev.smile.data.service.LogService
 import javax.inject.Inject
 
 @HiltViewModel
-class OnboardingScreenViewModel  @Inject constructor(
+class OnboardingViewModel  @Inject constructor(
     private val dataStoreRepository: DataStoreService,
     logService: LogService
 ): SmileViewModel(logService){

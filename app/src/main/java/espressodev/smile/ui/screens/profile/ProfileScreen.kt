@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile_screen
+package espressodev.smile.ui.screens.profile
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -50,12 +50,12 @@ import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 
 @Composable
-fun ProfileScreenProvider(
+fun ProfileRoute(
     popUp: () -> Unit,
     clearAndNavigate: (String) -> Unit,
     navigate: (String) -> Unit,
     navigateWithArgument: (String, String) -> Unit,
-    viewModel: ProfileScreenViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     LaunchedEffect(Unit) { viewModel.getUserAndNotificationState(context) }

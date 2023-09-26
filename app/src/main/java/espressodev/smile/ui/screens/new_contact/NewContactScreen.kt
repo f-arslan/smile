@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.new_contact_screen
+package espressodev.smile.ui.screens.new_contact
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,7 +24,7 @@ import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import espressodev.smile.R.string as AppText
 
 @Composable
-fun NewContactScreenProvider(
+fun NewContactRoute(
     popUp: () -> Unit,
     viewModel: NewContactScreenViewModel = hiltViewModel()
 ) {

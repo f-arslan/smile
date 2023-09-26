@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile_screen.name_edit_screen
+package espressodev.smile.ui.screens.profile.edit_name
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,16 +19,16 @@ import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 
 @Composable
-fun NameEditScreenProvider(
+fun EditNameRoute(
     popUp: () -> Unit,
-    viewModel: NameEditScreenViewModel = hiltViewModel()
+    viewModel: EditNameViewModel = hiltViewModel()
 ) {
     val name by viewModel.name.collectAsStateWithLifecycle()
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
     if (loadingState) {
         LoadingAnimationDialog { viewModel.onLoadingStateChange(false) }
     }
-    NameEditScreen(name = name, onNameChange = viewModel::onNameChanged, popUp = popUp,
+    EditNameScreen(name = name, onNameChange = viewModel::onNameChanged, popUp = popUp,
         onUpdateClick = {
             viewModel.onUpdateClick(popUp)
         }
@@ -37,7 +37,7 @@ fun NameEditScreenProvider(
 
 
 @Composable
-private fun NameEditScreen(
+private fun EditNameScreen(
     name: String,
     onNameChange: (String) -> Unit,
     popUp: () -> Unit,
@@ -64,6 +64,6 @@ private fun NameEditScreen(
 
 @Composable
 @Preview(showBackground = true)
-private fun NameEditPreview() {
-    NameEditScreen(name = "Jeremy Combs", onNameChange = {}, popUp = {}, onUpdateClick = {})
+private fun EditNamePreview() {
+    EditNameScreen(name = "Jeremy Combs", onNameChange = {}, popUp = {}, onUpdateClick = {})
 }

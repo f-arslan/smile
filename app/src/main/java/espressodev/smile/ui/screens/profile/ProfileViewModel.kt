@@ -1,4 +1,4 @@
-package espressodev.smile.ui.screens.profile_screen
+package espressodev.smile.ui.screens.profile
 
 import android.Manifest
 import android.content.Context
@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class ProfileScreenViewModel @Inject constructor(
+class ProfileViewModel @Inject constructor(
     private val storageService: StorageService,
     private val accountService: AccountService,
     private val dataStoreRepository: DataStoreService,
