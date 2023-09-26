@@ -10,23 +10,22 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
+import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
-import espressodev.smile.data.service.model.User
 import espressodev.smile.data.datastore.DataStoreService
 import espressodev.smile.data.google.GoogleProfileService
+import espressodev.smile.data.google.SignOutResponse
 import espressodev.smile.data.service.AccountService
 import espressodev.smile.data.service.LogService
 import espressodev.smile.data.service.StorageService
-import espressodev.smile.data.service.model.GoogleResponse.*
+import espressodev.smile.data.service.model.GoogleResponse.Success
 import espressodev.smile.data.service.model.Response
-import espressodev.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
-import dagger.hilt.android.lifecycle.HiltViewModel
-import espressodev.smile.data.google.SignOutResponse
+import espressodev.smile.data.service.model.User
+import espressodev.smile.ui.screens.login.LOGIN_GRAPH_ROUTE_PATTERN
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-
 
 
 @HiltViewModel
@@ -44,7 +43,7 @@ class ProfileViewModel @Inject constructor(
     private val _notificationState = MutableStateFlow("")
     val notificationState = _notificationState.asStateFlow()
 
-    val displayName get() = profileRepository.displayName
+    val googleDisplayName get() = profileRepository.displayName
     val photoUrl get() = profileRepository.photoUrl
 
     var signOutResponse by mutableStateOf<SignOutResponse>(Success(false))
@@ -76,20 +75,20 @@ class ProfileViewModel @Inject constructor(
                 ) == PackageManager.PERMISSION_GRANTED -> {
                     setNotificationsEnabled(DataStoreService.ENABLED)
                 }
+
                 else -> setNotificationsEnabled(DataStoreService.DISABLED)
             }
             _notificationState.value = dataStoreRepository.getNotificationsEnabled()
         }
     }
 
-    fun signOut(clearAndNavigate: (String) -> Unit) {
-        launchCatching {
-            Firebase.messaging.deleteToken().await()
-            dataStoreRepository.setFcmToken("")
-            accountService.signOut()
-            clearAndNavigate(LOGIN_SCREEN)
-        }
+    fun signOut(clearAndNavigate: (String) -> Unit) = launchCatching {
+        Firebase.messaging.deleteToken().await()
+        dataStoreRepository.setFcmToken("")
+        accountService.signOut()
+        clearAndNavigate(LOGIN_GRAPH_ROUTE_PATTERN)
     }
+
 
     companion object {
         private const val TAG = "ProfileScreenViewModel"

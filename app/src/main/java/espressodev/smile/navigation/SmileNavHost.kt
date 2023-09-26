@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import espressodev.smile.SmileAppState
 import espressodev.smile.ui.screens.chat.chatScreen
+import espressodev.smile.ui.screens.chat.navigateToChat
 import espressodev.smile.ui.screens.contact.contactScreen
 import espressodev.smile.ui.screens.home.homeScreen
 import espressodev.smile.ui.screens.login.forgot_password.forgotPasswordScreen
@@ -43,11 +44,11 @@ fun SmileNavHost(
         contactScreen(
             popUp = navController::popBackStack,
             navigateToNewContact = navController::navigateToNewContact,
-            navigateChat = appState::navigateWithArgument
+            navigateToChat = navController::navigateToChat
         )
         homeScreen(
             navigate = appState::navigate,
-            navigateToChat = appState::navigateWithArgument,
+            navigateToChat = navController::navigateToChat,
             navigateToNotification = appState::clearAndNavigate
         )
         loginGraph(
@@ -85,5 +86,4 @@ fun SmileNavHost(
         registerScreen(clearAndNavigate = appState::clearAndNavigate)
         splashScreen(clearAndNavigate = appState::clearAndNavigate)
     }
-
 }

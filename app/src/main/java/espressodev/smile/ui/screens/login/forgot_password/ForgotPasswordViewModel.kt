@@ -8,7 +8,7 @@ import espressodev.smile.common.snackbar.SnackbarManager
 import espressodev.smile.data.service.AccountService
 import espressodev.smile.data.service.LogService
 import espressodev.smile.data.service.model.Response
-import espressodev.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
+import espressodev.smile.ui.screens.login.LOGIN_GRAPH_ROUTE_PATTERN
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -37,7 +37,7 @@ class ForgotPasswordViewModel @Inject constructor(
         launchCatching {
             val response = accountService.sendPasswordResetEmail(email.value.trim())
             if (response is Response.Success) {
-                clearAndNavigate(LOGIN_SCREEN)
+                clearAndNavigate(LOGIN_GRAPH_ROUTE_PATTERN)
             } else if (response is Response.Failure) {
                 SnackbarManager.showMessage(
                     response.e.message ?: resources.getString(AppText.email_error)

@@ -1,12 +1,9 @@
 package espressodev.smile.ui.screens.home
 
-import android.util.Log
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
-import espressodev.smile.domain.util.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
-import espressodev.smile.data.service.model.User
 import espressodev.smile.data.datastore.DataStoreService
 import espressodev.smile.data.datastore.DataStoreService.Companion.IDLE
 import espressodev.smile.data.room.ContactEntity
@@ -16,7 +13,9 @@ import espressodev.smile.data.service.AccountService
 import espressodev.smile.data.service.LogService
 import espressodev.smile.data.service.StorageService
 import espressodev.smile.data.service.model.Response
-import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
+import espressodev.smile.data.service.model.User
+import espressodev.smile.domain.util.getCurrentTimestamp
+import espressodev.smile.ui.screens.profile.notification.notificationRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.tasks.await
@@ -59,7 +58,7 @@ class HomeViewModel @Inject constructor(
         launchCatching {
             val currentNotificationState = dataStoreRepository.getNotificationsEnabled()
             if (currentNotificationState == IDLE) {
-                clearAndNavigate(homeRoute)
+                clearAndNavigate(notificationRoute)
             }
         }
     }

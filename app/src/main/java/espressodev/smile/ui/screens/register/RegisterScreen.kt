@@ -43,13 +43,11 @@ import espressodev.smile.common.composables.RegisterHeader
 import espressodev.smile.common.composables.SignInUpWithGoogle
 import espressodev.smile.common.composables.VerificationDialog
 import espressodev.smile.data.service.model.LoadingState
-import espressodev.smile.ui.screens.chat.DayHeader
-import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
-import espressodev.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import espressodev.smile.domain.util.Constants
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
 import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import espressodev.smile.domain.util.Constants.VERY_HIGH_PADDING
+import espressodev.smile.ui.screens.chat.DayHeader
 import espressodev.smile.ui.screens.home.homeRoute
 import espressodev.smile.ui.screens.login.LOGIN_GRAPH_ROUTE_PATTERN
 import espressodev.smile.R.drawable as AppDrawable

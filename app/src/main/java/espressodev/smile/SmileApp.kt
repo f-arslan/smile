@@ -20,11 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import espressodev.smile.common.snackbar.SnackbarManager
-import espressodev.smile.ui.screens.graph.SmileRoutes.SPLASH_SCREEN
-import espressodev.smile.ui.screens.graph.appGraph
 import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import espressodev.smile.navigation.SmileNavHost
 import kotlinx.coroutines.CoroutineScope

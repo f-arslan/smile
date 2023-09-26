@@ -33,7 +33,6 @@ import espressodev.smile.data.datastore.DataStoreService.Companion.ENABLED
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
 import espressodev.smile.domain.util.Constants.VERY_HIGH_PADDING
 import espressodev.smile.domain.util.icons.NotificationIcon
-import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
 import espressodev.smile.ui.screens.home.homeRoute
 import espressodev.smile.R.string as AppText
 

@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import espressodev.smile.common.composables.HyperlinkText
 import espressodev.smile.common.composables.NavigationTopAppBar
-import espressodev.smile.ui.theme.Pacifico
 import espressodev.smile.domain.util.Constants.GITHUB_DESC
 import espressodev.smile.domain.util.Constants.GITHUB_LINK
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
@@ -34,6 +33,7 @@ import espressodev.smile.domain.util.Constants.PRIVACY_TERM_CONDITIONS
 import espressodev.smile.domain.util.Constants.SMALL_ICON_SIZE
 import espressodev.smile.domain.util.Constants.TERMS_CONDITIONS
 import espressodev.smile.domain.util.Constants.TERMS_CONDITIONS_LINK
+import espressodev.smile.ui.theme.Pacifico
 import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 

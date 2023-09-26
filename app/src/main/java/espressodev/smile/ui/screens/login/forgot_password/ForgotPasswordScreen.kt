@@ -31,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import espressodev.smile.common.composables.DefaultTextField
-import espressodev.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
 import espressodev.smile.domain.util.Constants.MEDIUM_HIGH_PADDING
 import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
@@ -39,6 +38,7 @@ import espressodev.smile.domain.util.Constants.NO_SMALL_PADDING
 import espressodev.smile.domain.util.Constants.SMALL_PADDING
 import espressodev.smile.domain.util.Constants.VERY_MAX_PADDING
 import espressodev.smile.domain.util.Constants.VERY_SMALL_PADDING
+import espressodev.smile.ui.screens.login.LOGIN_GRAPH_ROUTE_PATTERN
 import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText
 
@@ -53,10 +53,10 @@ fun ForgotPasswordRoute(
         viewModel::onEmailChange,
         onResetPasswordClick = {
             viewModel.sendPasswordResetEmail {
-                clearAndNavigate(LOGIN_SCREEN)
+                clearAndNavigate(LOGIN_GRAPH_ROUTE_PATTERN)
             }
         },
-        backToLoginClick = { clearAndNavigate(LOGIN_SCREEN) })
+        backToLoginClick = { clearAndNavigate(LOGIN_GRAPH_ROUTE_PATTERN) })
 }
 
 @Composable

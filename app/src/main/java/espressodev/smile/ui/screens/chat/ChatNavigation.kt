@@ -9,8 +9,12 @@ import androidx.navigation.navArgument
 
 const val chatRoute = "chat_route"
 
-fun NavController.navigateToChat(navOptions: NavOptions? = null) {
-    navigate(chatRoute, navOptions)
+fun NavController.navigateToChat(
+    contactId: String,
+    roomId: String,
+    navOptions: NavOptions? = null
+) {
+    navigate("$chatRoute/$contactId/$roomId", navOptions)
 }
 
 fun NavGraphBuilder.chatScreen(popUp: () -> Unit) {

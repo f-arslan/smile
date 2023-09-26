@@ -1,14 +1,13 @@
 package espressodev.smile.ui.screens.profile.verify_password
 
-import espressodev.smile.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import espressodev.smile.R
 import espressodev.smile.SmileViewModel
 import espressodev.smile.common.ext.isValidPassword
 import espressodev.smile.common.snackbar.SnackbarManager
 import espressodev.smile.data.service.AccountService
 import espressodev.smile.data.service.LogService
 import espressodev.smile.data.service.model.Response
-import espressodev.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
 import espressodev.smile.ui.screens.profile.change_password.changePasswordRoute
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

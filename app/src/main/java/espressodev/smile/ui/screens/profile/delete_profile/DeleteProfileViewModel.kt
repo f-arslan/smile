@@ -1,14 +1,13 @@
 package espressodev.smile.ui.screens.profile.delete_profile
 
 import android.content.res.Resources
+import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
 import espressodev.smile.common.snackbar.SnackbarManager
 import espressodev.smile.data.datastore.DataStoreService
 import espressodev.smile.data.service.AccountService
 import espressodev.smile.data.service.LogService
 import espressodev.smile.data.service.StorageService
-import espressodev.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
-import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.ui.screens.login.LOGIN_GRAPH_ROUTE_PATTERN
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

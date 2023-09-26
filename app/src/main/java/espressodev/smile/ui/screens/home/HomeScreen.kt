@@ -1,5 +1,6 @@
 package espressodev.smile.ui.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,10 +45,7 @@ import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import espressodev.smile.domain.util.Constants.SMALL_PADDING
 import espressodev.smile.domain.util.isTodayOrDate
 import espressodev.smile.ui.screens.contact.contactRoute
-import espressodev.smile.ui.screens.graph.SmileRoutes.CONTACT_SCREEN
-import espressodev.smile.ui.screens.graph.SmileRoutes.PROFILE_SCREEN
 import espressodev.smile.ui.screens.profile.PROFILE_GRAPH_ROUTE_PATTERN
-import espressodev.smile.ui.screens.profile.profileRoute
 
 
 @Composable

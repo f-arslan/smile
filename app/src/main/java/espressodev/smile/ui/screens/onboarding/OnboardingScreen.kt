@@ -25,13 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import espressodev.smile.common.composables.DefaultButton
 import espressodev.smile.common.composables.DefaultOutlinedButton
-import espressodev.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
-import espressodev.smile.ui.screens.graph.SmileRoutes.REGISTER_SCREEN
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
 import espressodev.smile.domain.util.Constants.MAX_PADDING
 import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import espressodev.smile.ui.screens.login.LOGIN_GRAPH_ROUTE_PATTERN
-import espressodev.smile.ui.screens.login.loginRoute
 import espressodev.smile.ui.screens.register.registerRoute
 import espressodev.smile.R.drawable as AppDrawable
 import espressodev.smile.R.string as AppText

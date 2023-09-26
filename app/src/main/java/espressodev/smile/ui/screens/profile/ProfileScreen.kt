@@ -34,20 +34,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import espressodev.smile.common.composables.IconCircle
 import espressodev.smile.common.composables.LetterInCircle
 import espressodev.smile.common.composables.NavigationTopAppBar
-import espressodev.smile.data.service.model.User
 import espressodev.smile.data.datastore.DataStoreService.Companion.ENABLED
+import espressodev.smile.data.service.model.PROVIDER
 import espressodev.smile.data.service.model.Response
-import espressodev.smile.ui.screens.graph.SmileRoutes.CHANGE_PASSWORD_SCREEN
-import espressodev.smile.ui.screens.graph.SmileRoutes.DELETE_PROFILE_SCREEN
-import espressodev.smile.ui.screens.graph.SmileRoutes.LEARN_MORE_SCREEN
-import espressodev.smile.ui.screens.graph.SmileRoutes.NAME_EDIT_SCREEN
-import espressodev.smile.ui.screens.graph.SmileRoutes.NOTIFICATION_SCREEN
-import espressodev.smile.ui.screens.graph.SmileRoutes.VERIFY_PASSWORD_SCREEN
+import espressodev.smile.data.service.model.User
 import espressodev.smile.domain.util.Constants.AVATAR_SIZE
 import espressodev.smile.domain.util.Constants.HIGH_PADDING
 import espressodev.smile.domain.util.Constants.MEDIUM_PADDING
 import espressodev.smile.ui.screens.profile.change_password.changePasswordRoute
 import espressodev.smile.ui.screens.profile.delete_profile.deleteProfileRoute
+import espressodev.smile.ui.screens.profile.edit_name.editNameRoute
 import espressodev.smile.ui.screens.profile.learn_more.learnMoreRoute
 import espressodev.smile.ui.screens.profile.notification.notificationRoute
 import espressodev.smile.ui.screens.profile.verify_password.verifyPasswordRoute
@@ -69,7 +65,7 @@ fun ProfileRoute(
     val notificationState by viewModel.notificationState.collectAsStateWithLifecycle()
     if (user is Response.Success) {
         ProfileScreen(
-            userName = (user as Response.Success<User>).data.displayName,
+            user = (user as Response.Success<User>).data,
             notificationState = notificationState,
             popUp = popUp,
             onChangePasswordClick = {
@@ -81,7 +77,7 @@ fun ProfileRoute(
             onApplicationInformationClick = { navigate(learnMoreRoute) },
             signOutClick = { viewModel.signOut { clearAndNavigate(it) } },
             onNotificationActivateClick = { navigate(notificationRoute) },
-            onEditClick = { navigate(NAME_EDIT_SCREEN) },
+            onEditClick = { navigate(editNameRoute) },
             onDeleteProfileClick = {
                 if ((user as Response.Success<User>).data.email.isEmpty()) {
                     navigateWithArgument(
@@ -99,7 +95,7 @@ fun ProfileRoute(
 
 @Composable
 fun ProfileScreen(
-    userName: String,
+    user: User,
     notificationState: String,
     popUp: () -> Unit,
     onChangePasswordClick: () -> Unit,
@@ -107,7 +103,7 @@ fun ProfileScreen(
     signOutClick: () -> Unit,
     onNotificationActivateClick: () -> Unit,
     onEditClick: () -> Unit,
-    onDeleteProfileClick: () -> Unit
+    onDeleteProfileClick: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -122,10 +118,15 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(HIGH_PADDING)
         ) {
-            LetterInCircle(userName.first())
-            UserName(userName, onEditClick)
+            LetterInCircle(user.displayName.first())
+            UserName(user.displayName, onEditClick)
             Spacer(modifier = Modifier.height(MEDIUM_PADDING))
-            ProfileItem(AppDrawable.outline_lock_24, AppText.change_password, onChangePasswordClick)
+            if (user.provider == PROVIDER.EMAIL)
+                ProfileItem(
+                    AppDrawable.outline_lock_24,
+                    AppText.change_password,
+                    onChangePasswordClick
+                )
             if (notificationState != ENABLED)
                 ProfileItem(
                     AppDrawable.outline_notifications_active_24,
@@ -203,11 +204,14 @@ fun ProfileItem(
 @Composable
 fun ProfilePreview() {
     ProfileScreen(
-        userName = "Fatih",
+        user = User(),
         notificationState = "South Dakota",
         popUp = {},
         onChangePasswordClick = {},
         onApplicationInformationClick = {},
         signOutClick = {},
-        onNotificationActivateClick = {}, onEditClick = {}, onDeleteProfileClick = {})
+        onNotificationActivateClick = {},
+        onEditClick = {},
+        onDeleteProfileClick = {},
+    )
 }

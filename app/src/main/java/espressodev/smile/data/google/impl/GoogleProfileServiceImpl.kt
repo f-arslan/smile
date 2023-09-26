@@ -20,7 +20,7 @@ class GoogleProfileServiceImpl @Inject constructor(
     private var signInClient: GoogleSignInClient,
     private val storageService: StorageService,
 ) : GoogleProfileService {
-    override val displayName = auth.currentUser?.displayName.toString()
+    override val displayName = auth.currentUser?.displayName ?: ""
     override val photoUrl = auth.currentUser?.photoUrl.toString()
 
     override suspend fun signOut(): SignOutResponse {

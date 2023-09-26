@@ -18,9 +18,6 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import espressodev.smile.R
-import espressodev.smile.ui.screens.graph.SmileRoutes.HOME_SCREEN
-import espressodev.smile.ui.screens.graph.SmileRoutes.LOGIN_SCREEN
-import espressodev.smile.ui.screens.graph.SmileRoutes.ONBOARDING_SCREEN
 import espressodev.smile.ui.screens.home.homeRoute
 import espressodev.smile.ui.screens.login.LOGIN_GRAPH_ROUTE_PATTERN
 import espressodev.smile.ui.screens.onboarding.onboardingRoute

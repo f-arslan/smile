@@ -2,24 +2,23 @@ package espressodev.smile.ui.screens.register
 
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
-import espressodev.smile.data.service.model.GoogleResponse.Loading
-import espressodev.smile.data.service.model.GoogleResponse.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
 import espressodev.smile.SmileViewModel
 import espressodev.smile.common.ext.isValidEmail
 import espressodev.smile.common.ext.isValidPassword
 import espressodev.smile.common.ext.passwordMatches
 import espressodev.smile.common.snackbar.SnackbarManager
-import espressodev.smile.data.service.model.User
 import espressodev.smile.data.google.GoogleAuthService
 import espressodev.smile.data.google.OneTapSignInUpResponse
 import espressodev.smile.data.google.SignInUpWithGoogleResponse
 import espressodev.smile.data.service.AccountService
 import espressodev.smile.data.service.LogService
 import espressodev.smile.data.service.StorageService
+import espressodev.smile.data.service.model.GoogleResponse.Loading
+import espressodev.smile.data.service.model.GoogleResponse.Success
 import espressodev.smile.data.service.model.LoadingState
 import espressodev.smile.data.service.model.Response
-import kotlinx.coroutines.async
+import espressodev.smile.data.service.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
